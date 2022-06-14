@@ -1,0 +1,3 @@
+[submodule "Rebirth/libs/spdlog"]
+	path = Rebirth/libs/spdlog
+	url = https://github.com/gabime/spdlog

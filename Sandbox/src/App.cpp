@@ -34,5 +34,7 @@ public:
 
 rebirth::Application* rebirth::CreateApplication()
 {
+	int a = 3;
+	RB_CLIENT_INFO("Starting client A={0}", a);
 	return new Sandbox();
 }

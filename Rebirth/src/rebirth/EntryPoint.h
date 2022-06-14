@@ -30,6 +30,9 @@ extern rebirth::Application* rebirth::CreateApplication();
 
 int main(int argc, char** argv)
 {
+	rebirth::Log::Init();
+	RB_CORE_WARN("Test warning initializing engine");
+	
 	auto app = rebirth::CreateApplication();
 	app->Run();
 	delete app;

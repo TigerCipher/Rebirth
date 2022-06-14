@@ -15,50 +15,27 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Core.h
-// Date File Created: 06/13/2022 at 3:03 PM
+// File Name: Log.cpp
+// Date File Created: 06/13/2022 at 11:39 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-#pragma once
+#include "Log.h"
+
+#include "spdlog/sinks/stdout_color_sinks.h"
+
+SharedPtr<spdlog::logger> rebirth::Log::sCoreLogger;
+SharedPtr<spdlog::logger> rebirth::Log::sClientLogger;
 
 
-// Macros
-
-#ifdef RB_WINDOWS
-	#ifdef RB_BUILD_DLL
-		#define RB_API __declspec(dllexport)
-	#else
-		#define RB_API __declspec(dllimport)
-	#endif
-#else
-	#error Windows compatibility only (for now)
-#endif
-
-
-// Smart Pointers (might move)
-
-#include <vector>
-#include <memory>
-
-template<typename T>
-using list = std::vector<T>;
-
-template <typename T>
-using UniquePtr = std::unique_ptr<T>;
-
-template<typename T>
-using SharedPtr = std::shared_ptr<T>;
-
-template<typename T, typename... Args>
-constexpr UniquePtr<T> createScope(Args&& ...args)
+void rebirth::Log::Init()
 {
-	return std::make_unique<T>(std::forward<Args>(args)...);
-}
+	spdlog::set_pattern("%^[%T] [%n] [%l] %v%$");
 
-template <typename T, typename... Args>
-constexpr SharedPtr<T> createRef(Args&& ...args)
-{
-	return std::make_shared<T>(std::forward<Args>(args)...);
+	sCoreLogger = spdlog::stdout_color_mt("Rebirth Engine");
+	sCoreLogger->set_level(spdlog::level::trace);
+	
+	sClientLogger = spdlog::stdout_color_mt("Client");
+	sClientLogger->set_level(spdlog::level::trace);
 }

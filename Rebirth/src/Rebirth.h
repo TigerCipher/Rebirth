@@ -24,5 +24,6 @@
 #pragma once
 
 #include "rebirth/Application.h"
+#include "rebirth/Log.h"
 
 #include "rebirth/EntryPoint.h"
