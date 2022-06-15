@@ -49,7 +49,8 @@ namespace rebirth
 		EVENT_CLASS_TYPE(MOUSE_MOVED)
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	private:
-		float mMouseX, mMouseY;
+		float mMouseX;
+		float mMouseY;
 	};
 
 	class RB_API MouseScrolledEvent : public Event
@@ -71,7 +72,8 @@ namespace rebirth
 		EVENT_CLASS_TYPE(MOUSE_SCROLLED)
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	private:
-		float mXOffset, mYOffset;
+		float mXOffset;
+		float mYOffset;
 	};
 
 	class RB_API MouseButtonEvent : public Event

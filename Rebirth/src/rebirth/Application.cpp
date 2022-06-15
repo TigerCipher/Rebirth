@@ -23,10 +23,12 @@
 
 #include "Application.h"
 
+
 rebirth::Application::Application() {}
 rebirth::Application::~Application() {}
 
 void rebirth::Application::Run()
 {
+	
 	while(true);
 }

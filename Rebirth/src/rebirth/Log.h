@@ -26,6 +26,7 @@
 #include "Core.h"
 
 #include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 
 namespace rebirth
 {
@@ -34,8 +35,8 @@ namespace rebirth
 	public:
 		static void Init();
 
-		inline static SharedPtr<spdlog::logger>& GetCoreLogger() { return sCoreLogger; }
-		inline static SharedPtr<spdlog::logger>& GetClientLogger() { return sClientLogger; }
+		static SharedPtr<spdlog::logger>& GetCoreLogger() { return sCoreLogger; }
+		static SharedPtr<spdlog::logger>& GetClientLogger() { return sClientLogger; }
 
 	private:
 		static SharedPtr<spdlog::logger> sCoreLogger;
@@ -54,3 +55,19 @@ namespace rebirth
 #define RB_CLIENT_WARN(...)		::rebirth::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define RB_CLIENT_ERROR(...)	::rebirth::Log::GetClientLogger()->error(__VA_ARGS__)
 #define RB_CLIENT_FATAL(...)	::rebirth::Log::GetClientLogger()->fatal(__VA_ARGS__)
+
+
+// Not ideal since still might use in engine headers, which become client when built on sandbox
+//#ifdef RB_BUILD_DLL
+//	#define RB_TRACE(...)	RB_CORE_TRACE(__VA_ARGS__)
+//	#define RB_INFO(...)	RB_CORE_INFO(__VA_ARGS__)
+//	#define RB_WARN(...)	RB_CORE_WARN(__VA_ARGS__)
+//	#define RB_ERROR(...)	RB_CORE_ERROR(__VA_ARGS__)
+//	#define RB_FATAL(...)	RB_CORE_FATAL(__VA_ARGS__)
+//#else
+//	#define RB_TRACE(...)	RB_CLIENT_TRACE(__VA_ARGS__)
+//	#define RB_INFO(...)	RB_CLIENT_INFO(__VA_ARGS__)
+//	#define RB_WARN(...)	RB_CLIENT_WARN(__VA_ARGS__)
+//	#define RB_ERROR(...)	RB_CLIENT_ERROR(__VA_ARGS__)
+//	#define RB_FATAL(...)	RB_CLIENT_FATAL(__VA_ARGS__)
+//#endif

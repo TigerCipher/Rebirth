@@ -33,7 +33,7 @@ namespace rebirth
 	class RB_API KeyEvent : public Event
 	{
 	public:
-		[[nodiscard]] inline int GetKeyCode() const { return mKeyCode; }
+		[[nodiscard]] int GetKeyCode() const { return mKeyCode; }
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
 	protected:
@@ -49,7 +49,7 @@ namespace rebirth
 		KeyPressedEvent(const int keycode, const int repeatCount)
 			: KeyEvent(keycode), mRepeatCount(repeatCount) {}
 
-		[[nodiscard]] inline int GetRepeatCount() const { return mRepeatCount; }
+		[[nodiscard]] int GetRepeatCount() const { return mRepeatCount; }
 
 		[[nodiscard]] std::string ToString() const override
 		{

@@ -61,7 +61,7 @@ namespace rebirth
 		EVENT_CATEGORY_MOUSE_BUTTON = BIT(4)
 	};
 
-	#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }					\
+	#define EVENT_CLASS_TYPE(type)	static EventType GetStaticType() { return EventType::##type; }					\
 									virtual EventType GetEventType() const override { return GetStaticType(); }		\
 									virtual const char* GetName() const override { return #type; }
 
@@ -76,7 +76,7 @@ namespace rebirth
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
 
-		bool IsInCategory(EventCategory category)
+		bool IsInCategory(const EventCategory category) const
 		{
 			return GetCategoryFlags() & category;
 		}

@@ -4,6 +4,9 @@
     <Filter Include="rebirth">
       <UniqueIdentifier>{559CF03D-C17B-6FD9-CA93-FAAF36F2D53A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rebirth\events">
+      <UniqueIdentifier>{B98A9FD5-A558-93DB-8EEC-03027A596F40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Rebirth.h" />
@@ -19,10 +22,18 @@
     <ClInclude Include="src\rebirth\Log.h">
       <Filter>rebirth</Filter>
     </ClInclude>
-    <ClInclude Include="src\rebirth\events\Event.h" />
-    <ClInclude Include="src\rebirth\events\AppEvent.h" />
-    <ClInclude Include="src\rebirth\events\KeyEvent.h" />
-    <ClInclude Include="src\rebirth\events\MouseEvent.h" />
+    <ClInclude Include="src\rebirth\events\AppEvent.h">
+      <Filter>rebirth\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\events\Event.h">
+      <Filter>rebirth\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\events\KeyEvent.h">
+      <Filter>rebirth\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\events\MouseEvent.h">
+      <Filter>rebirth\events</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rebirth\Application.cpp">
