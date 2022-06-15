@@ -19,6 +19,9 @@ project "Rebirth"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "rbpch.h"
+	pchsource "Rebirth/src/rbpch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",

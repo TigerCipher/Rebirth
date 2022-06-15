@@ -46,8 +46,6 @@ using uint = unsigned int;
 
 // Smart Pointers (might move)
 
-#include <vector>
-#include <memory>
 
 template<typename T>
 using list = std::vector<T>;

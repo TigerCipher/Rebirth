@@ -23,10 +23,7 @@
 
 #pragma once
 
-#include "../Core.h"
-
-#include <functional>
-#include <string>
+#include "rebirth/Core.h"
 
 
 

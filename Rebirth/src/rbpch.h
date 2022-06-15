@@ -15,27 +15,27 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Log.cpp
-// Date File Created: 06/13/2022 at 11:39 PM
+// File Name: rbpch.h
+// Date File Created: 06/15/2022 at 2:16 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-#include "rbpch.h"
-#include "Log.h"
 
-#include "spdlog/sinks/stdout_color_sinks.h"
+#pragma once
 
-SharedPtr<spdlog::logger> rebirth::Log::sCoreLogger;
-SharedPtr<spdlog::logger> rebirth::Log::sClientLogger;
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <utility>
+#include <algorithm>
+#include <functional>
+#include <memory>
 
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
 
-void rebirth::Log::Init()
-{
-	spdlog::set_pattern("%^[%T] [%n] [%l] %v%$");
+#ifdef RB_WINDOWS
+	#include <Windows.h>
+#endif
 
-	sCoreLogger = spdlog::stdout_color_mt("Rebirth Engine");
-	sCoreLogger->set_level(spdlog::level::trace);
-	
-	sClientLogger = spdlog::stdout_color_mt("Client");
-	sClientLogger->set_level(spdlog::level::trace);
-}
