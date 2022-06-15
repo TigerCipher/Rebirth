@@ -26,8 +26,8 @@
 class Sandbox : public rebirth::Application
 {
 public:
-	Sandbox() {}
-	~Sandbox() {}
+	Sandbox() = default;
+	~Sandbox() override = default;
 	
 };
 

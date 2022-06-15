@@ -147,6 +147,10 @@
     <ClInclude Include="src\rebirth\Application.h" />
     <ClInclude Include="src\rebirth\Core.h" />
     <ClInclude Include="src\rebirth\EntryPoint.h" />
+    <ClInclude Include="src\rebirth\events\AppEvent.h" />
+    <ClInclude Include="src\rebirth\events\Event.h" />
+    <ClInclude Include="src\rebirth\events\KeyEvent.h" />
+    <ClInclude Include="src\rebirth\events\MouseEvent.h" />
     <ClInclude Include="src\rebirth\Log.h" />
   </ItemGroup>
   <ItemGroup>

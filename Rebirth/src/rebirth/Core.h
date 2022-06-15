@@ -37,6 +37,13 @@
 #endif
 
 
+// Types and shortcuts
+
+using uint = unsigned int;
+
+#define BIT(x) (1 << x)
+
+
 // Smart Pointers (might move)
 
 #include <vector>

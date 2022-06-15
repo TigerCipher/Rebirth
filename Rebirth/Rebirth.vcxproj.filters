@@ -19,6 +19,10 @@
     <ClInclude Include="src\rebirth\Log.h">
       <Filter>rebirth</Filter>
     </ClInclude>
+    <ClInclude Include="src\rebirth\events\Event.h" />
+    <ClInclude Include="src\rebirth\events\AppEvent.h" />
+    <ClInclude Include="src\rebirth\events\KeyEvent.h" />
+    <ClInclude Include="src\rebirth\events\MouseEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rebirth\Application.cpp">
