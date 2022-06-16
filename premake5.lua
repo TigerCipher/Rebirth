@@ -21,6 +21,7 @@ project "Rebirth"
 	location "Rebirth"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
@@ -49,7 +50,6 @@ project "Rebirth"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -60,19 +60,26 @@ project "Rebirth"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox\"")
 		}
 
 	filter "configurations:Debug"
-		defines "RB_DEBUG"
+		defines
+		{
+			"RB_DEBUG",
+			"RB_ENABLE_ASSERTS"
+		}
 		symbols "On"
+		runtime "Debug"
 
 	filter "configurations:Release"
 		defines "RB_RELEASE"
 		optimize "On"
+		runtime "Release"
 
 	filter "configurations:Dist"
 		defines "RB_DIST"
+		runtime "Release"
 		optimize "On"
 
 --	filters { "system:windows", "configurations:Release" }
@@ -83,6 +90,7 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
@@ -106,7 +114,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -116,13 +123,20 @@ project "Sandbox"
 
 
 	filter "configurations:Debug"
-		defines "RB_DEBUG"
+		defines
+		{
+			"RB_DEBUG",
+			"RB_ENABLE_ASSERTS"
+		}
 		symbols "On"
+		runtime "Debug"
 
 	filter "configurations:Release"
 		defines "RB_RELEASE"
 		optimize "On"
+		runtime "Release"
 
 	filter "configurations:Dist"
 		defines "RB_DIST"
+		runtime "Release"
 		optimize "On"

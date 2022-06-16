@@ -7,6 +7,12 @@
     <Filter Include="rebirth\events">
       <UniqueIdentifier>{B98A9FD5-A558-93DB-8EEC-03027A596F40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rebirth\platforms">
+      <UniqueIdentifier>{FCB12FD1-68C8-2D67-B13F-B9881D95FEEE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rebirth\platforms\windows">
+      <UniqueIdentifier>{5630256A-C2F2-58F4-0BA3-E78077A431D2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Rebirth.h" />
@@ -23,6 +29,9 @@
     <ClInclude Include="src\rebirth\Log.h">
       <Filter>rebirth</Filter>
     </ClInclude>
+    <ClInclude Include="src\rebirth\Window.h">
+      <Filter>rebirth</Filter>
+    </ClInclude>
     <ClInclude Include="src\rebirth\events\AppEvent.h">
       <Filter>rebirth\events</Filter>
     </ClInclude>
@@ -35,8 +44,9 @@
     <ClInclude Include="src\rebirth\events\MouseEvent.h">
       <Filter>rebirth\events</Filter>
     </ClInclude>
-    <ClInclude Include="src\rebirth\Window.h" />
-    <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h" />
+    <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h">
+      <Filter>rebirth\platforms\windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rbpch.cpp" />
@@ -46,6 +56,8 @@
     <ClCompile Include="src\rebirth\Log.cpp">
       <Filter>rebirth</Filter>
     </ClCompile>
-    <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp" />
+    <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp">
+      <Filter>rebirth\platforms\windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
