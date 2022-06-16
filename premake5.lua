@@ -11,6 +11,12 @@ workspace "Rebirth"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "Rebirth/libs/glfw/include"
+
+-- Includes the premake file added to the glfw fork/submodule
+include "Rebirth/libs/glfw"
+
 project "Rebirth"
 	location "Rebirth"
 	kind "SharedLib"
@@ -31,7 +37,14 @@ project "Rebirth"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/libs/spdlog/include"
+		"%{prj.name}/libs/spdlog/include",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

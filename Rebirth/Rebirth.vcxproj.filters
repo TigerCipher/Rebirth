@@ -35,6 +35,8 @@
     <ClInclude Include="src\rebirth\events\MouseEvent.h">
       <Filter>rebirth\events</Filter>
     </ClInclude>
+    <ClInclude Include="src\rebirth\Window.h" />
+    <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rbpch.cpp" />
@@ -44,5 +46,6 @@
     <ClCompile Include="src\rebirth\Log.cpp">
       <Filter>rebirth</Filter>
     </ClCompile>
+    <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp" />
   </ItemGroup>
 </Project>

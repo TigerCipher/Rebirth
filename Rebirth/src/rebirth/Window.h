@@ -15,29 +15,45 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: rbpch.h
-// Date File Created: 06/15/2022 at 2:16 PM
+// File Name: Window.h
+// Date File Created: 06/15/2022 at 10:39 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <memory>
+#include "rbpch.h"
 
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
+#include "Core.h"
+#include "events/Event.h"
 
-#include "rebirth/Log.h"
+namespace rebirth
+{
+	struct WindowProperties
+	{
+		std::string title;
+		uint width;
+		uint height;
 
-#ifdef RB_WINDOWS
-	#include <Windows.h>
-#endif
+		WindowProperties(const std::string& pTitle = "Rebirth Engine", uint pWidth = 1920, uint pHeight = 1080) : title(pTitle), width(pWidth), height(pHeight) {}
+	};
 
+	class RB_API Window
+	{
+	public:
+		using EventCallbackFn = std::function<void(Event&)>;
+
+		virtual ~Window() {}
+
+		virtual void OnUpdate() = 0;
+		virtual uint GetWidth() const = 0;
+		virtual uint GetHeight() const = 0;
+
+		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+		virtual void SetVSync(bool enabled) = 0;
+		virtual bool IsVSync() const = 0;
+
+		static Window* Create(const WindowProperties& props = WindowProperties());
+	};
+}

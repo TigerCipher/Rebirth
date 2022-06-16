@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>rbpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;RB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;libs\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -101,7 +101,7 @@
       <PrecompiledHeaderFile>rbpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;RB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;libs\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -126,7 +126,7 @@
       <PrecompiledHeaderFile>rbpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;RB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;libs\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -156,6 +156,8 @@
     <ClInclude Include="src\rebirth\events\Event.h" />
     <ClInclude Include="src\rebirth\events\KeyEvent.h" />
     <ClInclude Include="src\rebirth\events\MouseEvent.h" />
+    <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h" />
+    <ClInclude Include="src\rebirth\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rbpch.cpp">
@@ -163,6 +165,7 @@
     </ClCompile>
     <ClCompile Include="src\rebirth\Application.cpp" />
     <ClCompile Include="src\rebirth\Log.cpp" />
+    <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

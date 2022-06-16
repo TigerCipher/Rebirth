@@ -45,7 +45,7 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MOUSE_MOVED)
+		EVENT_CLASS_TYPE(MOUSE_MOVED_EVENT)
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	private:
 		float mMouseX;

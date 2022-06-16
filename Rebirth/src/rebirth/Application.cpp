@@ -21,14 +21,27 @@
 // 
 // ------------------------------------------------------------------------------
 #include "rbpch.h"
+
 #include "Application.h"
 
+#include <GLFW/glfw3.h>
 
-rebirth::Application::Application() {}
+#include "platforms/windows/Win64Window.h"
+
+rebirth::Application::Application()
+{
+	//mWindow = createScope<Win64Window>(Window::Create());
+	mWindow = std::unique_ptr<Window>(Window::Create());
+}
 rebirth::Application::~Application() {}
 
 void rebirth::Application::Run()
 {
 	
-	while(true);
+	while(mRunning)
+	{
+		glClearColor(1, 0, 1, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+		mWindow->OnUpdate();
+	}
 }

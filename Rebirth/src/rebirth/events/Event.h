@@ -22,6 +22,7 @@
 // ------------------------------------------------------------------------------
 
 #pragma once
+#include "rbpch.h"
 
 #include "rebirth/Core.h"
 
@@ -44,7 +45,7 @@ namespace rebirth
 		KEY_RELEASED,
 		MOUSE_BUTTON_PRESSED,
 		MOUSE_BUTTON_RELEASED,
-		MOUSE_MOVED,
+		MOUSE_MOVED_EVENT,
 		MOUSE_SCROLLED
 	};
 

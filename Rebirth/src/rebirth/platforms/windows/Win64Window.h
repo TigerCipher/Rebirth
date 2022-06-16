@@ -15,32 +15,53 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Application.h
-// Date File Created: 06/13/2022 at 3:04 PM
+// File Name: Win64Window.h
+// Date File Created: 06/15/2022 at 10:50 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Core.h"
-#include "Window.h"
+#include "rebirth/Window.h"
+
+#include <GLFW/glfw3.h>
 
 namespace rebirth
 {
-	class RB_API Application
+	class Win64Window : public Window
 	{
 	public:
-		Application();
-		virtual ~Application();
+		Win64Window(const WindowProperties& props);
 
-		void Run();
+		virtual ~Win64Window();
 
+		void OnUpdate() override;
+
+		uint GetWidth() const override { return mData.width; }
+		uint GetHeight() const override { return mData.height; }
+
+		void SetEventCallback(const EventCallbackFn& callback) override { mData.eventCallback = callback; }
+
+		void SetVSync(bool enabled) override;
+
+		bool IsVSync() const override;
+
+	
 	private:
-		UniquePtr<Window> mWindow;
-		bool mRunning = true;
-	};
+		GLFWwindow* mWindow;
 
-	// Defined by game
-	Application* CreateApplication();
+		struct WindowData
+		{
+			std::string title;
+			uint width, height;
+			bool vSync;
+			EventCallbackFn eventCallback;
+		};
+
+		WindowData mData;
+
+		virtual void Init(const WindowProperties& props);
+		virtual void Shutdown();
+	};
 }
