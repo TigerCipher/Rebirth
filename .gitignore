@@ -3,3 +3,8 @@ bin/
 bin_int/
 
 *.user
+
+Rebirth/libs/glfw/*.vcxproj
+Rebirth/libs/glfw/*.vcxproj.*
+Rebirth/libs/glfw/bin/
+Rebirth/libs/glfw/bin_int/
