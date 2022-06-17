@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------
 // 
-// Sandbox
+// Rebirth
 //    Copyright 2022 Matthew Rogers
 // 
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,45 +15,32 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: App.cpp
-// Date File Created: 06/13/2022 at 2:16 PM
+// File Name: Layer.h
+// Date File Created: 06/16/2022 at 9:24 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-#include <Rebirth.h>
+#pragma once
 
-class SampleLayer : public rebirth::Layer
+#include "Core.h"
+#include "events/Event.h"
+namespace rebirth
 {
-public:
-	SampleLayer() : Layer("Sample") {}
-
-	void OnUpdate() override
+	class RB_API Layer
 	{
-		RB_CLIENT_INFO("SampleLayer Update");
-	}
+	public:
+		Layer(const std::string& name = "Layer") : mName(name) {}
+		virtual ~Layer() {}
 
-	void OnEvent(rebirth::Event& e) override
-	{
-		RB_CLIENT_TRACE("{0}", e);
-	}
-};
+		virtual void OnAttach() {}
+		virtual void OnDetach() {}
 
-class Sandbox : public rebirth::Application
-{
-public:
-	Sandbox()
-	{
-		PushLayer(new SampleLayer());
-	}
-	~Sandbox() override = default;
-	
-};
+		virtual void OnUpdate() {}
 
+		virtual void OnEvent(Event& e) {}
 
-rebirth::Application* rebirth::CreateApplication()
-{
-	int a = 3;
-	RB_CLIENT_INFO("Starting client A={0}", a);
-	return new Sandbox();
+	protected:
+		std::string mName;
+	};
 }

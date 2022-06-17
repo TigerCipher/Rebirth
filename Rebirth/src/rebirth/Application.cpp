@@ -41,8 +41,15 @@ void rebirth::Application::Run()
 	
 	while(mRunning)
 	{
-		glClearColor(1, 0, 1, 1);
+		glClearColor(0.2f, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+
+		for(Layer* layer : mLayerStack)
+		{
+			layer->OnUpdate();
+		}
+		
 		mWindow->OnUpdate();
 	}
 }
@@ -52,7 +59,24 @@ void rebirth::Application::OnEvent(Event& e)
 	EventDispatcher disp(e);
 	disp.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 
-	RB_CORE_TRACE("{0}", e);
+	for(auto it = mLayerStack.end(); it != mLayerStack.begin();)
+	{
+		(*--it)->OnEvent(e);
+		if(e.WasHandled())
+		{
+			break;
+		}
+	}
+}
+
+void rebirth::Application::PushLayer(Layer* layer)
+{
+	mLayerStack.PushLayer(layer);
+}
+
+void rebirth::Application::PushOverlay(Layer* overlay)
+{
+	mLayerStack.PushOverlay(overlay);
 }
 
 bool rebirth::Application::OnWindowClose(WindowCloseEvent& e)

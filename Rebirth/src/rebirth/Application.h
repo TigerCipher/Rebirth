@@ -25,6 +25,8 @@
 
 #include "Core.h"
 #include "Window.h"
+#include "LayerStack.h"
+#include "events/Event.h"
 #include "events/AppEvent.h"
 
 namespace rebirth
@@ -39,9 +41,13 @@ namespace rebirth
 
 		void OnEvent(Event& e);
 
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
+
 	private:
 		UniquePtr<Window> mWindow;
 		bool mRunning = true;
+		LayerStack mLayerStack;
 
 		bool OnWindowClose(WindowCloseEvent& e);
 	};

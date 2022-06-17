@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------
 // 
-// Sandbox
+// Rebirth
 //    Copyright 2022 Matthew Rogers
 // 
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,45 +15,49 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: App.cpp
-// Date File Created: 06/13/2022 at 2:16 PM
+// File Name: LayerStack.cpp
+// Date File Created: 06/16/2022 at 9:30 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-#include <Rebirth.h>
+#include "rbpch.h"
+#include "LayerStack.h"
 
-class SampleLayer : public rebirth::Layer
+rebirth::LayerStack::LayerStack()
 {
-public:
-	SampleLayer() : Layer("Sample") {}
-
-	void OnUpdate() override
-	{
-		RB_CLIENT_INFO("SampleLayer Update");
-	}
-
-	void OnEvent(rebirth::Event& e) override
-	{
-		RB_CLIENT_TRACE("{0}", e);
-	}
-};
-
-class Sandbox : public rebirth::Application
-{
-public:
-	Sandbox()
-	{
-		PushLayer(new SampleLayer());
-	}
-	~Sandbox() override = default;
-	
-};
-
-
-rebirth::Application* rebirth::CreateApplication()
-{
-	int a = 3;
-	RB_CLIENT_INFO("Starting client A={0}", a);
-	return new Sandbox();
+	mLayerInsert = mLayers.begin();
 }
+
+rebirth::LayerStack::~LayerStack()
+{
+	for(Layer* layer : mLayers)
+	{
+		delete layer;
+	}
+}
+
+void rebirth::LayerStack::PushLayer(Layer* layer)
+{
+	mLayerInsert = mLayers.emplace(mLayerInsert, layer);
+}
+
+void rebirth::LayerStack::PushOverlay(Layer* overlay)
+{
+	mLayers.emplace_back(overlay);
+}
+
+void rebirth::LayerStack::PopLayer(Layer* layer)
+{
+	auto it = std::find(mLayers.begin(), mLayers.end(), layer);
+
+	if(it != mLayers.end())
+	{
+		mLayers.erase(it);
+		--mLayerInsert;
+	}
+}
+
+
+
+

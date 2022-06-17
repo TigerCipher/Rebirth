@@ -149,6 +149,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\rebirth\LayerStack.h" />
+    <ClInclude Include="src\rebirth\Layer.h" />
     <ClInclude Include="src\Rebirth.h" />
     <ClInclude Include="src\rbpch.h" />
     <ClInclude Include="src\rebirth\Application.h" />
@@ -163,6 +165,8 @@
     <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\rebirth\LayerStack.cpp" />
+    <ClCompile Include="src\rebirth\Layer.cpp" />
     <ClCompile Include="src\rbpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

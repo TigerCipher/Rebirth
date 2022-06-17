@@ -25,5 +25,6 @@
 
 #include "rebirth/Application.h"
 #include "rebirth/Log.h"
+#include "rebirth/Layer.h"
 
 #include "rebirth/EntryPoint.h"

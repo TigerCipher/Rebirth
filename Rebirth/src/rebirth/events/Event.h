@@ -79,6 +79,8 @@ namespace rebirth
 			return GetCategoryFlags() & category;
 		}
 
+		virtual bool WasHandled() { return mHandled; }
+
 	protected:
 		bool mHandled = false;
 	};
