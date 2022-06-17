@@ -4,3 +4,4 @@
 [submodule "Rebirth/libs/glfw"]
 	path = Rebirth/libs/glfw
 	url = https://github.com/TigerCipher/glfw
+	ignore = dirty
