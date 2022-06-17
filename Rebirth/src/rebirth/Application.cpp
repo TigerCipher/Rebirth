@@ -32,6 +32,7 @@ rebirth::Application::Application()
 {
 	//mWindow = createScope<Win64Window>(Window::Create());
 	mWindow = std::unique_ptr<Window>(Window::Create());
+	mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 }
 rebirth::Application::~Application() {}
 
@@ -44,4 +45,18 @@ void rebirth::Application::Run()
 		glClear(GL_COLOR_BUFFER_BIT);
 		mWindow->OnUpdate();
 	}
+}
+
+void rebirth::Application::OnEvent(Event& e)
+{
+	EventDispatcher disp(e);
+	disp.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
+
+	RB_CORE_TRACE("{0}", e);
+}
+
+bool rebirth::Application::OnWindowClose(WindowCloseEvent& e)
+{
+	mRunning = false;
+	return true;
 }
