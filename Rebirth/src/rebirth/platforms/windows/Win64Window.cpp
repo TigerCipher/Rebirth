@@ -24,6 +24,9 @@
 #include "rbpch.h"
 #include "Win64Window.h"
 
+#include <glad/glad.h>
+
+
 #include "rebirth/events/AppEvent.h"
 #include "rebirth/events/KeyEvent.h"
 #include "rebirth/events/MouseEvent.h"
@@ -113,6 +116,11 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	                           nullptr, nullptr);
 	RB_CORE_TRACE("Creating OpenGL context");
 	glfwMakeContextCurrent(mWindow);
+
+	RB_CORE_TRACE("Loading Glad (OpenGL)");
+	int status = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+	RB_CORE_ASSERT(status, "Failed to initialize Glad");
+	RB_CORE_TRACE("Glad (OpenGL) loaded!");
 	RB_CORE_TRACE("Setting glfw window pointer");
 	glfwSetWindowUserPointer(mWindow, &mData);
 	SetVSync(true);
@@ -183,11 +191,11 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 		}
 	});
 
-	glfwSetScrollCallback(mWindow, [](GLFWwindow* window, double xOffset, double yOffset)
+	glfwSetScrollCallback(mWindow, [](GLFWwindow* window, const double xOffset, const double yOffset)
 	{
 		WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 
-		MouseScrolledEvent event((xOffset), (yOffset));
+		MouseScrolledEvent event(static_cast<float>(xOffset), static_cast<float>(yOffset));
 		data.eventCallback(event);
 	});
 

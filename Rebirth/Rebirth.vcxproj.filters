@@ -26,6 +26,12 @@
     <ClInclude Include="src\rebirth\EntryPoint.h">
       <Filter>rebirth</Filter>
     </ClInclude>
+    <ClInclude Include="src\rebirth\Layer.h">
+      <Filter>rebirth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\LayerStack.h">
+      <Filter>rebirth</Filter>
+    </ClInclude>
     <ClInclude Include="src\rebirth\Log.h">
       <Filter>rebirth</Filter>
     </ClInclude>
@@ -47,12 +53,16 @@
     <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h">
       <Filter>rebirth\platforms\windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\rebirth\Layer.h" />
-    <ClInclude Include="src\rebirth\LayerStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\rbpch.cpp" />
     <ClCompile Include="src\rebirth\Application.cpp">
+      <Filter>rebirth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rebirth\Layer.cpp">
+      <Filter>rebirth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rebirth\LayerStack.cpp">
       <Filter>rebirth</Filter>
     </ClCompile>
     <ClCompile Include="src\rebirth\Log.cpp">
@@ -61,7 +71,5 @@
     <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp">
       <Filter>rebirth\platforms\windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\rebirth\Layer.cpp" />
-    <ClCompile Include="src\rebirth\LayerStack.cpp" />
   </ItemGroup>
 </Project>

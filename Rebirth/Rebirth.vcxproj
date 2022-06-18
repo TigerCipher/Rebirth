@@ -79,8 +79,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rbpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;RB_DEBUG;RB_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;GLFW_INCLUDE_NONE;RB_DEBUG;RB_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;libs\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -101,8 +101,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rbpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;RB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;GLFW_INCLUDE_NONE;RB_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;libs\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -127,8 +127,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rbpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;RB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;GLFW_INCLUDE_NONE;RB_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;libs\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -149,13 +149,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\rebirth\LayerStack.h" />
-    <ClInclude Include="src\rebirth\Layer.h" />
     <ClInclude Include="src\Rebirth.h" />
     <ClInclude Include="src\rbpch.h" />
     <ClInclude Include="src\rebirth\Application.h" />
     <ClInclude Include="src\rebirth\Core.h" />
     <ClInclude Include="src\rebirth\EntryPoint.h" />
+    <ClInclude Include="src\rebirth\Layer.h" />
+    <ClInclude Include="src\rebirth\LayerStack.h" />
     <ClInclude Include="src\rebirth\Log.h" />
     <ClInclude Include="src\rebirth\Window.h" />
     <ClInclude Include="src\rebirth\events\AppEvent.h" />
@@ -165,18 +165,21 @@
     <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\rebirth\LayerStack.cpp" />
-    <ClCompile Include="src\rebirth\Layer.cpp" />
     <ClCompile Include="src\rbpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\rebirth\Application.cpp" />
+    <ClCompile Include="src\rebirth\Layer.cpp" />
+    <ClCompile Include="src\rebirth\LayerStack.cpp" />
     <ClCompile Include="src\rebirth\Log.cpp" />
     <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="libs\glfw\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="libs\Glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

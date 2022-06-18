@@ -13,9 +13,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Rebirth/libs/glfw/include"
+IncludeDir["Glad"] = "Rebirth/libs/Glad/include"
 
 -- Includes the premake file added to the glfw fork/submodule
 include "Rebirth/libs/glfw"
+include "Rebirth/libs/Glad"
 
 project "Rebirth"
 	location "Rebirth"
@@ -39,12 +41,14 @@ project "Rebirth"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/libs/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
 	}
 
 	links
 	{
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -55,7 +59,8 @@ project "Rebirth"
 		defines
 		{
 			"RB_WINDOWS",
-			"RB_BUILD_DLL"
+			"RB_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands
