@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="platform">
+      <UniqueIdentifier>{4A63C33C-3630-1E48-5F49-0CF04B7553D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\opengl">
+      <UniqueIdentifier>{9E4DBFD0-0AD9-2C95-13EA-AF897FF48895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform\windows">
+      <UniqueIdentifier>{A44FC440-9048-E392-B97A-C817A5D2C29E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="rebirth">
       <UniqueIdentifier>{559CF03D-C17B-6FD9-CA93-FAAF36F2D53A}</UniqueIdentifier>
     </Filter>
@@ -10,18 +19,15 @@
     <Filter Include="rebirth\imgui">
       <UniqueIdentifier>{7FD55773-EB95-D3A9-B4D0-1C2720501886}</UniqueIdentifier>
     </Filter>
-    <Filter Include="rebirth\platforms">
-      <UniqueIdentifier>{FCB12FD1-68C8-2D67-B13F-B9881D95FEEE}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="rebirth\platforms\opengl">
-      <UniqueIdentifier>{10E04D08-FC04-9D88-2550-821811D49BA6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="rebirth\platforms\windows">
-      <UniqueIdentifier>{5630256A-C2F2-58F4-0BA3-E78077A431D2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Rebirth.h" />
+    <ClInclude Include="src\platform\opengl\ImguiImpl.h">
+      <Filter>platform\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\windows\Win64Window.h">
+      <Filter>platform\windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\rbpch.h" />
     <ClInclude Include="src\rebirth\Application.h">
       <Filter>rebirth</Filter>
@@ -30,6 +36,9 @@
       <Filter>rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\EntryPoint.h">
+      <Filter>rebirth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\Input.h">
       <Filter>rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\Layer.h">
@@ -59,19 +68,17 @@
     <ClInclude Include="src\rebirth\imgui\ImguiLayer.h">
       <Filter>rebirth\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="src\rebirth\platforms\opengl\ImguiImpl.h">
-      <Filter>rebirth\platforms\opengl</Filter>
-    </ClInclude>
-    <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h">
-      <Filter>rebirth\platforms\windows</Filter>
-    </ClInclude>
+    <ClInclude Include="src\platform\windows\Win64Input.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\platform\opengl\ImguiImpl.cpp">
+      <Filter>platform\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\windows\Win64Window.cpp">
+      <Filter>platform\windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\rbpch.cpp" />
     <ClCompile Include="src\rebirth\Application.cpp">
-      <Filter>rebirth</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rebirth\Layer.cpp">
       <Filter>rebirth</Filter>
     </ClCompile>
     <ClCompile Include="src\rebirth\LayerStack.cpp">
@@ -83,11 +90,6 @@
     <ClCompile Include="src\rebirth\imgui\ImguiLayer.cpp">
       <Filter>rebirth\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="src\rebirth\platforms\opengl\ImguiImpl.cpp">
-      <Filter>rebirth\platforms\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp">
-      <Filter>rebirth\platforms\windows</Filter>
-    </ClCompile>
+    <ClCompile Include="src\platform\windows\Win64Input.cpp" />
   </ItemGroup>
 </Project>

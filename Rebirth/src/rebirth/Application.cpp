@@ -27,7 +27,8 @@
 
 #include <glad/glad.h>
 
-#include "platforms/windows/Win64Window.h"
+#include "platform/windows/Win64Window.h"
+#include "Input.h"
 
 rebirth::Application* rebirth::Application::sInstance = nullptr;
 
@@ -54,6 +55,8 @@ void rebirth::Application::Run()
 		{
 			layer->OnUpdate();
 		}
+		auto[x, y] = Input::GetMousePos();
+		RB_CORE_TRACE("{0}, {1}", x, y);
 		
 		mWindow->OnUpdate();
 	}

@@ -30,12 +30,12 @@ public:
 
 	void OnUpdate() override
 	{
-		RB_CLIENT_INFO("SampleLayer Update");
+		//RB_CLIENT_INFO("SampleLayer Update");
 	}
 
 	void OnEvent(rebirth::Event& e) override
 	{
-		RB_CLIENT_TRACE("{0}", e);
+		//RB_CLIENT_TRACE("{0}", e);
 	}
 };
 

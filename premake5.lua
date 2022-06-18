@@ -17,9 +17,12 @@ IncludeDir["Glad"] = "Rebirth/libs/Glad/include"
 IncludeDir["ImGui"] = "Rebirth/libs/imgui"
 
 -- Includes the premake file added to the glfw fork/submodule
-include "Rebirth/libs/glfw"
-include "Rebirth/libs/Glad"
-include "Rebirth/libs/imgui"
+group "Dependencies"
+	include "Rebirth/libs/glfw"
+	include "Rebirth/libs/Glad"
+	include "Rebirth/libs/imgui"
+
+group ""
 
 project "Rebirth"
 	location "Rebirth"
@@ -75,8 +78,7 @@ project "Rebirth"
 	filter "configurations:Debug"
 		defines
 		{
-			"RB_DEBUG",
-			"RB_ENABLE_ASSERTS"
+			"RB_DEBUG"
 		}
 		symbols "On"
 		runtime "Debug"

@@ -93,15 +93,6 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	if (!gGlfwInitialized)
 	{
 		RB_CORE_TRACE("Initializing GLFW");
-
-		//TODO: glfwInit takes 20 seconds. Supposedly due to potential driver/windows issue?
-		// Hangs at init.c line 574 (code from glfw init.c):
-		/*if (FAILED(IDirectInput8_EnumDevices(_glfw.win32.dinput8.api,
-			DI8DEVCLASS_GAMECTRL,
-			deviceCallback,
-			NULL,
-			DIEDFL_ALLDEVICES)))*/
-		// Other people with this issue report it's due to faulty driver with hwid containing VID_262 - however I do not have a driver with this VID - Frankly, I'm at a loss
 		const int success = glfwInit();
 		RB_CORE_ASSERT(success, "Could not initialize GLFW")
 		RB_CORE_TRACE("GLFW Initialized");

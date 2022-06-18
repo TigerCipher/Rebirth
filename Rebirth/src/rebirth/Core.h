@@ -38,6 +38,10 @@
 #define RB_EXPAND_MACRO(x) x
 #define RB_STRINGIFY_MACRO(x) #x
 
+#ifdef RB_DEBUG
+	#define RB_ENABLE_ASSERTS
+#endif
+
 #ifdef RB_ENABLE_ASSERTS
 	#include <filesystem> //TODO: Move
 

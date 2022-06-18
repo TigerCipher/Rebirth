@@ -79,7 +79,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>rbpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;GLFW_INCLUDE_NONE;RB_DEBUG;RB_ENABLE_ASSERTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RB_WINDOWS;RB_BUILD_DLL;GLFW_INCLUDE_NONE;RB_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;libs\spdlog\include;libs\glfw\include;libs\Glad\include;libs\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -149,11 +149,15 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\platform\windows\Win64Input.h" />
     <ClInclude Include="src\Rebirth.h" />
+    <ClInclude Include="src\platform\opengl\ImguiImpl.h" />
+    <ClInclude Include="src\platform\windows\Win64Window.h" />
     <ClInclude Include="src\rbpch.h" />
     <ClInclude Include="src\rebirth\Application.h" />
     <ClInclude Include="src\rebirth\Core.h" />
     <ClInclude Include="src\rebirth\EntryPoint.h" />
+    <ClInclude Include="src\rebirth\Input.h" />
     <ClInclude Include="src\rebirth\Layer.h" />
     <ClInclude Include="src\rebirth\LayerStack.h" />
     <ClInclude Include="src\rebirth\Log.h" />
@@ -163,20 +167,18 @@
     <ClInclude Include="src\rebirth\events\KeyEvent.h" />
     <ClInclude Include="src\rebirth\events\MouseEvent.h" />
     <ClInclude Include="src\rebirth\imgui\ImguiLayer.h" />
-    <ClInclude Include="src\rebirth\platforms\opengl\ImguiImpl.h" />
-    <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\platform\opengl\ImguiImpl.cpp" />
+    <ClCompile Include="src\platform\windows\Win64Input.cpp" />
+    <ClCompile Include="src\platform\windows\Win64Window.cpp" />
     <ClCompile Include="src\rbpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\rebirth\Application.cpp" />
-    <ClCompile Include="src\rebirth\Layer.cpp" />
     <ClCompile Include="src\rebirth\LayerStack.cpp" />
     <ClCompile Include="src\rebirth\Log.cpp" />
     <ClCompile Include="src\rebirth\imgui\ImguiLayer.cpp" />
-    <ClCompile Include="src\rebirth\platforms\opengl\ImguiImpl.cpp" />
-    <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="libs\glfw\GLFW.vcxproj">

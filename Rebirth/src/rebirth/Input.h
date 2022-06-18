@@ -15,32 +15,58 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: ImguiLayer.h
-// Date File Created: 06/17/2022 at 10:11 PM
+// File Name: Input.h
+// Date File Created: 06/18/2022 at 4:02 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
-#include "rebirth/Layer.h"
 
+
+#include "Core.h"
 
 namespace rebirth
 {
-	class RB_API ImguiLayer : public Layer
+	class RB_API Input
 	{
 	public:
-		ImguiLayer();
-		~ImguiLayer() override = default;
 
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate() override;
-		void OnEvent(Event& e) override;
-	
+		static bool IsKeyPressed(const int keycode)
+		{
+			return sInstance->IsKeyPressedImpl(keycode);
+		}
+
+		static bool IsMouseButtonPressed(const int button)
+		{
+			return sInstance->IsMouseButtonPressedImpl(button);
+		}
+
+		static float GetMouseX()
+		{
+			return sInstance->GetMouseXImpl();
+		}
+
+		static float GetMouseY()
+		{
+			return sInstance->GetMouseYImpl();
+		}
+
+		static std::pair<float, float> GetMousePos()
+		{
+			return sInstance->GetMousePosImpl();
+		}
+
+	protected:
+		virtual bool IsKeyPressedImpl(int keycode) = 0;
+		virtual bool IsMouseButtonPressedImpl(int button) = 0;
+		virtual float GetMouseXImpl() = 0;
+		virtual float GetMouseYImpl() = 0;
+		virtual std::pair<float, float> GetMousePosImpl() = 0;
+		
 	private:
 
-		float mTime = 0.0f;
+		static Input* sInstance;
 		
 	};
 }

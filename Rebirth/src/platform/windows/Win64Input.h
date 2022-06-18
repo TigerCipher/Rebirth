@@ -15,11 +15,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Layer.cpp
-// Date File Created: 06/16/2022 at 9:24 PM
+// File Name: Win64Input.h
+// Date File Created: 06/18/2022 at 4:09 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-#include "rbpch.h"
-#include "Layer.h"
+#pragma once
+
+#include "rebirth/Input.h"
+
+namespace rebirth
+{
+	class Win64Input : public Input
+	{
+	protected:
+		bool IsKeyPressedImpl(int keycode) override;
+		bool IsMouseButtonPressedImpl(int button) override;
+		float GetMouseXImpl() override;
+		float GetMouseYImpl() override;
+		std::pair<float, float> GetMousePosImpl() override;
+	};
+}

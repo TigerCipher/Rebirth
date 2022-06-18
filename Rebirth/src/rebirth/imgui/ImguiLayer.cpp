@@ -28,7 +28,7 @@
 #include "ImguiLayer.h"
 
 #include "imgui.h"
-#include "rebirth/platforms/opengl/ImguiImpl.h"
+#include "platform/opengl/ImguiImpl.h"
 
 #include "rebirth/Application.h"
 #include <GLFW/glfw3.h>
@@ -36,7 +36,6 @@
 
 rebirth::ImguiLayer::ImguiLayer(): Layer("ImguiLayer") {}
 
-rebirth::ImguiLayer::~ImguiLayer() {}
 
 void rebirth::ImguiLayer::OnAttach()
 {

@@ -58,6 +58,16 @@ void rebirth::LayerStack::PopLayer(Layer* layer)
 	}
 }
 
+void rebirth::LayerStack::PopOverlay(Layer* overlay)
+{
+	auto it = std::find(mLayers.begin(), mLayers.end(), overlay);
+
+	if (it != mLayers.end())
+	{
+		mLayers.erase(it);
+	}
+}
+
 
 
 
