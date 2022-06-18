@@ -7,8 +7,14 @@
     <Filter Include="rebirth\events">
       <UniqueIdentifier>{B98A9FD5-A558-93DB-8EEC-03027A596F40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rebirth\imgui">
+      <UniqueIdentifier>{7FD55773-EB95-D3A9-B4D0-1C2720501886}</UniqueIdentifier>
+    </Filter>
     <Filter Include="rebirth\platforms">
       <UniqueIdentifier>{FCB12FD1-68C8-2D67-B13F-B9881D95FEEE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rebirth\platforms\opengl">
+      <UniqueIdentifier>{10E04D08-FC04-9D88-2550-821811D49BA6}</UniqueIdentifier>
     </Filter>
     <Filter Include="rebirth\platforms\windows">
       <UniqueIdentifier>{5630256A-C2F2-58F4-0BA3-E78077A431D2}</UniqueIdentifier>
@@ -50,6 +56,12 @@
     <ClInclude Include="src\rebirth\events\MouseEvent.h">
       <Filter>rebirth\events</Filter>
     </ClInclude>
+    <ClInclude Include="src\rebirth\imgui\ImguiLayer.h">
+      <Filter>rebirth\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\platforms\opengl\ImguiImpl.h">
+      <Filter>rebirth\platforms\opengl</Filter>
+    </ClInclude>
     <ClInclude Include="src\rebirth\platforms\windows\Win64Window.h">
       <Filter>rebirth\platforms\windows</Filter>
     </ClInclude>
@@ -67,6 +79,12 @@
     </ClCompile>
     <ClCompile Include="src\rebirth\Log.cpp">
       <Filter>rebirth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rebirth\imgui\ImguiLayer.cpp">
+      <Filter>rebirth\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rebirth\platforms\opengl\ImguiImpl.cpp">
+      <Filter>rebirth\platforms\opengl</Filter>
     </ClCompile>
     <ClCompile Include="src\rebirth\platforms\windows\Win64Window.cpp">
       <Filter>rebirth\platforms\windows</Filter>

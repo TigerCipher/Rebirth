@@ -45,6 +45,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new SampleLayer());
+		PushOverlay(new rebirth::ImguiLayer());
 	}
 	~Sandbox() override = default;
 	

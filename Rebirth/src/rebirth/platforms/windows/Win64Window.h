@@ -47,6 +47,8 @@ namespace rebirth
 
 		bool IsVSync() const override;
 
+		void* GetNativeWindow() const override { return mWindow; }
+
 	
 	private:
 		GLFWwindow* mWindow;

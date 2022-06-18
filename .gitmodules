@@ -5,3 +5,7 @@
 	path = Rebirth/libs/glfw
 	url = https://github.com/TigerCipher/glfw
 	ignore = dirty
+[submodule "Rebirth/libs/imgui"]
+	path = Rebirth/libs/imgui
+	url = https://github.com/TigerCipher/imgui
+	ignore = dirty

@@ -34,6 +34,7 @@ namespace rebirth
 	class RB_API Application
 	{
 	public:
+
 		Application();
 		virtual ~Application();
 
@@ -44,7 +45,13 @@ namespace rebirth
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
+		Window& GetWindow() const { return *mWindow; }
+
+		static Application& Instance() { return *sInstance; }
+
 	private:
+		static Application* sInstance;
+		
 		UniquePtr<Window> mWindow;
 		bool mRunning = true;
 		LayerStack mLayerStack;

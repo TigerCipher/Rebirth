@@ -44,3 +44,4 @@ namespace rebirth
 		std::string mName;
 	};
 }
+

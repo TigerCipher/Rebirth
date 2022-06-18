@@ -29,8 +29,12 @@
 
 #include "platforms/windows/Win64Window.h"
 
+rebirth::Application* rebirth::Application::sInstance = nullptr;
+
 rebirth::Application::Application()
 {
+	RB_CORE_ASSERT(!sInstance, "Application already exists");
+	sInstance = this;
 	//mWindow = createScope<Win64Window>(Window::Create());
 	mWindow = std::unique_ptr<Window>(Window::Create());
 	mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
@@ -73,11 +77,13 @@ void rebirth::Application::OnEvent(Event& e)
 void rebirth::Application::PushLayer(Layer* layer)
 {
 	mLayerStack.PushLayer(layer);
+	layer->OnAttach();
 }
 
 void rebirth::Application::PushOverlay(Layer* overlay)
 {
 	mLayerStack.PushOverlay(overlay);
+	overlay->OnAttach();
 }
 
 bool rebirth::Application::OnWindowClose(WindowCloseEvent& e)

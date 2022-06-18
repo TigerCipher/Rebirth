@@ -15,17 +15,32 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Rebirth.h
-// Date File Created: 06/13/2022 at 3:12 PM
+// File Name: ImguiLayer.h
+// Date File Created: 06/17/2022 at 10:11 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
-
-#include "rebirth/Application.h"
-#include "rebirth/Log.h"
 #include "rebirth/Layer.h"
-#include "rebirth/imgui/ImguiLayer.h"
 
-#include "rebirth/EntryPoint.h"
+
+namespace rebirth
+{
+	class RB_API ImguiLayer : public Layer
+	{
+	public:
+		ImguiLayer();
+		~ImguiLayer() override;
+
+		void OnAttach() override;
+		void OnDetach() override;
+		void OnUpdate() override;
+		void OnEvent(Event& e) override;
+	
+	private:
+
+		float mTime = 0.0f;
+		
+	};
+}

@@ -118,7 +118,7 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	glfwMakeContextCurrent(mWindow);
 
 	RB_CORE_TRACE("Loading Glad (OpenGL)");
-	int status = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
+	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	RB_CORE_ASSERT(status, "Failed to initialize Glad");
 	RB_CORE_TRACE("Glad (OpenGL) loaded!");
 	RB_CORE_TRACE("Setting glfw window pointer");
@@ -203,7 +203,7 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	{
 		WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
 
-		MouseMovedEvent event((xPos), (yPos));
+		MouseMovedEvent event(static_cast<float>(xPos), static_cast<float>(yPos));
 		data.eventCallback(event);
 	});
 }
