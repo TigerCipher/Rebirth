@@ -26,7 +26,9 @@
 class SampleLayer : public rebirth::Layer
 {
 public:
-	SampleLayer() : Layer("Sample") {}
+	SampleLayer() : Layer("Sample")
+	{
+	}
 
 	void OnUpdate() override
 	{

@@ -1,97 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="platform">
-      <UniqueIdentifier>{4A63C33C-3630-1E48-5F49-0CF04B7553D6}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="platform\opengl">
-      <UniqueIdentifier>{9E4DBFD0-0AD9-2C95-13EA-AF897FF48895}</UniqueIdentifier>
+    <Filter Include="src\platform">
+      <UniqueIdentifier>{41663D6D-2DC9-CC11-D64E-05C8C2909894}</UniqueIdentifier>
     </Filter>
-    <Filter Include="platform\windows">
-      <UniqueIdentifier>{A44FC440-9048-E392-B97A-C817A5D2C29E}</UniqueIdentifier>
+    <Filter Include="src\platform\opengl">
+      <UniqueIdentifier>{B57427EB-21D6-04F9-AA43-4BAB16A43BB8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="rebirth">
-      <UniqueIdentifier>{559CF03D-C17B-6FD9-CA93-FAAF36F2D53A}</UniqueIdentifier>
+    <Filter Include="src\platform\windows">
+      <UniqueIdentifier>{9B5931A8-87E8-BA71-3007-CF6C1C75CB17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="rebirth\events">
-      <UniqueIdentifier>{B98A9FD5-A558-93DB-8EEC-03027A596F40}</UniqueIdentifier>
+    <Filter Include="src\rebirth">
+      <UniqueIdentifier>{6C9C2A47-D851-A33C-6146-9D13CDFA9940}</UniqueIdentifier>
     </Filter>
-    <Filter Include="rebirth\imgui">
-      <UniqueIdentifier>{7FD55773-EB95-D3A9-B4D0-1C2720501886}</UniqueIdentifier>
+    <Filter Include="src\rebirth\events">
+      <UniqueIdentifier>{F0AA8333-DC8E-4489-45EF-3EDC31F22E0B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rebirth\imgui">
+      <UniqueIdentifier>{D64A8DEA-4261-8B80-8BD8-16A2F72D5C08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Rebirth.h" />
+    <ClInclude Include="src\Rebirth.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\platform\opengl\ImguiImpl.h">
-      <Filter>platform\opengl</Filter>
+      <Filter>src\platform\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\windows\Win64Input.h">
+      <Filter>src\platform\windows</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\windows\Win64Window.h">
-      <Filter>platform\windows</Filter>
+      <Filter>src\platform\windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\rbpch.h" />
+    <ClInclude Include="src\rbpch.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\rebirth\Application.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\Core.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\EntryPoint.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\Input.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\KeyCodes.h">
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\Layer.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\LayerStack.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\Log.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rebirth\MouseCodes.h">
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\Window.h">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\events\AppEvent.h">
-      <Filter>rebirth\events</Filter>
+      <Filter>src\rebirth\events</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\events\Event.h">
-      <Filter>rebirth\events</Filter>
+      <Filter>src\rebirth\events</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\events\KeyEvent.h">
-      <Filter>rebirth\events</Filter>
+      <Filter>src\rebirth\events</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\events\MouseEvent.h">
-      <Filter>rebirth\events</Filter>
+      <Filter>src\rebirth\events</Filter>
     </ClInclude>
     <ClInclude Include="src\rebirth\imgui\ImguiLayer.h">
-      <Filter>rebirth\imgui</Filter>
+      <Filter>src\rebirth\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="src\platform\windows\Win64Input.h" />
-    <ClInclude Include="src\rebirth\KeyCodes.h" />
-    <ClInclude Include="src\rebirth\MouseCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\platform\opengl\ImguiImpl.cpp">
-      <Filter>platform\opengl</Filter>
+      <Filter>src\platform\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\windows\Win64Input.cpp">
+      <Filter>src\platform\windows</Filter>
     </ClCompile>
     <ClCompile Include="src\platform\windows\Win64Window.cpp">
-      <Filter>platform\windows</Filter>
+      <Filter>src\platform\windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\rbpch.cpp" />
+    <ClCompile Include="src\rbpch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\rebirth\Application.cpp">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClCompile>
     <ClCompile Include="src\rebirth\LayerStack.cpp">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClCompile>
     <ClCompile Include="src\rebirth\Log.cpp">
-      <Filter>rebirth</Filter>
+      <Filter>src\rebirth</Filter>
     </ClCompile>
     <ClCompile Include="src\rebirth\imgui\ImguiLayer.cpp">
-      <Filter>rebirth\imgui</Filter>
+      <Filter>src\rebirth\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="src\platform\windows\Win64Input.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\premake5.lua" />
   </ItemGroup>
 </Project>

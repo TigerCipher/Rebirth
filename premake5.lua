@@ -15,6 +15,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Rebirth/libs/glfw/include"
 IncludeDir["Glad"] = "Rebirth/libs/Glad/include"
 IncludeDir["ImGui"] = "Rebirth/libs/imgui"
+IncludeDir["glm"] = "Rebirth/libs/glm"
 
 -- Includes the premake file added to the glfw fork/submodule
 group "Dependencies"
@@ -39,7 +40,8 @@ project "Rebirth"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"premake5.lua"
 	}
 
 	includedirs
@@ -49,6 +51,7 @@ project "Rebirth"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}",
 	}
 
 	links
@@ -115,7 +118,8 @@ project "Sandbox"
 	includedirs
 	{
 		"Rebirth/libs/spdlog/include",
-		"Rebirth/src"
+		"Rebirth/src",
+		"%{IncludeDir.glm}",
 	}
 
 	links
