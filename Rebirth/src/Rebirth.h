@@ -24,8 +24,23 @@
 #pragma once
 
 #include "rebirth/Application.h"
+
+// Input
+#include "rebirth/Input.h"
+#include "rebirth/KeyCodes.h"
+#include "rebirth/MouseCodes.h"
+
+// Debug
 #include "rebirth/Log.h"
+
+// Engine Architecture
 #include "rebirth/Layer.h"
+#include "rebirth/events/KeyEvent.h"
+#include "rebirth/events/MouseEvent.h"
+
+// GUI
 #include "rebirth/imgui/ImguiLayer.h"
 
+
+// Main function
 #include "rebirth/EntryPoint.h"

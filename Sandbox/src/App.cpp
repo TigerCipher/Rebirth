@@ -31,11 +31,19 @@ public:
 	void OnUpdate() override
 	{
 		//RB_CLIENT_INFO("SampleLayer Update");
+		if(rebirth::Input::IsKeyPressed(RB_KEY_V))
+		{
+			RB_CLIENT_TRACE("V was pressed!");
+		}
 	}
 
 	void OnEvent(rebirth::Event& e) override
 	{
-		//RB_CLIENT_TRACE("{0}", e);
+		if(e.GetEventType() == rebirth::EventType::KEY_PRESSED)
+		{
+			auto& ev = dynamic_cast<rebirth::KeyPressedEvent&>(e);
+			RB_CLIENT_TRACE("{}", static_cast<char>(ev.GetKeyCode()));
+		}
 	}
 };
 

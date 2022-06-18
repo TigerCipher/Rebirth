@@ -55,8 +55,6 @@ void rebirth::Application::Run()
 		{
 			layer->OnUpdate();
 		}
-		auto[x, y] = Input::GetMousePos();
-		RB_CORE_TRACE("{0}, {1}", x, y);
 		
 		mWindow->OnUpdate();
 	}

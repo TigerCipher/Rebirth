@@ -158,9 +158,11 @@
     <ClInclude Include="src\rebirth\Core.h" />
     <ClInclude Include="src\rebirth\EntryPoint.h" />
     <ClInclude Include="src\rebirth\Input.h" />
+    <ClInclude Include="src\rebirth\KeyCodes.h" />
     <ClInclude Include="src\rebirth\Layer.h" />
     <ClInclude Include="src\rebirth\LayerStack.h" />
     <ClInclude Include="src\rebirth\Log.h" />
+    <ClInclude Include="src\rebirth\MouseCodes.h" />
     <ClInclude Include="src\rebirth\Window.h" />
     <ClInclude Include="src\rebirth\events\AppEvent.h" />
     <ClInclude Include="src\rebirth\events\Event.h" />

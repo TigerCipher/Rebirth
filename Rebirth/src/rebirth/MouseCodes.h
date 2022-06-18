@@ -15,30 +15,27 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EntryPoint.h
-// Date File Created: 06/13/2022 at 3:17 PM
+// File Name: MouseCodes.h
+// Date File Created: 06/18/2022 at 4:48 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
+
+
 #pragma once
 
+// modified from glfw3.h
 
-#ifdef RB_WINDOWS
-
-extern rebirth::Application* rebirth::CreateApplication();
-
-int main(int argc, char** argv)
-{
-	rebirth::Log::Init();
-	RB_CORE_WARN("Test warning initializing engine");
-	
-	auto app = rebirth::CreateApplication();
-	app->Run();
-	delete app;
-
-	// TODO: Might be nice to return error codes for debug purposes
-	return 0;
-}
-
-#endif
+#define RB_MOUSE_BUTTON_1         0
+#define RB_MOUSE_BUTTON_2         1
+#define RB_MOUSE_BUTTON_3         2
+#define RB_MOUSE_BUTTON_4         3
+#define RB_MOUSE_BUTTON_5         4
+#define RB_MOUSE_BUTTON_6         5
+#define RB_MOUSE_BUTTON_7         6
+#define RB_MOUSE_BUTTON_8         7
+#define RB_MOUSE_BUTTON_LAST      RB_MOUSE_BUTTON_8
+#define RB_MOUSE_BUTTON_LEFT      RB_MOUSE_BUTTON_1
+#define RB_MOUSE_BUTTON_RIGHT     RB_MOUSE_BUTTON_2
+#define RB_MOUSE_BUTTON_MIDDLE    RB_MOUSE_BUTTON_3

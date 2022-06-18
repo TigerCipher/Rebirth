@@ -69,6 +69,8 @@
       <Filter>rebirth\imgui</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\windows\Win64Input.h" />
+    <ClInclude Include="src\rebirth\KeyCodes.h" />
+    <ClInclude Include="src\rebirth\MouseCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\platform\opengl\ImguiImpl.cpp">
