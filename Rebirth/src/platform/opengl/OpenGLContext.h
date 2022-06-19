@@ -15,58 +15,30 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Win64Window.h
-// Date File Created: 06/15/2022 at 10:50 PM
+// File Name: OpenGLContext.h
+// Date File Created: 06/19/2022 at 1:01 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "rebirth/Window.h"
-
-#include <GLFW/glfw3.h>
 #include "rebirth/renderer/GraphicsContext.h"
 
+struct GLFWwindow;
 
 namespace rebirth
 {
-	class Win64Window : public Window
+	class OpenGLContext : public GraphicsContext
 	{
 	public:
-		Win64Window(const WindowProperties& props);
 
-		virtual ~Win64Window();
+		OpenGLContext(GLFWwindow* window);
+		
+		void Init() override;
+		void SwapBuffers() override;
 
-		void OnUpdate() override;
-
-		uint GetWidth() const override { return mData.width; }
-		uint GetHeight() const override { return mData.height; }
-
-		void SetEventCallback(const EventCallbackFn& callback) override { mData.eventCallback = callback; }
-
-		void SetVSync(bool enabled) override;
-
-		bool IsVSync() const override;
-
-		void* GetNativeWindow() const override { return mWindow; }
-
-	
 	private:
 		GLFWwindow* mWindow;
-		GraphicsContext* mContext;
-
-		struct WindowData
-		{
-			std::string title;
-			uint width, height;
-			bool vSync;
-			EventCallbackFn eventCallback;
-		};
-
-		WindowData mData;
-
-		virtual void Init(const WindowProperties& props);
-		virtual void Shutdown();
 	};
 }

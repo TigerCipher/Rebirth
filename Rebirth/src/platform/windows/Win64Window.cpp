@@ -24,12 +24,11 @@
 #include "rbpch.h"
 #include "Win64Window.h"
 
-#include <glad/glad.h>
-
-
 #include "rebirth/events/AppEvent.h"
 #include "rebirth/events/KeyEvent.h"
 #include "rebirth/events/MouseEvent.h"
+
+#include "platform/opengl/OpenGLContext.h"
 
 namespace rebirth
 {
@@ -60,7 +59,7 @@ rebirth::Win64Window::~Win64Window()
 void rebirth::Win64Window::OnUpdate()
 {
 	glfwPollEvents();
-	glfwSwapBuffers(mWindow);
+	mContext->SwapBuffers();
 }
 
 void rebirth::Win64Window::SetVSync(bool enabled)
@@ -88,8 +87,10 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	mData.width  = props.width;
 	mData.height = props.height;
 
+
 	RB_CORE_INFO("Creating window {0} ({1}, {2})", props.title, props.width, props.height);
 
+	
 	if (!gGlfwInitialized)
 	{
 		RB_CORE_TRACE("Initializing GLFW");
@@ -105,13 +106,11 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	RB_CORE_TRACE("Creating glfw window");
 	mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
 	                           nullptr, nullptr);
-	RB_CORE_TRACE("Creating OpenGL context");
-	glfwMakeContextCurrent(mWindow);
 
-	RB_CORE_TRACE("Loading Glad (OpenGL)");
-	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	RB_CORE_ASSERT(status, "Failed to initialize Glad");
-	RB_CORE_TRACE("Glad (OpenGL) loaded!");
+	mContext = new OpenGLContext(mWindow);
+	mContext->Init();
+	
+	
 	RB_CORE_TRACE("Setting glfw window pointer");
 	glfwSetWindowUserPointer(mWindow, &mData);
 	SetVSync(true);
