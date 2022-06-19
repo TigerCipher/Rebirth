@@ -23,7 +23,7 @@
 
 #include <Rebirth.h>
 
-class SampleLayer : public rebirth::Layer
+class SampleLayer final : public rebirth::Layer
 {
 public:
 	SampleLayer() : Layer("Sample")
@@ -49,7 +49,7 @@ public:
 	}
 };
 
-class Sandbox : public rebirth::Application
+class Sandbox final : public rebirth::Application
 {
 public:
 	Sandbox()

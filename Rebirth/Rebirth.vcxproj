@@ -150,7 +150,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Rebirth.h" />
-    <ClInclude Include="src\platform\opengl\ImguiImpl.h" />
     <ClInclude Include="src\platform\windows\Win64Input.h" />
     <ClInclude Include="src\platform\windows\Win64Window.h" />
     <ClInclude Include="src\rbpch.h" />
@@ -171,13 +170,13 @@
     <ClInclude Include="src\rebirth\imgui\ImguiLayer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\platform\opengl\ImguiImpl.cpp" />
     <ClCompile Include="src\platform\windows\Win64Input.cpp" />
     <ClCompile Include="src\platform\windows\Win64Window.cpp" />
     <ClCompile Include="src\rbpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\rebirth\Application.cpp" />
+    <ClCompile Include="src\rebirth\imgui\ImguiImpl.cpp" />
     <ClCompile Include="src\rebirth\LayerStack.cpp" />
     <ClCompile Include="src\rebirth\Log.cpp" />
     <ClCompile Include="src\rebirth\imgui\ImguiLayer.cpp" />
