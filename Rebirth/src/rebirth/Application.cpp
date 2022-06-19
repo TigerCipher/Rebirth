@@ -42,6 +42,62 @@ rebirth::Application::Application()
 
 	mImguiLayer = new ImguiLayer();
 	PushOverlay(mImguiLayer);
+
+	// TEMPORARY
+	glGenVertexArrays(1, &mVertexArray);
+	glBindVertexArray(mVertexArray);
+
+	glGenBuffers(1, &mVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+
+	float verts[3*3] =
+	{
+		-0.5f, -0.5f, 0.0f, // lower left
+		0.5f, -0.5f, 0.0f, // lower right
+		0.0f, 0.5f, 0.0f, // top center
+	};
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+	glGenBuffers(1, &mIndexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+
+	uint indices[3] = { 0, 1, 2};
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	std::string vertSrc = R"(
+	#version 330 core
+
+	layout(location=0) in vec3 aPos;
+
+	out vec3 vPos;
+	
+	void main()
+	{
+		vPos = aPos + 0.5;
+		gl_Position = vec4(aPos + 0.5, 1.0);
+	}
+
+	)";
+
+	std::string fragSrc = R"(
+	#version 330 core
+
+	layout(location=0) out vec4 color;
+
+	in vec3 vPos;
+
+	void main()
+	{
+		color = vec4(vPos * 0.5 + 0.5, 1.0);
+	}
+
+	)";
+	
+	mShader.reset(new Shader(vertSrc, fragSrc));
 }
 //rebirth::Application::~Application() {}
 
@@ -50,9 +106,12 @@ void rebirth::Application::Run()
 	
 	while(mRunning)
 	{
-		glClearColor(0.2f, 0, 0, 1);
+		glClearColor(0.05f, 0.05f, 0.05f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		mShader->Bind();
+		glBindVertexArray(mVertexArray);
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
 		for(Layer* layer : mLayerStack)
 		{

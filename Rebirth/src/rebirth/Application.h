@@ -31,6 +31,8 @@
 
 #include "imgui/ImguiLayer.h"
 
+#include "renderer/Shader.h"
+
 namespace rebirth
 {
 	class RB_API Application
@@ -60,6 +62,13 @@ namespace rebirth
 		ImguiLayer* mImguiLayer;
 
 		bool OnWindowClose(WindowCloseEvent& e);
+
+
+		// TEMPORARY
+		uint mVertexArray {};
+		uint mVertexBuffer {};
+		uint mIndexBuffer {};
+		UniquePtr<Shader> mShader;
 	};
 
 	// Defined by game

@@ -107,6 +107,10 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
 	                           nullptr, nullptr);
 
+	const int maxWidth  = GetSystemMetrics(SM_CXSCREEN);
+	const int maxHeight = GetSystemMetrics(SM_CYSCREEN);
+	glfwSetWindowMonitor(mWindow, nullptr, (maxWidth / 2) - (props.width / 2), (maxHeight / 2) - (props.height / 2), props.width, props.height, GLFW_DONT_CARE);
+
 	mContext = new OpenGLContext(mWindow);
 	mContext->Init();
 	
