@@ -176,9 +176,9 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\rebirth\Application.cpp" />
-    <ClCompile Include="src\rebirth\imgui\ImguiImpl.cpp" />
     <ClCompile Include="src\rebirth\LayerStack.cpp" />
     <ClCompile Include="src\rebirth\Log.cpp" />
+    <ClCompile Include="src\rebirth\imgui\ImguiImpl.cpp" />
     <ClCompile Include="src\rebirth\imgui\ImguiLayer.cpp" />
   </ItemGroup>
   <ItemGroup>

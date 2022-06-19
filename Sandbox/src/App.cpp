@@ -23,6 +23,8 @@
 
 #include <Rebirth.h>
 
+#include <imgui/imgui.h>
+
 class SampleLayer final : public rebirth::Layer
 {
 public:
@@ -47,6 +49,13 @@ public:
 			RB_CLIENT_TRACE("{}", static_cast<char>(ev.GetKeyCode()));
 		}
 	}
+
+	void OnImguiRender() override
+	{
+		//ImGui::Begin("Test");
+		//ImGui::Text("Testing Sandbox imgui");
+		//ImGui::End();
+	}
 };
 
 class Sandbox final : public rebirth::Application
@@ -55,7 +64,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new SampleLayer());
-		PushOverlay(new rebirth::ImguiLayer());
+		//PushOverlay(new rebirth::ImguiLayer());
 	}
 	~Sandbox() override = default;
 	

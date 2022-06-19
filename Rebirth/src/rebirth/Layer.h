@@ -38,6 +38,8 @@ namespace rebirth
 
 		virtual void OnUpdate() {}
 
+		virtual void OnImguiRender() {}
+
 		virtual void OnEvent(Event& e) {}
 
 	protected:

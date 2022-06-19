@@ -46,12 +46,21 @@ void rebirth::ImguiLayer::OnAttach()
 	(void)io;
 
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	
 	
 	ImGui::StyleColorsDark();
 
+	ImGuiStyle& style = ImGui::GetStyle();
+	if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
 	Application& app = Application::Instance();
-	GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+	auto window      = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 410");
@@ -65,25 +74,35 @@ void rebirth::ImguiLayer::OnDetach()
 	ImGui::DestroyContext();
 }
 
-void rebirth::ImguiLayer::OnUpdate()
+void rebirth::ImguiLayer::OnImguiRender()
+{
+	static bool show = true;
+	ImGui::ShowDemoWindow(&show);
+}
+
+void rebirth::ImguiLayer::Begin()
+{
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+}
+
+void rebirth::ImguiLayer::End()
 {
 	Application& app = Application::Instance();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
-	
 
-	
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-	
-	static bool show = true;
-	ImGui::ShowDemoWindow(&show);
-
-	
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		GLFWwindow* backupContext = glfwGetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(backupContext);
+	}
 }
 
-void rebirth::ImguiLayer::OnEvent(Event& e) {}

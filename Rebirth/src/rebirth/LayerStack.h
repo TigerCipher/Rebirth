@@ -33,7 +33,7 @@ namespace rebirth
 	class RB_API LayerStack
 	{
 	public:
-		LayerStack();
+		LayerStack() = default;
 		~LayerStack();
 
 		void PushLayer(Layer* layer);
@@ -47,7 +47,7 @@ namespace rebirth
 	
 	private:
 		std::vector<Layer*> mLayers;
-		std::vector<Layer*>::iterator mLayerInsert;
+		uint mInsertIndex = 0;
 	};
 	
 }

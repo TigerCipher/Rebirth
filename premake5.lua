@@ -120,6 +120,7 @@ project "Sandbox"
 		"Rebirth/libs/spdlog/include",
 		"Rebirth/src",
 		"%{IncludeDir.glm}",
+		"Rebirth/libs"
 	}
 
 	links

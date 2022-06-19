@@ -29,6 +29,8 @@
 #include "events/Event.h"
 #include "events/AppEvent.h"
 
+#include "imgui/ImguiLayer.h"
+
 namespace rebirth
 {
 	class RB_API Application
@@ -36,7 +38,7 @@ namespace rebirth
 	public:
 
 		Application();
-		virtual ~Application();
+		virtual ~Application() = default;
 
 		void Run();
 
@@ -55,6 +57,7 @@ namespace rebirth
 		UniquePtr<Window> mWindow;
 		bool mRunning = true;
 		LayerStack mLayerStack;
+		ImguiLayer* mImguiLayer;
 
 		bool OnWindowClose(WindowCloseEvent& e);
 	};

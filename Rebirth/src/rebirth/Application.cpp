@@ -39,8 +39,11 @@ rebirth::Application::Application()
 	//mWindow = createScope<Win64Window>(Window::Create());
 	mWindow = std::unique_ptr<Window>(Window::Create());
 	mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+
+	mImguiLayer = new ImguiLayer();
+	PushOverlay(mImguiLayer);
 }
-rebirth::Application::~Application() {}
+//rebirth::Application::~Application() {}
 
 void rebirth::Application::Run()
 {
@@ -55,6 +58,13 @@ void rebirth::Application::Run()
 		{
 			layer->OnUpdate();
 		}
+
+		mImguiLayer->Begin();
+		for(Layer* layer : mLayerStack)
+		{
+			layer->OnImguiRender();
+		}
+		mImguiLayer->End();
 		
 		mWindow->OnUpdate();
 	}
@@ -78,13 +88,11 @@ void rebirth::Application::OnEvent(Event& e)
 void rebirth::Application::PushLayer(Layer* layer)
 {
 	mLayerStack.PushLayer(layer);
-	layer->OnAttach();
 }
 
 void rebirth::Application::PushOverlay(Layer* overlay)
 {
 	mLayerStack.PushOverlay(overlay);
-	overlay->OnAttach();
 }
 
 bool rebirth::Application::OnWindowClose(WindowCloseEvent& e)
