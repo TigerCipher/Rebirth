@@ -49,15 +49,16 @@ void rebirth::OpenGLContext::Init()
 void rebirth::OpenGLContext::SwapBuffers()
 {
 	//TODO TEMP: testing some basic immediate mode drawing
-	glColor3f(0.0f, 1.0f, 0.4f);
-	glBegin(GL_TRIANGLES);//start drawing triangles
-	glVertex3f(-1.0f, -0.1f, 0.0f);//triangle one first vertex
-	glVertex3f(-0.5f, -0.25f, 0.0f);//triangle one second vertex
-	glVertex3f(-0.75f, 0.25f, 0.0f);//triangle one third vertex
-	//drawing a new triangle
-	glVertex3f(0.5f, -0.25f, 0.0f);//triangle two first vertex
-	glVertex3f(1.0f, -0.25f, 0.0f);//triangle two second vertex
-	glVertex3f(0.75f, 0.25f, 0.0f);//triangle two third vertex
-	glEnd();//end drawing of triangles
+	// Tested using compatibility Glad - now switched to Core so this is obsolete
+	//glColor3f(0.0f, 1.0f, 0.4f);
+	//glBegin(GL_TRIANGLES);//start drawing triangles
+	//glVertex3f(-1.0f, -0.1f, 0.0f);//triangle one first vertex
+	//glVertex3f(-0.5f, -0.25f, 0.0f);//triangle one second vertex
+	//glVertex3f(-0.75f, 0.25f, 0.0f);//triangle one third vertex
+	////drawing a new triangle
+	//glVertex3f(0.5f, -0.25f, 0.0f);//triangle two first vertex
+	//glVertex3f(1.0f, -0.25f, 0.0f);//triangle two second vertex
+	//glVertex3f(0.75f, 0.25f, 0.0f);//triangle two third vertex
+	//glEnd();//end drawing of triangles
 	glfwSwapBuffers(mWindow);
 }
