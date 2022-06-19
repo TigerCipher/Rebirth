@@ -27,9 +27,10 @@ group ""
 
 project "Rebirth"
 	location "Rebirth"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
@@ -62,8 +63,11 @@ project "Rebirth"
 		"opengl32.lib"
 	}
 
+	defines {
+		"_CRT_SECURE_NO_WARNINGS"
+	}
+
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -73,28 +77,28 @@ project "Rebirth"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox\"")
-		}
+--		postbuildcommands
+--		{
+--			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox\"")
+--		}
 
 	filter "configurations:Debug"
 		defines
 		{
 			"RB_DEBUG"
 		}
-		symbols "On"
+		symbols "on"
 		runtime "Debug"
 
 	filter "configurations:Release"
 		defines "RB_RELEASE"
-		optimize "On"
+		optimize "on"
 		runtime "Release"
 
 	filter "configurations:Dist"
 		defines "RB_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 --	filters { "system:windows", "configurations:Release" }
 --		buildoptions "/MT"
@@ -104,7 +108,8 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
@@ -129,7 +134,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -141,18 +145,17 @@ project "Sandbox"
 	filter "configurations:Debug"
 		defines
 		{
-			"RB_DEBUG",
-			"RB_ENABLE_ASSERTS"
+			"RB_DEBUG"
 		}
-		symbols "On"
+		symbols "on"
 		runtime "Debug"
 
 	filter "configurations:Release"
 		defines "RB_RELEASE"
-		optimize "On"
+		optimize "on"
 		runtime "Release"
 
 	filter "configurations:Dist"
 		defines "RB_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"

@@ -92,7 +92,7 @@ void rebirth::ImguiLayer::End()
 	Application& app = Application::Instance();
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+	io.DisplaySize = ImVec2(static_cast<float>(app.GetWindow().GetWidth()), static_cast<float>(app.GetWindow().GetHeight()));
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
