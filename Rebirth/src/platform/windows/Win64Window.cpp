@@ -117,7 +117,6 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 	
 	RB_CORE_TRACE("Setting glfw window pointer");
 	glfwSetWindowUserPointer(mWindow, &mData);
-	RB_CORE_TRACE("TEST");
 	SetVSync(true);
 
 
@@ -164,7 +163,6 @@ void rebirth::Win64Window::Init(const WindowProperties& props)
 			}
 		}
 
-		RB_CORE_TRACE("TEST2");
 	});
 
 	glfwSetMouseButtonCallback(mWindow, [](GLFWwindow* window, int button, int action, int mods)

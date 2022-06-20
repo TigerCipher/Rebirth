@@ -59,7 +59,6 @@ rebirth::IndexBuffer* rebirth::IndexBuffer::Create(const uint32_t count, uint* i
 
 	case GraphicsAPI::OPENGL:
 		{
-			RB_CORE_TRACE("Creating index buffer allocation");
 			return new OpenGLIndexBuffer(count, indices);
 		}
 	}

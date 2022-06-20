@@ -32,7 +32,10 @@
 
 void GLAPIENTRY GLErrorCallback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-	RB_CORE_ERROR("OpenGL Error (Severity: {}): {} (type = {}) -> {}", severity, (type == GL_DEBUG_TYPE_ERROR ? "*GL ERROR*" : ""), type, message);
+	if(severity == GL_DEBUG_SEVERITY_HIGH)
+	{
+		RB_CORE_ERROR("OpenGL Error (Severity: {}): {} (type = {}) -> {}", severity, (type == GL_DEBUG_TYPE_ERROR ? "*GL ERROR*" : ""), type, message);
+	}
 }
 
 rebirth::OpenGLContext::OpenGLContext(GLFWwindow* window): mWindow(window)
@@ -57,7 +60,7 @@ void rebirth::OpenGLContext::Init()
 	RB_CORE_INFO("Available OpenGL Version: {}", glVersionName);
 
 	#ifdef RB_DEBUG
-	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(GLErrorCallback, nullptr);
 	#endif
 

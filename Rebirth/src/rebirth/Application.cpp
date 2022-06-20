@@ -34,8 +34,7 @@ rebirth::Application* rebirth::Application::sInstance = nullptr;
 
 rebirth::Application::Application()
 {
-	//RB_CORE_TRACE("APP CONSTRUCTION");
-	//RB_CORE_ASSERT(!sInstance, "Application already exists");
+	RB_CORE_ASSERT(!sInstance, "Application already exists");
 	sInstance = this;
 	//mWindow = createScope<Win64Window>(Window::Create());
 	mWindow = std::unique_ptr<Window>(Window::Create());
@@ -60,14 +59,10 @@ rebirth::Application::Application()
 	//mVertexBuffer->Bind();
 
 	glEnableVertexAttribArray(0);
-	//RB_CORE_TRACE("Vert Size: {}", 3 * sizeof(float));
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
 
 	uint indices[3] = { 0, 1, 2};
-	//RB_CORE_TRACE("UINT SIZE: {}", sizeof(uint));
-	//RB_CORE_TRACE("UINT32 SIZE: {}", sizeof(uint32_t));
-	//RB_CORE_TRACE("Count: {}", sizeof(indices) / sizeof(uint));
 	mIndexBuffer.reset(IndexBuffer::Create(sizeof(indices) / sizeof(uint), indices));
 
 	std::string vertSrc = R"(
@@ -102,16 +97,13 @@ rebirth::Application::Application()
 	mShader.reset(new Shader(vertSrc, fragSrc));
 
 	
-	//RB_CORE_TRACE("END APP CONSTRUCTION");
 }
 rebirth::Application::~Application()
 {
-	//RB_CORE_TRACE("Deleting application");
 }
 
 void rebirth::Application::Run()
 {
-	RB_CORE_TRACE("BEGIN APP RUN");
 	
 	while(mRunning)
 	{

@@ -41,7 +41,6 @@ rebirth::OpenGLVertexBuffer::OpenGLVertexBuffer(const int size, float* vertices)
 
 rebirth::OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {
-	RB_CORE_TRACE("Deleting vertex buffer {}", mID);
 	glDeleteBuffers(1, &mID);
 }
 
@@ -71,7 +70,6 @@ rebirth::OpenGLIndexBuffer::OpenGLIndexBuffer(const uint count, uint* indices) :
 
 rebirth::OpenGLIndexBuffer::~OpenGLIndexBuffer()
 {
-	RB_CORE_TRACE("Deleting index buffer {}", mID);
 	glDeleteBuffers(1, &mID);
 }
 

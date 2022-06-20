@@ -34,7 +34,6 @@ public:
 
 	void OnUpdate() override
 	{
-		//RB_CLIENT_INFO("SampleLayer Update");
 		if(rebirth::Input::IsKeyPressed(RB_KEY_V))
 		{
 			//RB_CLIENT_TRACE("V was pressed!");
@@ -52,9 +51,9 @@ public:
 
 	void OnImguiRender() override
 	{
-		//ImGui::Begin("Test");
-		//ImGui::Text("Testing Sandbox imgui");
-		//ImGui::End();
+		ImGui::Begin("Test");
+		ImGui::Text("Testing Sandbox imgui");
+		ImGui::End();
 	}
 };
 
@@ -66,17 +65,12 @@ public:
 		PushLayer(new SampleLayer());
 		//PushOverlay(new rebirth::ImguiLayer());
 	}
-	~Sandbox() override
-	{
-		RB_CLIENT_TRACE("Deleting sandbox app");
-	}
+	~Sandbox() override = default;
 	
 };
 
 
 rebirth::Application* rebirth::CreateApplication()
 {
-	int a = 3;
-	//RB_CLIENT_INFO("Starting client A={0}", a);
 	return new Sandbox();
 }
