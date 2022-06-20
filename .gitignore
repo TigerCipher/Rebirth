@@ -6,3 +6,6 @@ bin_int/
 *.sln
 *.vcxproj
 *.vcxproj.*
+
+# Exceptions
+!/vendor/bin/
