@@ -32,7 +32,7 @@
 /////////////////////////////////////
 
 
-rebirth::OpenGLVertexBuffer::OpenGLVertexBuffer(const int size, float* vertices)
+rebirth::OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size, float* vertices)
 {
 	glCreateBuffers(1, &mID);
 	glBindBuffer(GL_ARRAY_BUFFER, mID);
@@ -60,12 +60,12 @@ void rebirth::OpenGLVertexBuffer::Unbind() const
 /////////////////////////////////////
 
 
-rebirth::OpenGLIndexBuffer::OpenGLIndexBuffer(const uint count, uint* indices) :
+rebirth::OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t count, uint32_t* indices) :
 	mCount(count)
 {
 	glCreateBuffers(1, &mID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 }
 
 rebirth::OpenGLIndexBuffer::~OpenGLIndexBuffer()

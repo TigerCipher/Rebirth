@@ -32,6 +32,28 @@
 
 rebirth::Application* rebirth::Application::sInstance = nullptr;
 
+static GLenum GetGlType(rebirth::ShaderDataType type)
+{
+	switch (type)
+	{
+	case rebirth::ShaderDataType::FLOAT:
+	case rebirth::ShaderDataType::FLOAT2:
+	case rebirth::ShaderDataType::FLOAT3:
+	case rebirth::ShaderDataType::FLOAT4:
+	case rebirth::ShaderDataType::MAT3:
+	case rebirth::ShaderDataType::MAT4: return GL_FLOAT;
+	case rebirth::ShaderDataType::INT:
+	case rebirth::ShaderDataType::INT2:
+	case rebirth::ShaderDataType::INT3:
+	case rebirth::ShaderDataType::INT4: return GL_INT;
+	case rebirth::ShaderDataType::BOOL: return GL_BOOL;
+	case rebirth::ShaderDataType::NONE: break;
+	}
+
+	RB_CORE_ASSERT(false, "Unknown shader data type");
+	return 0;
+}
+
 rebirth::Application::Application()
 {
 	RB_CORE_ASSERT(!sInstance, "Application already exists");
@@ -48,48 +70,65 @@ rebirth::Application::Application()
 	glBindVertexArray(mVertexArray);
 
 
-	float verts[3*3] =
+	float verts[3*7] =
 	{
-		-0.5f, -0.5f, 0.0f, // lower left
-		0.5f, -0.5f, 0.0f, // lower right
-		0.0f, 0.5f, 0.0f, // top center
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // lower left
+		0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 1.0f,// lower right
+		0.0f, 0.5f, 0.0f,  0.0f, 1.0f, 1.0f, 1.0f,// top center
 	};
 
 	mVertexBuffer.reset(VertexBuffer::Create(sizeof(verts), verts));
-	//mVertexBuffer->Bind();
 
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+	{
+		BufferLayout layout = {
+			{ ShaderDataType::FLOAT3, "aPos" },
+			{ ShaderDataType::FLOAT4, "aColor" }
+		};
+		mVertexBuffer->SetLayout(layout);
+	}
 
+	uint32_t index = 0;
+	const auto& layout = mVertexBuffer->GetLayout();
+	for(const auto& elem : layout)
+	{
+		glEnableVertexAttribArray(index);
+		glVertexAttribPointer(index, elem.GetComponentCount(), GetGlType(elem.type), elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)elem.offset);
+		index++;
+	}
+	
+	uint32_t indices[3] = { 0, 1, 2};
+	mIndexBuffer.reset(IndexBuffer::Create(sizeof(indices) / sizeof(uint32_t), indices));
 
-	uint indices[3] = { 0, 1, 2};
-	mIndexBuffer.reset(IndexBuffer::Create(sizeof(indices) / sizeof(uint), indices));
-
-	std::string vertSrc = R"(
+	const std::string vertSrc = R"(
 	#version 330 core
 
 	layout(location=0) in vec3 aPos;
+	layout(location=1) in vec4 aColor;
 
 	out vec3 vPos;
+	out vec4 vColor;
 	
 	void main()
 	{
 		vPos = aPos + 0.5;
+		vColor = aColor;
 		gl_Position = vec4(aPos + 0.5, 1.0);
 	}
 
 	)";
 
-	std::string fragSrc = R"(
+	const std::string fragSrc = R"(
 	#version 330 core
 
 	layout(location=0) out vec4 color;
 
 	in vec3 vPos;
+	in vec4 vColor;
 
 	void main()
 	{
 		color = vec4(vPos * 0.5 + 0.5, 1.0);
+		color = vColor;
 	}
 
 	)";
@@ -97,9 +136,6 @@ rebirth::Application::Application()
 	mShader.reset(new Shader(vertSrc, fragSrc));
 
 	
-}
-rebirth::Application::~Application()
-{
 }
 
 void rebirth::Application::Run()

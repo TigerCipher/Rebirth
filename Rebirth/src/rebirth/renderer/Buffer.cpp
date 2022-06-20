@@ -27,7 +27,7 @@
 #include "Renderer.h"
 #include "platform/opengl/OpenGLBuffer.h"
 
-rebirth::VertexBuffer* rebirth::VertexBuffer::Create(const int size, float* vertices)
+rebirth::VertexBuffer* rebirth::VertexBuffer::Create(const uint32_t size, float* vertices)
 {
 	switch (Renderer::GetAPI())
 	{
@@ -47,7 +47,7 @@ rebirth::VertexBuffer* rebirth::VertexBuffer::Create(const int size, float* vert
 	return nullptr;
 }
 
-rebirth::IndexBuffer* rebirth::IndexBuffer::Create(const uint32_t count, uint* indices)
+rebirth::IndexBuffer* rebirth::IndexBuffer::Create(const uint32_t count, uint32_t* indices)
 {
 	switch (Renderer::GetAPI())
 	{

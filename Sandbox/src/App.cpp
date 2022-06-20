@@ -52,7 +52,7 @@ public:
 	void OnImguiRender() override
 	{
 		ImGui::Begin("Test");
-		ImGui::Text("Testing Sandbox imgui");
+		ImGui::Text("Testing Rebirth Engine UI");
 		ImGui::End();
 	}
 };
