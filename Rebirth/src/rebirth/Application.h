@@ -32,6 +32,7 @@
 #include "imgui/ImguiLayer.h"
 
 #include "renderer/Shader.h"
+#include "renderer/Buffer.h"
 
 namespace rebirth
 {
@@ -40,7 +41,7 @@ namespace rebirth
 	public:
 
 		Application();
-		virtual ~Application() = default;
+		virtual ~Application();
 
 		void Run();
 
@@ -66,9 +67,11 @@ namespace rebirth
 
 		// TEMPORARY
 		uint mVertexArray {};
-		uint mVertexBuffer {};
-		uint mIndexBuffer {};
+		//uint mVertexBuffer{};
+		//uint mIndexBuffer{};
 		UniquePtr<Shader> mShader;
+		UniquePtr<VertexBuffer> mVertexBuffer;
+		UniquePtr<IndexBuffer> mIndexBuffer;
 	};
 
 	// Defined by game

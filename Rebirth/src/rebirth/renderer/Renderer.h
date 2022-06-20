@@ -15,30 +15,29 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EntryPoint.h
-// Date File Created: 06/13/2022 at 3:17 PM
+// File Name: Renderer.h
+// Date File Created: 06/19/2022 at 4:18 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
+
 #pragma once
 
-
-#ifdef RB_WINDOWS
-
-extern rebirth::Application* rebirth::CreateApplication();
-
-int main(int argc, char** argv)
+namespace rebirth
 {
-	rebirth::Log::Init();
-	RB_CORE_WARN("Test warning initializing engine");
+	enum class GraphicsAPI
+	{
+		NONE = 0,
+		OPENGL
+	};
 
-	auto app = rebirth::CreateApplication();
-	app->Run();
-	delete app;
 
-	// TODO: Might be nice to return error codes for debug purposes
-	return 0;
+	class Renderer
+	{
+	public:
+		static GraphicsAPI GetAPI() { return sGraphicsAPI; }
+	private:
+		static GraphicsAPI sGraphicsAPI;
+	};
 }
-
-#endif

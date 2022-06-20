@@ -15,8 +15,8 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EntryPoint.h
-// Date File Created: 06/13/2022 at 3:17 PM
+// File Name: Buffer.h
+// Date File Created: 06/19/2022 at 3:44 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
@@ -24,21 +24,30 @@
 #pragma once
 
 
-#ifdef RB_WINDOWS
-
-extern rebirth::Application* rebirth::CreateApplication();
-
-int main(int argc, char** argv)
+namespace rebirth
 {
-	rebirth::Log::Init();
-	RB_CORE_WARN("Test warning initializing engine");
+	class VertexBuffer
+	{
+	public:
+		virtual ~VertexBuffer() = default;
 
-	auto app = rebirth::CreateApplication();
-	app->Run();
-	delete app;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-	// TODO: Might be nice to return error codes for debug purposes
-	return 0;
+
+		static VertexBuffer* Create(int size, float* vertices);
+	};
+
+	class IndexBuffer
+	{
+	public:
+		virtual ~IndexBuffer() = default;
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual uint GetCount() const = 0;
+		
+		static IndexBuffer* Create(uint32_t count, uint* indices);
+	};
 }
-
-#endif

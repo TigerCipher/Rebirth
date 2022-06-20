@@ -37,7 +37,7 @@ public:
 		//RB_CLIENT_INFO("SampleLayer Update");
 		if(rebirth::Input::IsKeyPressed(RB_KEY_V))
 		{
-			RB_CLIENT_TRACE("V was pressed!");
+			//RB_CLIENT_TRACE("V was pressed!");
 		}
 	}
 
@@ -46,7 +46,7 @@ public:
 		if(e.GetEventType() == rebirth::EventType::KEY_PRESSED)
 		{
 			auto& ev = dynamic_cast<rebirth::KeyPressedEvent&>(e);
-			RB_CLIENT_TRACE("{}", static_cast<char>(ev.GetKeyCode()));
+			//RB_CLIENT_TRACE("{}", static_cast<char>(ev.GetKeyCode()));
 		}
 	}
 
@@ -66,7 +66,10 @@ public:
 		PushLayer(new SampleLayer());
 		//PushOverlay(new rebirth::ImguiLayer());
 	}
-	~Sandbox() override = default;
+	~Sandbox() override
+	{
+		RB_CLIENT_TRACE("Deleting sandbox app");
+	}
 	
 };
 
@@ -74,6 +77,6 @@ public:
 rebirth::Application* rebirth::CreateApplication()
 {
 	int a = 3;
-	RB_CLIENT_INFO("Starting client A={0}", a);
+	//RB_CLIENT_INFO("Starting client A={0}", a);
 	return new Sandbox();
 }

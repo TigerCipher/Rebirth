@@ -27,8 +27,10 @@
 
 rebirth::LayerStack::~LayerStack()
 {
+	RB_CORE_TRACE("Deleting stack");
 	for(Layer* layer : mLayers)
 	{
+		RB_CORE_TRACE("Deleting layer");
 		delete layer;
 	}
 }

@@ -48,13 +48,13 @@ namespace rebirth
 #define RB_CORE_INFO(...)	::rebirth::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define RB_CORE_WARN(...)	::rebirth::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define RB_CORE_ERROR(...)	::rebirth::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define RB_CORE_FATAL(...)	::rebirth::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define RB_CORE_FATAL(...)	::rebirth::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 #define RB_CLIENT_TRACE(...)	::rebirth::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define RB_CLIENT_INFO(...)		::rebirth::Log::GetClientLogger()->info(__VA_ARGS__)
 #define RB_CLIENT_WARN(...)		::rebirth::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define RB_CLIENT_ERROR(...)	::rebirth::Log::GetClientLogger()->error(__VA_ARGS__)
-#define RB_CLIENT_FATAL(...)	::rebirth::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define RB_CLIENT_FATAL(...)	::rebirth::Log::GetClientLogger()->critical(__VA_ARGS__)
 
 
 // Not ideal since still might use in engine headers, which become client when built on sandbox
