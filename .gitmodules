@@ -8,6 +8,7 @@
 [submodule "Rebirth/libs/imgui"]
 	path = Rebirth/libs/imgui
 	url = https://github.com/TigerCipher/imgui
+	branch = docking
 	ignore = dirty
 [submodule "Rebirth/libs/glm"]
 	path = Rebirth/libs/glm
