@@ -33,6 +33,7 @@
 
 #include "renderer/Shader.h"
 #include "renderer/Buffer.h"
+#include "renderer/VertexArray.h"
 
 namespace rebirth
 {
@@ -66,12 +67,13 @@ namespace rebirth
 
 
 		// TEMPORARY
-		uint mVertexArray {};
 		//uint mVertexBuffer{};
 		//uint mIndexBuffer{};
-		UniquePtr<Shader> mShader;
-		UniquePtr<VertexBuffer> mVertexBuffer;
-		UniquePtr<IndexBuffer> mIndexBuffer;
+		SharedPtr<Shader> mShader;
+		SharedPtr<Shader> mShaderNoColor;
+		SharedPtr<VertexArray> mVertexArray;
+
+		SharedPtr<VertexArray> mSquareVtxArray;
 	};
 
 	// Defined by game

@@ -20,6 +20,7 @@
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+
 #include "rbpch.h"
 
 #include "Application.h"
@@ -65,40 +66,54 @@ rebirth::Application::Application()
 	mImguiLayer = new ImguiLayer();
 	PushOverlay(mImguiLayer);
 
-	// TEMPORARY
-	glGenVertexArrays(1, &mVertexArray);
-	glBindVertexArray(mVertexArray);
+	mVertexArray.reset(VertexArray::Create());
 
-
-	float verts[3*7] =
+	float triVerts[ 3 * 7 ] =
 	{
 		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // lower left
-		0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 1.0f,// lower right
-		0.0f, 0.5f, 0.0f,  0.0f, 1.0f, 1.0f, 1.0f,// top center
+		0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, // lower right
+		0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top center
 	};
 
-	mVertexBuffer.reset(VertexBuffer::Create(sizeof(verts), verts));
+	SharedPtr<VertexBuffer> triVertBuffer;
+	triVertBuffer.reset(VertexBuffer::Create(sizeof(triVerts), triVerts));
 
-	{
-		BufferLayout layout = {
-			{ ShaderDataType::FLOAT3, "aPos" },
-			{ ShaderDataType::FLOAT4, "aColor" }
-		};
-		mVertexBuffer->SetLayout(layout);
-	}
+	BufferLayout triLayout = {
+		{ ShaderDataType::FLOAT3, "aPos" },
+		{ ShaderDataType::FLOAT4, "aColor" }
+	};
+	triVertBuffer->SetLayout(triLayout);
+	mVertexArray->AddVertexBuffer(triVertBuffer);
 
-	uint32_t index = 0;
-	const auto& layout = mVertexBuffer->GetLayout();
-	for(const auto& elem : layout)
+
+
+	uint32_t triIndices[ 3 ] = { 0, 1, 2 };
+	SharedPtr<IndexBuffer> triIndBuffer;
+	triIndBuffer.reset(IndexBuffer::Create(sizeof(triIndices) / sizeof(uint32_t), triIndices));
+
+	mVertexArray->SetIndexBuffer(triIndBuffer);
+
+
+	float sq_verts[3 * 4] =
 	{
-		glEnableVertexAttribArray(index);
-		glVertexAttribPointer(index, elem.GetComponentCount(), GetGlType(elem.type), elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)elem.offset);
-		index++;
-	}
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		0.5f, 0.5f, 0.0f,
+		-0.5f, 0.5f, 0.0f
+	};
+
+	mSquareVtxArray.reset(VertexArray::Create());
+	SharedPtr<VertexBuffer> svb;
+	svb.reset(VertexBuffer::Create(sizeof(sq_verts), sq_verts));
+	svb->SetLayout({{ ShaderDataType::FLOAT3, "aPos" }});
+	mSquareVtxArray->AddVertexBuffer(svb);
+
+	uint32_t sq_indices[6] = { 0, 1, 2, 2, 3, 0 };
+	SharedPtr<IndexBuffer> sib;
+	sib.reset(IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices));
+
+	mSquareVtxArray->SetIndexBuffer(sib);
 	
-	uint32_t indices[3] = { 0, 1, 2};
-	mIndexBuffer.reset(IndexBuffer::Create(sizeof(indices) / sizeof(uint32_t), indices));
-
 	const std::string vertSrc = R"(
 	#version 330 core
 
@@ -132,37 +147,69 @@ rebirth::Application::Application()
 	}
 
 	)";
-	
-	mShader.reset(new Shader(vertSrc, fragSrc));
 
+	const std::string vertSrc2 = R"(
+	#version 330 core
+
+	layout(location=0) in vec3 aPos;
+
+	out vec3 vPos;
 	
+	void main()
+	{
+		vPos = aPos + 0.5;
+		gl_Position = vec4(aPos + 0.5, 1.0);
+	}
+
+	)";
+
+	const std::string fragSrc2 = R"(
+	#version 330 core
+
+	layout(location=0) out vec4 color;
+
+	in vec3 vPos;
+
+	void main()
+	{
+		color = vec4(0.2, 0.4, 0.7, 1.0);
+	}
+
+	)";
+
+	mShader.reset(new Shader(vertSrc, fragSrc));
+	mShaderNoColor.reset(new Shader(vertSrc2, fragSrc2));
 }
 
 void rebirth::Application::Run()
 {
-	
-	while(mRunning)
+	while (mRunning)
 	{
 		glClearColor(0.05f, 0.05f, 0.05f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		mShader->Bind();
-		glBindVertexArray(mVertexArray);
-		glDrawElements(GL_TRIANGLES, mIndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+		mShaderNoColor->Bind();
+		mSquareVtxArray->Bind();
+		glDrawElements(GL_TRIANGLES, mSquareVtxArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-		for(Layer* layer : mLayerStack)
+		
+		mShader->Bind();
+		mVertexArray->Bind();
+		glDrawElements(GL_TRIANGLES, mVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+
+		for (Layer* layer : mLayerStack)
 		{
-			if(layer)
+			if (layer)
 				layer->OnUpdate();
 		}
 
 		mImguiLayer->Begin();
-		for(Layer* layer : mLayerStack)
+		for (Layer* layer : mLayerStack)
 		{
 			layer->OnImguiRender();
 		}
 		mImguiLayer->End();
-		
+
 		mWindow->OnUpdate();
 	}
 }
@@ -172,10 +219,10 @@ void rebirth::Application::OnEvent(Event& e)
 	EventDispatcher disp(e);
 	disp.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
 
-	for(auto it = mLayerStack.end(); it != mLayerStack.begin();)
+	for (auto it = mLayerStack.end(); it != mLayerStack.begin();)
 	{
 		(*--it)->OnEvent(e);
-		if(e.WasHandled())
+		if (e.WasHandled())
 		{
 			break;
 		}

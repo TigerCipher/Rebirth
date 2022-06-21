@@ -15,54 +15,44 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: OpenGLBuffer.h
-// Date File Created: 06/19/2022 at 3:52 PM
+// File Name: OpenGLVertexArray.h
+// Date File Created: 06/20/2022 at 5:08 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
-
 #pragma once
 
-#include "rebirth/renderer/Buffer.h"
+#include "rebirth/renderer/VertexArray.h"
 
 namespace rebirth
 {
-	class OpenGLVertexBuffer : public VertexBuffer
+	class OpenGLVertexArray : public VertexArray
 	{
 	public:
-		OpenGLVertexBuffer(uint32_t size, float* vertices);
-		~OpenGLVertexBuffer() override;
+		OpenGLVertexArray();
+		~OpenGLVertexArray() override;
+		
 		void Bind() const override;
 		void Unbind() const override;
 
-		void SetLayout(const BufferLayout& layout) override
+		void AddVertexBuffer(const SharedPtr<VertexBuffer>& buffer) override;
+		void SetIndexBuffer(const SharedPtr<IndexBuffer>& buffer) override;
+
+		const std::vector<SharedPtr<VertexBuffer>>& GetVertexBuffers() const override
 		{
-			mLayout = layout;
+			return mVertexBuffers;
 		}
-		
-		const BufferLayout& GetLayout() const override
+
+		const SharedPtr<IndexBuffer>& GetIndexBuffer() const override
 		{
-			return mLayout;
+			return mIndexBuffer;
 		}
 	
 	private:
-		uint32_t mId;
-		BufferLayout mLayout;
-	};
-
-	class OpenGLIndexBuffer : public IndexBuffer
-	{
-	public:
-		OpenGLIndexBuffer(uint32_t count, uint32_t* indices);
-		~OpenGLIndexBuffer() override;
-		void Bind() const override;
-		void Unbind() const override;
-
-		uint32_t GetCount() const override { return mCount; }
-
-	private:
-		uint32_t mId;
-		uint32_t mCount;
+		uint32_t mId = 0;
+		std::vector<SharedPtr<VertexBuffer>> mVertexBuffers;
+		SharedPtr<IndexBuffer> mIndexBuffer;
 	};
 }
+
