@@ -15,7 +15,7 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: OpenGLVertexArray.h
+// File Name: OpenGLVertexArray.cpp
 // Date File Created: 06/20/2022 at 5:08 PM
 // Author: Matt
 // 
@@ -27,7 +27,7 @@
 
 #include <glad/glad.h>
 
-static GLenum GetGlType(rebirth::ShaderDataType type)
+static GLenum GetGlType(const rebirth::ShaderDataType type)
 {
 	switch (type)
 	{
@@ -72,7 +72,7 @@ void rebirth::OpenGLVertexArray::Unbind() const
 void rebirth::OpenGLVertexArray::AddVertexBuffer(const SharedPtr<VertexBuffer>& buffer)
 {
 	RB_CORE_ASSERT(buffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout");
-	
+
 	glBindVertexArray(mId);
 	buffer->Bind();
 	uint32_t index = 0;
@@ -80,7 +80,9 @@ void rebirth::OpenGLVertexArray::AddVertexBuffer(const SharedPtr<VertexBuffer>& 
 	for (const auto& elem : layout)
 	{
 		glEnableVertexAttribArray(index);
-		glVertexAttribPointer(index, elem.GetComponentCount(), GetGlType(elem.type), elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(), (const void*)elem.offset);
+		glVertexAttribPointer(index, elem.GetComponentCount(), GetGlType(elem.type),
+			elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
+			reinterpret_cast<const void*>(static_cast<uintptr_t>(elem.offset)));
 		index++;
 	}
 

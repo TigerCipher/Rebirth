@@ -68,7 +68,7 @@ rebirth::Application::Application()
 
 	mVertexArray.reset(VertexArray::Create());
 
-	float triVerts[ 3 * 7 ] =
+	float triVerts[3 * 7] =
 	{
 		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // lower left
 		0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, // lower right
@@ -87,7 +87,7 @@ rebirth::Application::Application()
 
 
 
-	uint32_t triIndices[ 3 ] = { 0, 1, 2 };
+	uint32_t triIndices[3] = { 0, 1, 2 };
 	SharedPtr<IndexBuffer> triIndBuffer;
 	triIndBuffer.reset(IndexBuffer::Create(sizeof(triIndices) / sizeof(uint32_t), triIndices));
 
@@ -105,7 +105,7 @@ rebirth::Application::Application()
 	mSquareVtxArray.reset(VertexArray::Create());
 	SharedPtr<VertexBuffer> svb;
 	svb.reset(VertexBuffer::Create(sizeof(sq_verts), sq_verts));
-	svb->SetLayout({{ ShaderDataType::FLOAT3, "aPos" }});
+	svb->SetLayout({ { ShaderDataType::FLOAT3, "aPos" } });
 	mSquareVtxArray->AddVertexBuffer(svb);
 
 	uint32_t sq_indices[6] = { 0, 1, 2, 2, 3, 0 };
@@ -113,7 +113,7 @@ rebirth::Application::Application()
 	sib.reset(IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices));
 
 	mSquareVtxArray->SetIndexBuffer(sib);
-	
+
 	const std::string vertSrc = R"(
 	#version 330 core
 
@@ -192,7 +192,7 @@ void rebirth::Application::Run()
 		mSquareVtxArray->Bind();
 		glDrawElements(GL_TRIANGLES, mSquareVtxArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 
-		
+
 		mShader->Bind();
 		mVertexArray->Bind();
 		glDrawElements(GL_TRIANGLES, mVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
