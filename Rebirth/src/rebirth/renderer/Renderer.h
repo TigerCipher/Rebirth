@@ -24,20 +24,22 @@
 
 #pragma once
 
+#include "RenderCommand.h"
+
 namespace rebirth
 {
-	enum class GraphicsAPI
-	{
-		NONE = 0,
-		OPENGL
-	};
 
 
 	class Renderer
 	{
 	public:
-		static GraphicsAPI GetAPI() { return sGraphicsAPI; }
+
+		static void BeginScene();
+		static void EndScene();
+
+		static void Submit(const SharedPtr<VertexArray>& vertexArray);
+
+		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	private:
-		static GraphicsAPI sGraphicsAPI;
 	};
 }

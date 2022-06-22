@@ -15,35 +15,37 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: VertexArray.h
-// Date File Created: 06/20/2022 at 4:51 PM
+// File Name: RendererAPI.h
+// Date File Created: 6/21/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+#pragma once
 
-#include "rbpch.h"
+#include <glm/glm.hpp>
 
 #include "VertexArray.h"
 
-#include "Renderer.h"
-#include "platform/opengl/OpenGLVertexArray.h"
-
-rebirth::VertexArray* rebirth::VertexArray::Create()
+namespace rebirth
 {
-	switch (Renderer::GetAPI())
+	class RendererAPI
 	{
-	case RendererAPI::API::NONE:
-	{
-		RB_CORE_ASSERT(false, "Must use a graphics API");
-		return nullptr;
-	}
+	public:
+		enum class API
+		{
+			NONE = 0,
+			OPENGL
+		};
 
-	case RendererAPI::API::OPENGL:
-	{
-		return new OpenGLVertexArray();
-	}
-	}
+		virtual void SetClearColor(const glm::vec4& color) = 0;
+		virtual void Clear() = 0;
 
-	RB_CORE_ASSERT(false, "Unknown graphics API");
-	return nullptr;
+		virtual void DrawIndexed(const SharedPtr<VertexArray>& vertexArray) = 0;
+
+		static API GetAPI() { return sApi;  }
+
+	private:
+		static API sApi;
+	};
 }
+

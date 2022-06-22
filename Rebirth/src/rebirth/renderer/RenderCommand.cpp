@@ -15,35 +15,18 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: VertexArray.h
-// Date File Created: 06/20/2022 at 4:51 PM
+// File Name: RenderCommand.cpp
+// Date File Created: 6/21/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #include "rbpch.h"
 
-#include "VertexArray.h"
+#include "RenderCommand.h"
 
-#include "Renderer.h"
-#include "platform/opengl/OpenGLVertexArray.h"
+#include "platform/opengl/OpenGLRendererAPI.h"
 
-rebirth::VertexArray* rebirth::VertexArray::Create()
-{
-	switch (Renderer::GetAPI())
-	{
-	case RendererAPI::API::NONE:
-	{
-		RB_CORE_ASSERT(false, "Must use a graphics API");
-		return nullptr;
-	}
+// Temp
+rebirth::RendererAPI* rebirth::RenderCommand::sRendererApi = new OpenGLRendererAPI;
 
-	case RendererAPI::API::OPENGL:
-	{
-		return new OpenGLVertexArray();
-	}
-	}
-
-	RB_CORE_ASSERT(false, "Unknown graphics API");
-	return nullptr;
-}

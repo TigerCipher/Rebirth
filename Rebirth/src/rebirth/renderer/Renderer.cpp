@@ -25,4 +25,18 @@
 #include "rbpch.h"
 #include "Renderer.h"
 
-rebirth::GraphicsAPI rebirth::Renderer::sGraphicsAPI = GraphicsAPI::OPENGL;
+void rebirth::Renderer::BeginScene()
+{
+
+}
+
+void rebirth::Renderer::EndScene()
+{
+
+}
+
+void rebirth::Renderer::Submit(const SharedPtr<VertexArray>& vertexArray)
+{
+	vertexArray->Bind();
+	RenderCommand::DrawIndexed(vertexArray);
+}

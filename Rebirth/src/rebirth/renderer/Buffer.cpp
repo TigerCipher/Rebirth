@@ -31,13 +31,13 @@ rebirth::VertexBuffer* rebirth::VertexBuffer::Create(const uint32_t size, float*
 {
 	switch (Renderer::GetAPI())
 	{
-	case GraphicsAPI::NONE:
+	case RendererAPI::API::NONE:
 		{
 			RB_CORE_ASSERT(false, "Must use a graphics API");
 			return nullptr;
 		}
 
-	case GraphicsAPI::OPENGL:
+	case RendererAPI::API::OPENGL:
 		{
 			return new OpenGLVertexBuffer(size, vertices);
 		}
@@ -51,13 +51,13 @@ rebirth::IndexBuffer* rebirth::IndexBuffer::Create(const uint32_t count, uint32_
 {
 	switch (Renderer::GetAPI())
 	{
-	case GraphicsAPI::NONE:
+	case RendererAPI::API::NONE:
 		{
 			RB_CORE_ASSERT(false, "Must use a graphics API");
 			return nullptr;
 		}
 
-	case GraphicsAPI::OPENGL:
+	case RendererAPI::API::OPENGL:
 		{
 			return new OpenGLIndexBuffer(count, indices);
 		}

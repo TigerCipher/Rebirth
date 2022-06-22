@@ -26,95 +26,74 @@
 #include "Application.h"
 
 
-#include <glad/glad.h>
-
 #include "platform/windows/Win64Window.h"
+#include "renderer/Renderer.h"
 
-
-rebirth::Application* rebirth::Application::sInstance = nullptr;
-
-static GLenum GetGlType(rebirth::ShaderDataType type)
+// TODO: rebirth:: is nice because both resharper and visual assist auto implement functions using that, but especially when dealing with statics, let's just start doing this
+namespace rebirth
 {
-	switch (type)
+	Application* Application::sInstance = nullptr;
+
+	Application::Application()
 	{
-	case rebirth::ShaderDataType::FLOAT:
-	case rebirth::ShaderDataType::FLOAT2:
-	case rebirth::ShaderDataType::FLOAT3:
-	case rebirth::ShaderDataType::FLOAT4:
-	case rebirth::ShaderDataType::MAT3:
-	case rebirth::ShaderDataType::MAT4: return GL_FLOAT;
-	case rebirth::ShaderDataType::INT:
-	case rebirth::ShaderDataType::INT2:
-	case rebirth::ShaderDataType::INT3:
-	case rebirth::ShaderDataType::INT4: return GL_INT;
-	case rebirth::ShaderDataType::BOOL: return GL_BOOL;
-	case rebirth::ShaderDataType::NONE: break;
-	}
+		RB_CORE_ASSERT(!sInstance, "Application already exists");
+		sInstance = this;
+		//mWindow = createScope<Win64Window>(Window::Create());
+		mWindow = std::unique_ptr<Window>(Window::Create());
+		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
-	RB_CORE_ASSERT(false, "Unknown shader data type");
-	return 0;
-}
+		mImguiLayer = new ImguiLayer();
+		PushOverlay(mImguiLayer);
 
-rebirth::Application::Application()
-{
-	RB_CORE_ASSERT(!sInstance, "Application already exists");
-	sInstance = this;
-	//mWindow = createScope<Win64Window>(Window::Create());
-	mWindow = std::unique_ptr<Window>(Window::Create());
-	mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		mVertexArray.reset(VertexArray::Create());
 
-	mImguiLayer = new ImguiLayer();
-	PushOverlay(mImguiLayer);
+		float triVerts[3 * 7] =
+		{
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // lower left
+			0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, // lower right
+			0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top center
+		};
 
-	mVertexArray.reset(VertexArray::Create());
+		SharedPtr<VertexBuffer> triVertBuffer;
+		triVertBuffer.reset(VertexBuffer::Create(sizeof(triVerts), triVerts));
 
-	float triVerts[3 * 7] =
-	{
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // lower left
-		0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, // lower right
-		0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top center
-	};
-
-	SharedPtr<VertexBuffer> triVertBuffer;
-	triVertBuffer.reset(VertexBuffer::Create(sizeof(triVerts), triVerts));
-
-	BufferLayout triLayout = {
-		{ ShaderDataType::FLOAT3, "aPos" },
-		{ ShaderDataType::FLOAT4, "aColor" }
-	};
-	triVertBuffer->SetLayout(triLayout);
-	mVertexArray->AddVertexBuffer(triVertBuffer);
+		BufferLayout triLayout = {
+			{ ShaderDataType::FLOAT3, "aPos" },
+			{ ShaderDataType::FLOAT4, "aColor" }
+		};
+		triVertBuffer->SetLayout(triLayout);
+		mVertexArray->AddVertexBuffer(triVertBuffer);
 
 
 
-	uint32_t triIndices[3] = { 0, 1, 2 };
-	SharedPtr<IndexBuffer> triIndBuffer;
-	triIndBuffer.reset(IndexBuffer::Create(sizeof(triIndices) / sizeof(uint32_t), triIndices));
+		uint32_t triIndices[3] = { 0, 1, 2 };
+		SharedPtr<IndexBuffer> triIndBuffer;
+		triIndBuffer.reset(IndexBuffer::Create(sizeof(triIndices) / sizeof(uint32_t), triIndices));
 
-	mVertexArray->SetIndexBuffer(triIndBuffer);
+		mVertexArray->SetIndexBuffer(triIndBuffer);
 
 
-	float sq_verts[3 * 4] =
-	{
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f
-	};
+		float sq_verts[3 * 4] =
+		{
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			0.5f, 0.5f, 0.0f,
+			-0.5f, 0.5f, 0.0f
+		};
 
-	mSquareVtxArray.reset(VertexArray::Create());
-	SharedPtr<VertexBuffer> svb;
-	svb.reset(VertexBuffer::Create(sizeof(sq_verts), sq_verts));
-	svb->SetLayout({ { ShaderDataType::FLOAT3, "aPos" } });
-	mSquareVtxArray->AddVertexBuffer(svb);
+		mSquareVtxArray.reset(VertexArray::Create());
+		SharedPtr<VertexBuffer> svb;
+		svb.reset(VertexBuffer::Create(sizeof(sq_verts), sq_verts));
+		svb->SetLayout({ { ShaderDataType::FLOAT3, "aPos" } });
+		mSquareVtxArray->AddVertexBuffer(svb);
 
-	uint32_t sq_indices[6] = { 0, 1, 2, 2, 3, 0 };
-	SharedPtr<IndexBuffer> sib;
-	sib.reset(IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices));
+		uint32_t sq_indices[6] = { 0, 1, 2, 2, 3, 0 };
+		SharedPtr<IndexBuffer> sib;
+		sib.reset(IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices));
 
-	mSquareVtxArray->SetIndexBuffer(sib);
+		mSquareVtxArray->SetIndexBuffer(sib);
 
-	const std::string vertSrc = R"(
+		const std::string vertSrc = R"(
 	#version 330 core
 
 	layout(location=0) in vec3 aPos;
@@ -132,7 +111,7 @@ rebirth::Application::Application()
 
 	)";
 
-	const std::string fragSrc = R"(
+		const std::string fragSrc = R"(
 	#version 330 core
 
 	layout(location=0) out vec4 color;
@@ -148,7 +127,7 @@ rebirth::Application::Application()
 
 	)";
 
-	const std::string vertSrc2 = R"(
+		const std::string vertSrc2 = R"(
 	#version 330 core
 
 	layout(location=0) in vec3 aPos;
@@ -163,7 +142,7 @@ rebirth::Application::Application()
 
 	)";
 
-	const std::string fragSrc2 = R"(
+		const std::string fragSrc2 = R"(
 	#version 330 core
 
 	layout(location=0) out vec4 color;
@@ -177,70 +156,72 @@ rebirth::Application::Application()
 
 	)";
 
-	mShader.reset(new Shader(vertSrc, fragSrc));
-	mShaderNoColor.reset(new Shader(vertSrc2, fragSrc2));
-}
+		mShader.reset(new Shader(vertSrc, fragSrc));
+		mShaderNoColor.reset(new Shader(vertSrc2, fragSrc2));
+	}
 
-void rebirth::Application::Run()
-{
-	while (mRunning)
+	void Application::Run()
 	{
-		glClearColor(0.05f, 0.05f, 0.05f, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		mShaderNoColor->Bind();
-		mSquareVtxArray->Bind();
-		glDrawElements(GL_TRIANGLES, mSquareVtxArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
-
-		mShader->Bind();
-		mVertexArray->Bind();
-		glDrawElements(GL_TRIANGLES, mVertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-
-		for (Layer* layer : mLayerStack)
+		while (mRunning)
 		{
-			if (layer)
+			RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+			RenderCommand::Clear();
+
+			Renderer::BeginScene();
+
+			mShaderNoColor->Bind();
+			Renderer::Submit(mSquareVtxArray);
+
+			mShader->Bind();
+			Renderer::Submit(mVertexArray);
+
+			Renderer::EndScene();
+
+			for (Layer* layer : mLayerStack)
+			{
 				layer->OnUpdate();
-		}
+			}
 
-		mImguiLayer->Begin();
-		for (Layer* layer : mLayerStack)
-		{
-			layer->OnImguiRender();
-		}
-		mImguiLayer->End();
+			mImguiLayer->Begin();
+			for (Layer* layer : mLayerStack)
+			{
+				layer->OnImguiRender();
+			}
+			mImguiLayer->End();
 
-		mWindow->OnUpdate();
+			mWindow->OnUpdate();
+		}
 	}
-}
 
-void rebirth::Application::OnEvent(Event& e)
-{
-	EventDispatcher disp(e);
-	disp.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
-
-	for (auto it = mLayerStack.end(); it != mLayerStack.begin();)
+	void Application::OnEvent(Event& e)
 	{
-		(*--it)->OnEvent(e);
-		if (e.WasHandled())
+		EventDispatcher disp(e);
+		disp.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
+
+		for (auto it = mLayerStack.end(); it != mLayerStack.begin();)
 		{
-			break;
+			(*--it)->OnEvent(e);
+			if (e.WasHandled())
+			{
+				break;
+			}
 		}
 	}
-}
 
-void rebirth::Application::PushLayer(Layer* layer)
-{
-	mLayerStack.PushLayer(layer);
-}
+	void Application::PushLayer(Layer* layer)
+	{
+		mLayerStack.PushLayer(layer);
+	}
 
-void rebirth::Application::PushOverlay(Layer* overlay)
-{
-	mLayerStack.PushOverlay(overlay);
-}
+	void Application::PushOverlay(Layer* overlay)
+	{
+		mLayerStack.PushOverlay(overlay);
+	}
 
-bool rebirth::Application::OnWindowClose(WindowCloseEvent& e)
-{
-	mRunning = false;
-	return true;
+	bool Application::OnWindowClose(WindowCloseEvent& e)
+	{
+		mRunning = false;
+		return true;
+	}
+
 }
