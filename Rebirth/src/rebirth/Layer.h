@@ -25,6 +25,9 @@
 
 #include "Core.h"
 #include "events/Event.h"
+
+#include "Timestep.h"
+
 namespace rebirth
 {
 	class RB_API Layer
@@ -36,7 +39,7 @@ namespace rebirth
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep timestep) {}
 
 		virtual void OnImguiRender() {}
 

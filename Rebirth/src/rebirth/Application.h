@@ -35,6 +35,8 @@
 #include "renderer/Buffer.h"
 #include "renderer/VertexArray.h"
 
+#include "Timestep.h"
+
 namespace rebirth
 {
 	class RB_API Application
@@ -62,6 +64,7 @@ namespace rebirth
 		bool mRunning = true;
 		LayerStack mLayerStack;
 		ImguiLayer* mImguiLayer;
+		float mLastFrameTime = 0.0f;
 
 		bool OnWindowClose(WindowCloseEvent& e);
 	};

@@ -15,43 +15,26 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Rebirth.h
-// Date File Created: 06/13/2022 at 3:12 PM
+// File Name: Timestep.h
+// Date File Created: 6/22/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-// Core
-#include "rebirth/Application.h"
-#include "rebirth/Layer.h"
-#include "rebirth/Timestep.h"
+namespace rebirth
+{
+	class Timestep
+	{
+	public:
+		Timestep(float time = 0.0f) : mTime(time) {}
 
-// Debug
-#include "rebirth/Log.h"
+		operator float() const { return mTime; }
 
-// Events
-#include "rebirth/events/KeyEvent.h"
-#include "rebirth/events/MouseEvent.h"
+		float Seconds() const { return mTime; }
+		float Milliseconds() const { return mTime * 1000.0f; }
+	private:
+		float mTime;
+	};
+}
 
-
-// Input
-#include "rebirth/Input.h"
-#include "rebirth/KeyCodes.h"
-#include "rebirth/MouseCodes.h"
-
-
-// Renderer
-#include "rebirth/renderer/Renderer.h"
-#include "rebirth/renderer/RenderCommand.h"
-#include "rebirth/renderer/Shader.h"
-#include "rebirth/renderer/VertexArray.h"
-#include "rebirth/renderer/OrthoCamera.h"
-
-// GUI
-#include "rebirth/imgui/ImguiLayer.h"
-
-
-// Main function
-#include "rebirth/EntryPoint.h"

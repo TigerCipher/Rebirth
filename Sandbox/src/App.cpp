@@ -25,6 +25,7 @@
 
 #include <imgui/imgui.h>
 
+
 class SampleLayer final : public rebirth::Layer
 {
 public:
@@ -151,10 +152,45 @@ public:
 		mShaderNoColor.reset(new rebirth::Shader(vertSrc2, fragSrc2));
 	}
 
-	void OnUpdate() override
+	void OnUpdate(rebirth::Timestep timestep) override
 	{
-		//mCamera.SetPosition({ 0.5f, 0.5f, 0.0f });
-		mCamera.SetRotation(45.0f);
+		RB_CLIENT_TRACE("Delta time: {}s  -  {}ms", timestep.Seconds(), timestep.Milliseconds());
+		rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+		rebirth::RenderCommand::Clear();
+
+		float time = timestep;
+		if (rebirth::Input::IsKeyPressed(RB_KEY_A))
+		{
+			mCamPos.x -= mCamSpeed * time;
+		}
+
+		if (rebirth::Input::IsKeyPressed(RB_KEY_D))
+		{
+			mCamPos.x += mCamSpeed * time;
+		}
+
+		if (rebirth::Input::IsKeyPressed(RB_KEY_W))
+		{
+			mCamPos.y += mCamSpeed * time;
+		}
+
+		if (rebirth::Input::IsKeyPressed(RB_KEY_S))
+		{
+			mCamPos.y -= mCamSpeed * time;
+		}
+
+		if (rebirth::Input::IsKeyPressed(RB_KEY_LEFT))
+		{
+			mCamRot += mCamRotSpeed * time;
+		}
+
+		if (rebirth::Input::IsKeyPressed(RB_KEY_RIGHT))
+		{
+			mCamRot -= mCamRotSpeed * time;
+		}
+
+		mCamera.SetPosition(mCamPos);
+		mCamera.SetRotation(mCamRot);
 		rebirth::Renderer::BeginScene(mCamera);
 		rebirth::Renderer::Submit(mShaderNoColor, mSquareVtxArray);
 		rebirth::Renderer::Submit(mShader, mVertexArray);
@@ -163,7 +199,10 @@ public:
 
 	void OnEvent(rebirth::Event& e) override
 	{
+		rebirth::EventDispatcher disp(e);
+		//disp.Dispatch<rebirth::KeyPressedEvent>(BIND_EVENT_FUNC(SampleLayer::OnKeyPressed));
 	}
+
 
 	void OnImguiRender() override
 	{
@@ -180,6 +219,11 @@ private:
 	SharedPtr<rebirth::VertexArray> mSquareVtxArray;
 
 	rebirth::OrthoCamera mCamera;
+	glm::vec3 mCamPos{0.0f};
+	float mCamSpeed = 5.0f;
+	float mCamRotSpeed = 60.0f;
+	float mCamRot = 0.0f;
+	
 };
 
 class Sandbox final : public rebirth::Application

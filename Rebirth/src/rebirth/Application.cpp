@@ -25,9 +25,10 @@
 
 #include "Application.h"
 
-
-#include "platform/windows/Win64Window.h"
 #include "renderer/Renderer.h"
+
+// temp
+#include <glfw/glfw3.h>
 
 namespace rebirth
 {
@@ -40,6 +41,7 @@ namespace rebirth
 		//mWindow = createScope<Win64Window>(Window::Create());
 		mWindow = std::unique_ptr<Window>(Window::Create());
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		//mWindow->SetVSync(false);
 
 		mImguiLayer = new ImguiLayer();
 		PushOverlay(mImguiLayer);
@@ -49,12 +51,15 @@ namespace rebirth
 	{
 		while (mRunning)
 		{
-			RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
-			RenderCommand::Clear();
+
+			// TODO: Abstract getTime to platform/opengl
+			float time = static_cast<float>(glfwGetTime());
+			Timestep timestep = time - mLastFrameTime;
+			mLastFrameTime = time;
 
 			for (Layer* layer : mLayerStack)
 			{
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 			}
 
 			mImguiLayer->Begin();

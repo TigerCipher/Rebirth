@@ -73,6 +73,8 @@ using uint = unsigned int;
 
 #define BIT(x) (1 << (x))
 
+#define BIND_EVENT_FUNC(func) std::bind(&func, this, std::placeholders::_1)
+
 
 // Smart Pointers (might move)
 
