@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "rebirth/Window.h"
+#include "rebirth/core/Window.h"
 
 #include <GLFW/glfw3.h>
 #include "rebirth/renderer/GraphicsContext.h"

@@ -35,7 +35,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "rebirth/Log.h"
+#include "rebirth/debug/Log.h"
 
 #ifdef RB_WINDOWS
 	#include <Windows.h>

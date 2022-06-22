@@ -22,7 +22,7 @@
 // ------------------------------------------------------------------------------
 
 #pragma once
-#include "rebirth/Layer.h"
+#include "rebirth/core/Layer.h"
 
 
 namespace rebirth

@@ -24,12 +24,12 @@
 #pragma once
 
 // Core
-#include "rebirth/Application.h"
-#include "rebirth/Layer.h"
-#include "rebirth/Timestep.h"
+#include "rebirth/core/Application.h"
+#include "rebirth/core/Layer.h"
+#include "rebirth/core/Timestep.h"
 
 // Debug
-#include "rebirth/Log.h"
+#include "rebirth/debug/Log.h"
 
 // Events
 #include "rebirth/events/KeyEvent.h"
@@ -37,9 +37,9 @@
 
 
 // Input
-#include "rebirth/Input.h"
-#include "rebirth/KeyCodes.h"
-#include "rebirth/MouseCodes.h"
+#include "rebirth/input/Input.h"
+#include "rebirth/input/KeyCodes.h"
+#include "rebirth/input/MouseCodes.h"
 
 
 // Renderer
@@ -54,4 +54,4 @@
 
 
 // Main function
-#include "rebirth/EntryPoint.h"
+#include "rebirth/core/EntryPoint.h"

@@ -15,38 +15,58 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Layer.h
-// Date File Created: 06/16/2022 at 9:24 PM
+// File Name: Input.h
+// Date File Created: 06/18/2022 at 4:02 PM
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include "Core.h"
-#include "events/Event.h"
 
-#include "Timestep.h"
+#include "rebirth/Core.h"
 
 namespace rebirth
 {
-	class RB_API Layer
+	class RB_API Input
 	{
 	public:
-		Layer(const std::string& name = "Layer") : mName(name) {}
-		virtual ~Layer() {}
 
-		virtual void OnAttach() {}
-		virtual void OnDetach() {}
+		static bool IsKeyPressed(const int keycode)
+		{
+			return sInstance->IsKeyPressedImpl(keycode);
+		}
 
-		virtual void OnUpdate(Timestep timestep) {}
+		static bool IsMouseButtonPressed(const int button)
+		{
+			return sInstance->IsMouseButtonPressedImpl(button);
+		}
 
-		virtual void OnImguiRender() {}
+		static float GetMouseX()
+		{
+			return sInstance->GetMouseXImpl();
+		}
 
-		virtual void OnEvent(Event& e) {}
+		static float GetMouseY()
+		{
+			return sInstance->GetMouseYImpl();
+		}
+
+		static std::pair<float, float> GetMousePos()
+		{
+			return sInstance->GetMousePosImpl();
+		}
 
 	protected:
-		std::string mName;
+		virtual bool IsKeyPressedImpl(int keycode) = 0;
+		virtual bool IsMouseButtonPressedImpl(int button) = 0;
+		virtual float GetMouseXImpl() = 0;
+		virtual float GetMouseYImpl() = 0;
+		virtual std::pair<float, float> GetMousePosImpl() = 0;
+		
+	private:
+
+		static Input* sInstance;
+		
 	};
 }
-

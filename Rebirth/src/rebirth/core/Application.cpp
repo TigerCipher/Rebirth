@@ -25,7 +25,7 @@
 
 #include "Application.h"
 
-#include "renderer/Renderer.h"
+#include "rebirth/renderer/Renderer.h"
 
 // temp
 #include <glfw/glfw3.h>

@@ -26,6 +26,8 @@
 #include <imgui/imgui.h>
 
 
+#include <glm/gtc/matrix_transform.hpp>
+
 class SampleLayer final : public rebirth::Layer
 {
 public:
@@ -86,6 +88,7 @@ public:
 	layout(location=1) in vec4 aColor;
 
 	uniform mat4 uViewProj;
+	uniform mat4 uModelTransform;
 
 	out vec3 vPos;
 	out vec4 vColor;
@@ -95,7 +98,7 @@ public:
 	{
 		vPos = aPos;
 		vColor = aColor;
-		gl_Position = uViewProj * vec4(aPos, 1.0);
+		gl_Position = uViewProj * uModelTransform * vec4(aPos, 1.0);
 	}
 
 	)";
@@ -122,6 +125,7 @@ public:
 	layout(location=0) in vec3 aPos;
 
 	uniform mat4 uViewProj;
+	uniform mat4 uModelTransform;
 
 	out vec3 vPos;
 
@@ -129,7 +133,7 @@ public:
 	void main()
 	{
 		vPos = aPos;
-		gl_Position = uViewProj * vec4(aPos, 1.0);
+		gl_Position = uViewProj * uModelTransform * vec4(aPos, 1.0);
 	}
 
 	)";
@@ -179,12 +183,12 @@ public:
 			mCamPos.y -= mCamSpeed * time;
 		}
 
-		if (rebirth::Input::IsKeyPressed(RB_KEY_LEFT))
+		if (rebirth::Input::IsKeyPressed(RB_KEY_Q))
 		{
 			mCamRot += mCamRotSpeed * time;
 		}
 
-		if (rebirth::Input::IsKeyPressed(RB_KEY_RIGHT))
+		if (rebirth::Input::IsKeyPressed(RB_KEY_E))
 		{
 			mCamRot -= mCamRotSpeed * time;
 		}
@@ -192,7 +196,19 @@ public:
 		mCamera.SetPosition(mCamPos);
 		mCamera.SetRotation(mCamRot);
 		rebirth::Renderer::BeginScene(mCamera);
-		rebirth::Renderer::Submit(mShaderNoColor, mSquareVtxArray);
+
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
+
+		for (int i = 0; i < 25; i++)
+		{
+			for (int j = 0; j < 25; j++)
+			{
+				glm::vec3 pos(j * 0.06f, i * 0.06f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				rebirth::Renderer::Submit(mShaderNoColor, mSquareVtxArray, transform);
+			}
+		}
+
 		rebirth::Renderer::Submit(mShader, mVertexArray);
 		rebirth::Renderer::EndScene();
 	}
@@ -206,9 +222,9 @@ public:
 
 	void OnImguiRender() override
 	{
-		ImGui::Begin("Test");
-		ImGui::Text("Testing Rebirth Engine UI");
-		ImGui::End();
+		//ImGui::Begin("Test");
+		//ImGui::Text("Testing Rebirth Engine UI");
+		//ImGui::End();
 	}
 
 private:
@@ -223,6 +239,7 @@ private:
 	float mCamSpeed = 5.0f;
 	float mCamRotSpeed = 60.0f;
 	float mCamRot = 0.0f;
+
 	
 };
 

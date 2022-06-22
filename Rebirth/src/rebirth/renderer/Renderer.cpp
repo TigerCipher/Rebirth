@@ -39,10 +39,11 @@ namespace rebirth
 
 	}
 
-	void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray)
+	void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray, const glm::mat4& transform /*= glm::mat4(1.0f)*/)
 	{
 		shader->Bind();
 		shader->SetUniformMat4("uViewProj", sData->viewProj);
+		shader->SetUniformMat4("uModelTransform", transform);
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}

@@ -23,17 +23,17 @@
 
 #pragma once
 
-#include "Core.h"
+#include "rebirth/Core.h"
 #include "Window.h"
 #include "LayerStack.h"
-#include "events/Event.h"
-#include "events/AppEvent.h"
+#include "rebirth/events/Event.h"
+#include "rebirth/events/AppEvent.h"
 
-#include "imgui/ImguiLayer.h"
+#include "rebirth/imgui/ImguiLayer.h"
 
-#include "renderer/Shader.h"
-#include "renderer/Buffer.h"
-#include "renderer/VertexArray.h"
+#include "rebirth/renderer/Shader.h"
+#include "rebirth/renderer/Buffer.h"
+#include "rebirth/renderer/VertexArray.h"
 
 #include "Timestep.h"
 

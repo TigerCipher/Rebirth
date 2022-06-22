@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "rebirth/Input.h"
+#include "rebirth/input/Input.h"
 
 namespace rebirth
 {

@@ -31,7 +31,7 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
 
-#include "rebirth/Application.h"
+#include "rebirth/core/Application.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 

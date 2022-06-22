@@ -26,7 +26,7 @@
 
 
 #include "Win64Input.h"
-#include "rebirth/Application.h"
+#include "rebirth/core/Application.h"
 
 #include <GLFW/glfw3.h>
 
