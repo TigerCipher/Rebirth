@@ -38,6 +38,9 @@
 #include "rebirth/events/KeyEvent.h"
 #include "rebirth/events/MouseEvent.h"
 
+// Renderer
+#include "rebirth/renderer/Renderer.h"
+
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"
 

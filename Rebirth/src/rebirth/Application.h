@@ -64,16 +64,6 @@ namespace rebirth
 		ImguiLayer* mImguiLayer;
 
 		bool OnWindowClose(WindowCloseEvent& e);
-
-
-		// TEMPORARY
-		//uint mVertexBuffer{};
-		//uint mIndexBuffer{};
-		SharedPtr<Shader> mShader;
-		SharedPtr<Shader> mShaderNoColor;
-		SharedPtr<VertexArray> mVertexArray;
-
-		SharedPtr<VertexArray> mSquareVtxArray;
 	};
 
 	// Defined by game
