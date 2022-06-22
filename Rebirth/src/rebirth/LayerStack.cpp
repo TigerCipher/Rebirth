@@ -24,46 +24,46 @@
 #include "rbpch.h"
 #include "LayerStack.h"
 
-
-rebirth::LayerStack::~LayerStack()
+namespace rebirth
 {
-	for(Layer* layer : mLayers)
+	LayerStack::~LayerStack()
 	{
-		delete layer;
+		for (Layer* layer : mLayers)
+		{
+			delete layer;
+		}
 	}
-}
 
-void rebirth::LayerStack::PushLayer(Layer* layer)
-{
-	mLayers.emplace(mLayers.begin() + mInsertIndex, layer);
-	layer->OnAttach();
-}
-
-void rebirth::LayerStack::PushOverlay(Layer* overlay)
-{
-	mLayers.emplace_back(overlay);
-	overlay->OnAttach();
-}
-
-void rebirth::LayerStack::PopLayer(Layer* layer)
-{
-	if(const auto it = std::find(mLayers.begin(), mLayers.end(), layer); it != mLayers.end())
+	void LayerStack::PushLayer(Layer* layer)
 	{
-		mLayers.erase(it);
-		--mInsertIndex;
-		layer->OnDetach();
+		mLayers.emplace(mLayers.begin() + mInsertIndex, layer);
+		layer->OnAttach();
 	}
-}
 
-void rebirth::LayerStack::PopOverlay(Layer* overlay)
-{
-	if (const auto it = std::find(mLayers.begin(), mLayers.end(), overlay); it != mLayers.end())
+	void LayerStack::PushOverlay(Layer* overlay)
 	{
-		mLayers.erase(it);
-		overlay->OnDetach();
+		mLayers.emplace_back(overlay);
+		overlay->OnAttach();
 	}
+
+	void LayerStack::PopLayer(Layer* layer)
+	{
+		if (const auto it = std::find(mLayers.begin(), mLayers.end(), layer); it != mLayers.end())
+		{
+			mLayers.erase(it);
+			--mInsertIndex;
+			layer->OnDetach();
+		}
+	}
+
+	void LayerStack::PopOverlay(Layer* overlay)
+	{
+		if (const auto it = std::find(mLayers.begin(), mLayers.end(), overlay); it != mLayers.end())
+		{
+			mLayers.erase(it);
+			overlay->OnDetach();
+		}
+	}
+
+
 }
-
-
-
-

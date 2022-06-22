@@ -49,49 +49,53 @@ static GLenum GetGlType(const rebirth::ShaderDataType type)
 	return 0;
 }
 
-rebirth::OpenGLVertexArray::OpenGLVertexArray()
+namespace rebirth
 {
-	glCreateVertexArrays(1, &mId);
-}
 
-rebirth::OpenGLVertexArray::~OpenGLVertexArray()
-{
-	glDeleteVertexArrays(1, &mId);
-}
-
-void rebirth::OpenGLVertexArray::Bind() const
-{
-	glBindVertexArray(mId);
-}
-
-void rebirth::OpenGLVertexArray::Unbind() const
-{
-	glBindVertexArray(0);
-}
-
-void rebirth::OpenGLVertexArray::AddVertexBuffer(const SharedPtr<VertexBuffer>& buffer)
-{
-	RB_CORE_ASSERT(buffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout");
-
-	glBindVertexArray(mId);
-	buffer->Bind();
-	uint32_t index = 0;
-	const auto& layout = buffer->GetLayout();
-	for (const auto& elem : layout)
+	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glEnableVertexAttribArray(index);
-		glVertexAttribPointer(index, elem.GetComponentCount(), GetGlType(elem.type),
-			elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
-			reinterpret_cast<const void*>(static_cast<uintptr_t>(elem.offset)));
-		index++;
+		glCreateVertexArrays(1, &mId);
 	}
 
-	mVertexBuffers.push_back(buffer);
-}
+	OpenGLVertexArray::~OpenGLVertexArray()
+	{
+		glDeleteVertexArrays(1, &mId);
+	}
 
-void rebirth::OpenGLVertexArray::SetIndexBuffer(const SharedPtr<IndexBuffer>& buffer)
-{
-	glBindVertexArray(mId);
-	buffer->Bind();
-	mIndexBuffer = buffer;
+	void OpenGLVertexArray::Bind() const
+	{
+		glBindVertexArray(mId);
+	}
+
+	void OpenGLVertexArray::Unbind() const
+	{
+		glBindVertexArray(0);
+	}
+
+	void OpenGLVertexArray::AddVertexBuffer(const SharedPtr<VertexBuffer>& buffer)
+	{
+		RB_CORE_ASSERT(buffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout");
+
+		glBindVertexArray(mId);
+		buffer->Bind();
+		uint32_t index = 0;
+		const auto& layout = buffer->GetLayout();
+		for (const auto& elem : layout)
+		{
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, elem.GetComponentCount(), GetGlType(elem.type),
+				elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
+				reinterpret_cast<const void*>(static_cast<uintptr_t>(elem.offset)));
+			index++;
+		}
+
+		mVertexBuffers.push_back(buffer);
+	}
+
+	void OpenGLVertexArray::SetIndexBuffer(const SharedPtr<IndexBuffer>& buffer)
+	{
+		glBindVertexArray(mId);
+		buffer->Bind();
+		mIndexBuffer = buffer;
+	}
 }

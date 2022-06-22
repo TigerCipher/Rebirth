@@ -27,42 +27,46 @@
 #include "Renderer.h"
 #include "platform/opengl/OpenGLBuffer.h"
 
-rebirth::VertexBuffer* rebirth::VertexBuffer::Create(const uint32_t size, float* vertices)
+namespace rebirth
 {
-	switch (Renderer::GetAPI())
+
+	VertexBuffer* VertexBuffer::Create(const uint32_t size, float* vertices)
 	{
-	case RendererAPI::API::NONE:
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::NONE:
 		{
 			RB_CORE_ASSERT(false, "Must use a graphics API");
 			return nullptr;
 		}
 
-	case RendererAPI::API::OPENGL:
+		case RendererAPI::API::OPENGL:
 		{
 			return new OpenGLVertexBuffer(size, vertices);
 		}
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
 	}
 
-	RB_CORE_ASSERT(false, "Unknown graphics API");
-	return nullptr;
-}
-
-rebirth::IndexBuffer* rebirth::IndexBuffer::Create(const uint32_t count, uint32_t* indices)
-{
-	switch (Renderer::GetAPI())
+	IndexBuffer* IndexBuffer::Create(const uint32_t count, uint32_t* indices)
 	{
-	case RendererAPI::API::NONE:
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::NONE:
 		{
 			RB_CORE_ASSERT(false, "Must use a graphics API");
 			return nullptr;
 		}
 
-	case RendererAPI::API::OPENGL:
+		case RendererAPI::API::OPENGL:
 		{
 			return new OpenGLIndexBuffer(count, indices);
 		}
-	}
+		}
 
-	RB_CORE_ASSERT(false, "Unknown graphics API");
-	return nullptr;
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
 }

@@ -38,36 +38,40 @@ void GLAPIENTRY GLErrorCallback(GLenum src, GLenum type, GLuint id, GLenum sever
 	}
 }
 
-rebirth::OpenGLContext::OpenGLContext(GLFWwindow* window): mWindow(window)
+namespace rebirth
 {
-	RB_CORE_ASSERT(window, "Window handle is nullptr");
-}
 
-void rebirth::OpenGLContext::Init()
-{
-	RB_CORE_TRACE("Creating OpenGL context");
-	glfwMakeContextCurrent(mWindow);
+	OpenGLContext::OpenGLContext(GLFWwindow* window) : mWindow(window)
+	{
+		RB_CORE_ASSERT(window, "Window handle is nullptr");
+	}
 
-	RB_CORE_TRACE("Loading Glad (OpenGL)");
-	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	RB_CORE_ASSERT(status, "Failed to initialize Glad");
-	RB_CORE_TRACE("Glad (OpenGL) loaded!");
+	void OpenGLContext::Init()
+	{
+		RB_CORE_TRACE("Creating OpenGL context");
+		glfwMakeContextCurrent(mWindow);
 
-	const char* rendererName = (char*)glGetString(GL_RENDERER);
-	const char* vendorName = (char*)glGetString(GL_VENDOR);
-	const char* glVersionName = (char*)glGetString(GL_VERSION);
-	RB_CORE_INFO("Detected graphics unit: {} ({})", rendererName, vendorName);
-	RB_CORE_INFO("Available OpenGL Version: {}", glVersionName);
+		RB_CORE_TRACE("Loading Glad (OpenGL)");
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		RB_CORE_ASSERT(status, "Failed to initialize Glad");
+		RB_CORE_TRACE("Glad (OpenGL) loaded!");
 
-	#ifdef RB_DEBUG
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(GLErrorCallback, nullptr);
-	#endif
+		const char* rendererName = (char*)glGetString(GL_RENDERER);
+		const char* vendorName = (char*)glGetString(GL_VENDOR);
+		const char* glVersionName = (char*)glGetString(GL_VERSION);
+		RB_CORE_INFO("Detected graphics unit: {} ({})", rendererName, vendorName);
+		RB_CORE_INFO("Available OpenGL Version: {}", glVersionName);
 
-	RB_CORE_TRACE("OpenGL Context created");
-}
+		#ifdef RB_DEBUG
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(GLErrorCallback, nullptr);
+		#endif
 
-void rebirth::OpenGLContext::SwapBuffers()
-{
-	glfwSwapBuffers(mWindow);
+		RB_CORE_TRACE("OpenGL Context created");
+	}
+
+	void OpenGLContext::SwapBuffers()
+	{
+		glfwSwapBuffers(mWindow);
+	}
 }

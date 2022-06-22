@@ -30,41 +30,46 @@
 
 #include <GLFW/glfw3.h>
 
-rebirth::Input* rebirth::Input::sInstance = new Win64Input();
-
-bool rebirth::Win64Input::IsKeyPressedImpl(int keycode)
+namespace rebirth
 {
-	auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
 
-	auto state = glfwGetKey(window, keycode);
-	return state == GLFW_PRESS || state == GLFW_REPEAT;
-}
+	Input* Input::sInstance = new Win64Input();
 
-bool rebirth::Win64Input::IsMouseButtonPressedImpl(int button)
-{
-	auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
+	bool Win64Input::IsKeyPressedImpl(int keycode)
+	{
+		auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
 
-	auto state = glfwGetMouseButton(window, button);
+		auto state = glfwGetKey(window, keycode);
+		return state == GLFW_PRESS || state == GLFW_REPEAT;
+	}
 
-	return state == GLFW_PRESS;
-}
+	bool Win64Input::IsMouseButtonPressedImpl(int button)
+	{
+		auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
 
-float rebirth::Win64Input::GetMouseXImpl()
-{
-	auto[x, y] = GetMousePosImpl();
-	return x;
-}
+		auto state = glfwGetMouseButton(window, button);
 
-float rebirth::Win64Input::GetMouseYImpl()
-{
-	auto [x, y] = GetMousePosImpl();
-	return y;
-}
+		return state == GLFW_PRESS;
+	}
 
-std::pair<float, float> rebirth::Win64Input::GetMousePosImpl()
-{
-	auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
-	double x, y;
-	glfwGetCursorPos(window, &x, &y);
-	return { static_cast<float>(x), static_cast<float>(y) };
+	float Win64Input::GetMouseXImpl()
+	{
+		auto [x, y] = GetMousePosImpl();
+		return x;
+	}
+
+	float Win64Input::GetMouseYImpl()
+	{
+		auto [x, y] = GetMousePosImpl();
+		return y;
+	}
+
+	std::pair<float, float> Win64Input::GetMousePosImpl()
+	{
+		auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
+		double x, y;
+		glfwGetCursorPos(window, &x, &y);
+		return { static_cast<float>(x), static_cast<float>(y) };
+	}
+
 }

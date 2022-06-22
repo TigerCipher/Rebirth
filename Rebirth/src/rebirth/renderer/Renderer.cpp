@@ -25,18 +25,21 @@
 #include "rbpch.h"
 #include "Renderer.h"
 
-void rebirth::Renderer::BeginScene()
+namespace rebirth
 {
+	void Renderer::BeginScene()
+	{
 
-}
+	}
 
-void rebirth::Renderer::EndScene()
-{
+	void Renderer::EndScene()
+	{
 
-}
+	}
 
-void rebirth::Renderer::Submit(const SharedPtr<VertexArray>& vertexArray)
-{
-	vertexArray->Bind();
-	RenderCommand::DrawIndexed(vertexArray);
+	void Renderer::Submit(const SharedPtr<VertexArray>& vertexArray)
+	{
+		vertexArray->Bind();
+		RenderCommand::DrawIndexed(vertexArray);
+	}
 }

@@ -28,22 +28,26 @@
 #include "Renderer.h"
 #include "platform/opengl/OpenGLVertexArray.h"
 
-rebirth::VertexArray* rebirth::VertexArray::Create()
+namespace rebirth
 {
-	switch (Renderer::GetAPI())
+
+	VertexArray* VertexArray::Create()
 	{
-	case RendererAPI::API::NONE:
-	{
-		RB_CORE_ASSERT(false, "Must use a graphics API");
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::NONE:
+		{
+			RB_CORE_ASSERT(false, "Must use a graphics API");
+			return nullptr;
+		}
+
+		case RendererAPI::API::OPENGL:
+		{
+			return new OpenGLVertexArray();
+		}
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
 		return nullptr;
 	}
-
-	case RendererAPI::API::OPENGL:
-	{
-		return new OpenGLVertexArray();
-	}
-	}
-
-	RB_CORE_ASSERT(false, "Unknown graphics API");
-	return nullptr;
 }

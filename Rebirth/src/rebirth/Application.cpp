@@ -29,7 +29,6 @@
 #include "platform/windows/Win64Window.h"
 #include "renderer/Renderer.h"
 
-// TODO: rebirth:: is nice because both resharper and visual assist auto implement functions using that, but especially when dealing with statics, let's just start doing this
 namespace rebirth
 {
 	Application* Application::sInstance = nullptr;

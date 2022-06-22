@@ -25,17 +25,21 @@
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-SharedPtr<spdlog::logger> rebirth::Log::sCoreLogger;
-SharedPtr<spdlog::logger> rebirth::Log::sClientLogger;
-
-
-void rebirth::Log::Init()
+namespace rebirth
 {
-	spdlog::set_pattern("%^[%T] [%n] [%l] %v%$");
 
-	sCoreLogger = spdlog::stdout_color_mt("Rebirth Engine");
-	sCoreLogger->set_level(spdlog::level::trace);
-	
-	sClientLogger = spdlog::stdout_color_mt("Client");
-	sClientLogger->set_level(spdlog::level::trace);
+	SharedPtr<spdlog::logger> Log::sCoreLogger;
+	SharedPtr<spdlog::logger> Log::sClientLogger;
+
+
+	void Log::Init()
+	{
+		spdlog::set_pattern("%^[%T] [%n] [%l] %v%$");
+
+		sCoreLogger = spdlog::stdout_color_mt("Rebirth Engine");
+		sCoreLogger->set_level(spdlog::level::trace);
+
+		sClientLogger = spdlog::stdout_color_mt("Client");
+		sClientLogger->set_level(spdlog::level::trace);
+	}
 }

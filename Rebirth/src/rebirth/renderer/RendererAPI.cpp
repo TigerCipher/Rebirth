@@ -25,7 +25,8 @@
 
 #include "RendererAPI.h"
 
-
-rebirth::RendererAPI::API rebirth::RendererAPI::sApi = rebirth::RendererAPI::API::OPENGL;
-
+namespace rebirth
+{
+	RendererAPI::API RendererAPI::sApi = RendererAPI::API::OPENGL;
+}
 

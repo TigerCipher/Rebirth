@@ -27,6 +27,9 @@
 
 #include "platform/opengl/OpenGLRendererAPI.h"
 
-// Temp
-rebirth::RendererAPI* rebirth::RenderCommand::sRendererApi = new OpenGLRendererAPI;
+namespace rebirth
+{
+	// Temp
+	RendererAPI* RenderCommand::sRendererApi = new OpenGLRendererAPI;
 
+}

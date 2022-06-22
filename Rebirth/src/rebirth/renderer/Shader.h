@@ -38,6 +38,6 @@ namespace rebirth
 		void Unbind() const;
 	
 	private:
-		uint32_t mID;
+		uint32_t mId = 0;
 	};
 }
