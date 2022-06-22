@@ -15,32 +15,46 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Shader.h
-// Date File Created: 06/19/2022 at 2:50 PM
+// File Name: OrthoCamera.cpp
+// Date File Created: 6/21/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
+#include "rbpch.h"
 
+#include "OrthoCamera.h"
 
-#pragma once
-
-#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace rebirth
 {
-	class Shader
+
+	OrthoCamera::OrthoCamera(float left, float right, float bottom, float top) :
+		mProjection(glm::ortho(left, right, bottom, top, -1.0f, 1.0f)), mView(1.0f)
 	{
-	public:
-		Shader(const std::string& vertexSrc, const std::string& fragmentSrc);
-		~Shader();
+		mViewProjection = mProjection * mView;
+	}
 
-		void Bind() const;
-		void Unbind() const;
+	void OrthoCamera::SetPosition(const glm::vec3& pos)
+	{
+		mPosition = pos;
+		RecalculateViewMatrix();
+	}
 
-		void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
-	
-	private:
-		uint32_t mId = 0;
-	};
+
+	void OrthoCamera::SetRotation(const float rot)
+	{
+		mRotation = rot;
+		RecalculateViewMatrix();
+	}
+
+	void OrthoCamera::RecalculateViewMatrix()
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), mPosition) * glm::rotate(glm::mat4(1.0f), glm::radians(mRotation), glm::vec3(0, 0, 1));
+		mView = glm::inverse(transform);
+		mViewProjection = mProjection * mView;
+	}
+
 }
+

@@ -28,7 +28,7 @@
 class SampleLayer final : public rebirth::Layer
 {
 public:
-	SampleLayer() : Layer("Sample")
+	SampleLayer() : Layer("Sample"), mCamera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		mVertexArray.reset(rebirth::VertexArray::Create());
 
@@ -84,14 +84,17 @@ public:
 	layout(location=0) in vec3 aPos;
 	layout(location=1) in vec4 aColor;
 
+	uniform mat4 uViewProj;
+
 	out vec3 vPos;
 	out vec4 vColor;
+
 	
 	void main()
 	{
-		vPos = aPos + 0.5;
+		vPos = aPos;
 		vColor = aColor;
-		gl_Position = vec4(aPos + 0.5, 1.0);
+		gl_Position = uViewProj * vec4(aPos, 1.0);
 	}
 
 	)";
@@ -117,12 +120,15 @@ public:
 
 	layout(location=0) in vec3 aPos;
 
+	uniform mat4 uViewProj;
+
 	out vec3 vPos;
+
 	
 	void main()
 	{
-		vPos = aPos + 0.5;
-		gl_Position = vec4(aPos + 0.5, 1.0);
+		vPos = aPos;
+		gl_Position = uViewProj * vec4(aPos, 1.0);
 	}
 
 	)";
@@ -147,14 +153,11 @@ public:
 
 	void OnUpdate() override
 	{
-		rebirth::Renderer::BeginScene();
-
-		mShaderNoColor->Bind();
-		rebirth::Renderer::Submit(mSquareVtxArray);
-
-		mShader->Bind();
-		rebirth::Renderer::Submit(mVertexArray);
-
+		//mCamera.SetPosition({ 0.5f, 0.5f, 0.0f });
+		mCamera.SetRotation(45.0f);
+		rebirth::Renderer::BeginScene(mCamera);
+		rebirth::Renderer::Submit(mShaderNoColor, mSquareVtxArray);
+		rebirth::Renderer::Submit(mShader, mVertexArray);
 		rebirth::Renderer::EndScene();
 	}
 
@@ -175,6 +178,8 @@ private:
 	SharedPtr<rebirth::VertexArray> mVertexArray;
 
 	SharedPtr<rebirth::VertexArray> mSquareVtxArray;
+
+	rebirth::OrthoCamera mCamera;
 };
 
 class Sandbox final : public rebirth::Application

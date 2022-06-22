@@ -26,6 +26,9 @@
 
 #include "RenderCommand.h"
 
+#include "OrthoCamera.h"
+#include "Shader.h"
+
 namespace rebirth
 {
 
@@ -34,12 +37,18 @@ namespace rebirth
 	{
 	public:
 
-		static void BeginScene();
+		static void BeginScene(OrthoCamera& camera);
 		static void EndScene();
 
-		static void Submit(const SharedPtr<VertexArray>& vertexArray);
+		static void Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray);
 
 		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 	private:
+		struct Data
+		{
+			glm::mat4 viewProj;
+		};
+
+		static Data* sData;
 	};
 }

@@ -25,8 +25,13 @@
 
 #include "Core.h"
 
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/ostr.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
+
+#pragma warning(push, 0)
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+#pragma warning(pop)
 
 namespace rebirth
 {
@@ -43,6 +48,26 @@ namespace rebirth
 		static SharedPtr<spdlog::logger> sClientLogger;
 	};
 }
+
+
+template<typename OStream, glm::length_t L, typename T, glm::qualifier Q>
+inline OStream& operator<<(OStream& os, const glm::vec<L, T, Q>& vector)
+{
+	return os << glm::to_string(vector);
+}
+
+template<typename OStream, glm::length_t C, glm::length_t R, typename T, glm::qualifier Q>
+inline OStream& operator<<(OStream& os, const glm::mat<C, R, T, Q>& matrix)
+{
+	return os << glm::to_string(matrix);
+}
+
+template<typename OStream, typename T, glm::qualifier Q>
+inline OStream& operator<<(OStream& os, glm::qua<T, Q> quaternion)
+{
+	return os << glm::to_string(quaternion);
+}
+
 
 #define RB_CORE_TRACE(...)	::rebirth::Log::GetCoreLogger()->trace(__VA_ARGS__)
 #define RB_CORE_INFO(...)	::rebirth::Log::GetCoreLogger()->info(__VA_ARGS__)

@@ -40,6 +40,7 @@
 
 // Renderer
 #include "rebirth/renderer/Renderer.h"
+#include "rebirth/renderer/OrthoCamera.h"
 
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"

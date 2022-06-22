@@ -27,9 +27,11 @@
 
 namespace rebirth
 {
-	void Renderer::BeginScene()
-	{
+	Renderer::Data* Renderer::sData = new Renderer::Data;
 
+	void Renderer::BeginScene(OrthoCamera& camera)
+	{
+		sData->viewProj = camera.ViewProjectionMatrix();
 	}
 
 	void Renderer::EndScene()
@@ -37,8 +39,10 @@ namespace rebirth
 
 	}
 
-	void Renderer::Submit(const SharedPtr<VertexArray>& vertexArray)
+	void Renderer::Submit(const SharedPtr<Shader>& shader, const SharedPtr<VertexArray>& vertexArray)
 	{
+		shader->Bind();
+		shader->SetUniformMat4("uViewProj", sData->viewProj);
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}
