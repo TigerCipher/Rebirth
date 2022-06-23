@@ -39,7 +39,7 @@ namespace rebirth
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
 		RB_CORE_TRACE("Creating core application");
 		sInstance = this;
-		mWindow = UniquePtr<Window>(Window::Create());
+		mWindow = Scope<Window>(Window::Create());
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		//mWindow->SetVSync(false);
 

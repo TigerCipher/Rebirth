@@ -15,38 +15,35 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: RenderCommand.h
-// Date File Created: 6/21/2022
+// File Name: Texture.cpp
+// Date File Created: 6/22/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-#pragma once
+#include "rbpch.h"
+#include "Texture.h"
 
-#include "RendererAPI.h"
+#include "Renderer.h"
+#include "platform/opengl/OpenGLTexture.h"
 
 namespace rebirth
 {
-	class RenderCommand
+
+	Ref<rebirth::Texture2D> Texture2D::Create(const std::string& path)
 	{
-	public:
-		inline static void SetClearColor(const glm::vec4& color)
+		switch (Renderer::GetAPI())
 		{
-			sRendererApi->SetClearColor(color);
+			case RendererAPI::API::NONE:
+			{
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+			}
+
+			case RendererAPI::API::OPENGL: return createRef<OpenGLTexture2D>(path);
 		}
 
-		inline static void Clear()
-		{
-			sRendererApi->Clear();
-		}
-
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
-		{
-			sRendererApi->DrawIndexed(vertexArray);
-		}
-
-	private:
-		static RendererAPI* sRendererApi;
-	};
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
 
 }
-

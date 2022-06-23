@@ -60,7 +60,7 @@ namespace rebirth
 	private:
 		static Application* sInstance;
 		
-		UniquePtr<Window> mWindow;
+		Scope<Window> mWindow;
 		bool mRunning = true;
 		LayerStack mLayerStack;
 		ImguiLayer* mImguiLayer;

@@ -44,7 +44,7 @@ public:
 			0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top center
 		};
 
-		SharedPtr<rebirth::VertexBuffer> triVertBuffer;
+		Ref<rebirth::VertexBuffer> triVertBuffer;
 		triVertBuffer.reset(rebirth::VertexBuffer::Create(sizeof(triVerts), triVerts));
 
 		rebirth::BufferLayout triLayout = {
@@ -57,28 +57,32 @@ public:
 
 
 		uint32_t triIndices[3] = { 0, 1, 2 };
-		SharedPtr<rebirth::IndexBuffer> triIndBuffer;
+		Ref<rebirth::IndexBuffer> triIndBuffer;
 		triIndBuffer.reset(rebirth::IndexBuffer::Create(sizeof(triIndices) / sizeof(uint32_t), triIndices));
 
 		mVertexArray->SetIndexBuffer(triIndBuffer);
 
 
-		float sq_verts[3 * 4] =
+		float sq_verts[5 * 4] =
 		{
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f,
-			-0.5f, 0.5f, 0.0f
+			/* Positions              Tex coords*/
+			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+			0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
+			0.5f, 0.5f, 0.0f,		1.0f, 1.0f,
+			-0.5f, 0.5f, 0.0f,		0.0f, 1.0f
 		};
 
 		mSquareVtxArray.reset(rebirth::VertexArray::Create());
-		SharedPtr<rebirth::VertexBuffer> svb;
+		Ref<rebirth::VertexBuffer> svb;
 		svb.reset(rebirth::VertexBuffer::Create(sizeof(sq_verts), sq_verts));
-		svb->SetLayout({ { rebirth::ShaderDataType::FLOAT3, "aPos" } });
+		svb->SetLayout({
+				{ rebirth::ShaderDataType::FLOAT3, "aPos" },
+				{ rebirth::ShaderDataType::FLOAT2, "aTexCoord" }
+			});
 		mSquareVtxArray->AddVertexBuffer(svb);
 
 		uint32_t sq_indices[6] = { 0, 1, 2, 2, 3, 0 };
-		SharedPtr<rebirth::IndexBuffer> sib;
+		Ref<rebirth::IndexBuffer> sib;
 		sib.reset(rebirth::IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices));
 
 		mSquareVtxArray->SetIndexBuffer(sib);
@@ -156,8 +160,48 @@ public:
 
 	)";
 
+		const std::string vertSrcTexture = R"(
+	#version 330 core
+
+	layout(location=0) in vec3 aPos;
+	layout(location=1) in vec2 aTexCoord;
+
+	uniform mat4 uViewProj;
+	uniform mat4 uModelTransform;
+
+	out vec2 vTexCoord;
+	
+	void main()
+	{
+		vTexCoord = aTexCoord;
+		gl_Position = uViewProj * uModelTransform * vec4(aPos, 1.0);
+	}
+
+	)";
+
+		const std::string fragSrcTexture = R"(
+	#version 330 core
+
+	layout(location=0) out vec4 color;
+
+	in vec2 vTexCoord;
+
+	uniform sampler2D uTexture;
+
+	void main()
+	{
+		color = texture(uTexture, vTexCoord);
+	}
+
+	)";
+
 		mShader.reset(rebirth::Shader::Create(vertSrc, fragSrc));
 		mShaderColor.reset(rebirth::Shader::Create(vertSrcColor, fragSrcColor));
+		mShaderTexture.reset(rebirth::Shader::Create(vertSrcTexture, fragSrcTexture));
+
+		mTexture = rebirth::Texture2D::Create("assets/textures/missing_texture.png");
+		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderTexture)->Bind();
+		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderTexture)->SetUniformInt("uTexture", 0);
 	}
 
 	void OnUpdate(rebirth::Timestep timestep) override
@@ -217,7 +261,9 @@ public:
 			}
 		}
 
-		rebirth::Renderer::Submit(mShader, mVertexArray);
+		mTexture->Bind();
+		rebirth::Renderer::Submit(mShaderTexture, mSquareVtxArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		//rebirth::Renderer::Submit(mShader, mVertexArray);
 		rebirth::Renderer::EndScene();
 	}
 
@@ -236,11 +282,12 @@ public:
 	}
 
 private:
-	SharedPtr<rebirth::Shader> mShader;
-	SharedPtr<rebirth::Shader> mShaderColor;
-	SharedPtr<rebirth::VertexArray> mVertexArray;
-
-	SharedPtr<rebirth::VertexArray> mSquareVtxArray;
+	Ref<rebirth::Shader> mShader;
+	Ref<rebirth::Shader> mShaderColor;
+	Ref<rebirth::Shader> mShaderTexture;
+	Ref<rebirth::VertexArray> mVertexArray;
+	Ref<rebirth::VertexArray> mSquareVtxArray;
+	Ref<rebirth::Texture> mTexture;
 
 	rebirth::OrthoCamera mCamera;
 	glm::vec3 mCamPos{0.0f};

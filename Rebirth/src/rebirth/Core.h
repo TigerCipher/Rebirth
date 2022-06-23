@@ -70,6 +70,7 @@
 // Types and shortcuts
 
 using uint = unsigned int;
+using bytechar = unsigned char;
 
 #define BIT(x) (1 << (x))
 
@@ -78,27 +79,30 @@ using uint = unsigned int;
 
 // Smart Pointers (might move)
 
-
-//template<typename T>
-//using list = std::vector<T>;
-
-//temp
 #include <memory>
 
 template <typename T>
 using UniquePtr = std::unique_ptr<T>;
 
+// Scope as well as above in case I decide to make my own version of unique ptr
+template <typename T>
+using Scope = std::unique_ptr<T>;
+
 template<typename T>
 using SharedPtr = std::shared_ptr<T>;
 
+// Ref as well as above in case I decide to make my own version of shared ptr
+template<typename T>
+using Ref = std::shared_ptr<T>;
+
 template<typename T, typename... Args>
-constexpr UniquePtr<T> createScope(Args&& ...args)
+constexpr Scope<T> createScope(Args&& ...args)
 {
 	return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
 template <typename T, typename... Args>
-constexpr SharedPtr<T> createRef(Args&& ...args)
+constexpr Ref<T> createRef(Args&& ...args)
 {
 	return std::make_shared<T>(std::forward<Args>(args)...);
 }

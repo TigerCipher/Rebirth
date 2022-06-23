@@ -31,7 +31,7 @@ namespace rebirth
 
 		void SetClearColor(const glm::vec4& color) override;
 		void Clear() override;
-		void DrawIndexed(const SharedPtr<VertexArray>& vertexArray) override;
+		void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
 
 	private:
 	};

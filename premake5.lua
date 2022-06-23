@@ -16,13 +16,13 @@ IncludeDir["GLFW"] = "Rebirth/libs/glfw/include"
 IncludeDir["Glad"] = "Rebirth/libs/Glad/include"
 IncludeDir["ImGui"] = "Rebirth/libs/imgui"
 IncludeDir["glm"] = "Rebirth/libs/glm"
+IncludeDir["stb_image"] = "Rebirth/libs/stb_image"
 
 -- Includes the premake file added to the glfw fork/submodule
 group "Dependencies"
 	include "Rebirth/libs/glfw"
 	include "Rebirth/libs/Glad"
 	include "Rebirth/libs/imgui"
-
 group ""
 
 project "Rebirth"
@@ -42,6 +42,7 @@ project "Rebirth"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/libs/stb_image/stb_image.cpp",
 		"premake5.lua"
 	}
 
@@ -53,6 +54,7 @@ project "Rebirth"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}",
 	}
 
 	links

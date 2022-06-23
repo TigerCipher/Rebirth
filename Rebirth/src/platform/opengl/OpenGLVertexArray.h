@@ -36,23 +36,23 @@ namespace rebirth
 		void Bind() const override;
 		void Unbind() const override;
 
-		void AddVertexBuffer(const SharedPtr<VertexBuffer>& buffer) override;
-		void SetIndexBuffer(const SharedPtr<IndexBuffer>& buffer) override;
+		void AddVertexBuffer(const Ref<VertexBuffer>& buffer) override;
+		void SetIndexBuffer(const Ref<IndexBuffer>& buffer) override;
 
-		const std::vector<SharedPtr<VertexBuffer>>& GetVertexBuffers() const override
+		const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const override
 		{
 			return mVertexBuffers;
 		}
 
-		const SharedPtr<IndexBuffer>& GetIndexBuffer() const override
+		const Ref<IndexBuffer>& GetIndexBuffer() const override
 		{
 			return mIndexBuffer;
 		}
 	
 	private:
 		uint32_t mId = 0;
-		std::vector<SharedPtr<VertexBuffer>> mVertexBuffers;
-		SharedPtr<IndexBuffer> mIndexBuffer;
+		std::vector<Ref<VertexBuffer>> mVertexBuffers;
+		Ref<IndexBuffer> mIndexBuffer;
 	};
 }
 

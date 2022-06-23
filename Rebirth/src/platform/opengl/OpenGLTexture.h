@@ -15,38 +15,41 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: RenderCommand.h
-// Date File Created: 6/21/2022
+// File Name: OpenGLTexture.h
+// Date File Created: 6/22/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
+#include "rbpch.h"
 
-#include "RendererAPI.h"
+#include "rebirth/renderer/Texture.h"
 
 namespace rebirth
 {
-	class RenderCommand
+	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		inline static void SetClearColor(const glm::vec4& color)
+		OpenGLTexture2D(const std::string& path);
+		virtual ~OpenGLTexture2D();
+
+		void Bind(uint slot = 0) const override;
+
+		int GetWidth() const override
 		{
-			sRendererApi->SetClearColor(color);
+			return mWidth;
 		}
 
-		inline static void Clear()
+		int GetHeight() const override
 		{
-			sRendererApi->Clear();
+			return mHeight;
 		}
-
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
-		{
-			sRendererApi->DrawIndexed(vertexArray);
-		}
-
 	private:
-		static RendererAPI* sRendererApi;
-	};
+		int mWidth;
+		int mHeight;
+		uint mId;
 
+		std::string mPath;
+	};
 }
 

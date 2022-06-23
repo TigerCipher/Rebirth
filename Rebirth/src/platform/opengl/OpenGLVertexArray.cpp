@@ -72,7 +72,7 @@ namespace rebirth
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(const SharedPtr<VertexBuffer>& buffer)
+	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buffer)
 	{
 		RB_CORE_ASSERT(buffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout");
 
@@ -92,7 +92,7 @@ namespace rebirth
 		mVertexBuffers.push_back(buffer);
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(const SharedPtr<IndexBuffer>& buffer)
+	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& buffer)
 	{
 		glBindVertexArray(mId);
 		buffer->Bind();

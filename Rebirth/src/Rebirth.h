@@ -46,6 +46,7 @@
 #include "rebirth/renderer/Renderer.h"
 #include "rebirth/renderer/RenderCommand.h"
 #include "rebirth/renderer/Shader.h"
+#include "rebirth/renderer/Texture.h"
 #include "rebirth/renderer/VertexArray.h"
 #include "rebirth/renderer/OrthoCamera.h"
 

@@ -15,38 +15,31 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: RenderCommand.h
-// Date File Created: 6/21/2022
+// File Name: Texture.h
+// Date File Created: 6/22/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include "RendererAPI.h"
+
 
 namespace rebirth
 {
-	class RenderCommand
+	class Texture
 	{
 	public:
-		inline static void SetClearColor(const glm::vec4& color)
-		{
-			sRendererApi->SetClearColor(color);
-		}
+		virtual void Bind(uint slot = 0) const = 0;
 
-		inline static void Clear()
-		{
-			sRendererApi->Clear();
-		}
-
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
-		{
-			sRendererApi->DrawIndexed(vertexArray);
-		}
-
-	private:
-		static RendererAPI* sRendererApi;
+		virtual int GetWidth() const = 0;
+		virtual int GetHeight() const = 0;
 	};
 
-}
+	class Texture2D : public Texture
+	{
+	public:
+		virtual ~Texture2D() = default;
 
+		static Ref<Texture2D> Create(const std::string& path);
+	};
+}
