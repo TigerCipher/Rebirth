@@ -46,4 +46,19 @@ namespace rebirth
 		return nullptr;
 	}
 
+	rebirth::Shader* Shader::Create(const std::string& filepath)
+	{
+		switch (Renderer::GetAPI())
+		{
+			case RendererAPI::API::NONE:
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+
+			case RendererAPI::API::OPENGL: return new OpenGLShader(filepath);
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
+
 }

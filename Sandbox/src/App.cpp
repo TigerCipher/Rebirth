@@ -160,44 +160,10 @@ public:
 
 	)";
 
-		const std::string vertSrcTexture = R"(
-	#version 330 core
-
-	layout(location=0) in vec3 aPos;
-	layout(location=1) in vec2 aTexCoord;
-
-	uniform mat4 uViewProj;
-	uniform mat4 uModelTransform;
-
-	out vec2 vTexCoord;
-	
-	void main()
-	{
-		vTexCoord = aTexCoord;
-		gl_Position = uViewProj * uModelTransform * vec4(aPos, 1.0);
-	}
-
-	)";
-
-		const std::string fragSrcTexture = R"(
-	#version 330 core
-
-	layout(location=0) out vec4 color;
-
-	in vec2 vTexCoord;
-
-	uniform sampler2D uTexture;
-
-	void main()
-	{
-		color = texture(uTexture, vTexCoord);
-	}
-
-	)";
-
 		mShader.reset(rebirth::Shader::Create(vertSrc, fragSrc));
+
 		mShaderColor.reset(rebirth::Shader::Create(vertSrcColor, fragSrcColor));
-		mShaderTexture.reset(rebirth::Shader::Create(vertSrcTexture, fragSrcTexture));
+		mShaderTexture.reset(rebirth::Shader::Create("assets/shaders/texture.glsl"));
 
 		mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
 		mTextureGun = rebirth::Texture2D::Create("assets/textures/Gun1.png");

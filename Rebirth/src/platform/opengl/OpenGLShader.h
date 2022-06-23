@@ -30,6 +30,7 @@ namespace rebirth
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader(const std::string& filepath);
 		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 
@@ -46,6 +47,9 @@ namespace rebirth
 
 	private:
 		uint32_t mId = 0;
+		std::string Read(const std::string& filepath);
+		std::unordered_map<uint, std::string> Preprocess(const std::string& src);
+		void Compile(const std::unordered_map<uint, std::string>& sources);
 	};
 }
 

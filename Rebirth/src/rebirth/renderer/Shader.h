@@ -35,5 +35,6 @@ namespace rebirth
 		virtual void Unbind() const = 0;
 
 		static Shader* Create(const std::string& vertexSrc, const std::string& fragSrc);
+		static Shader* Create(const std::string& filepath);
 	};
 }

@@ -49,8 +49,8 @@
 #ifdef RB_ENABLE_ASSERTS
 	#include <filesystem> //TODO: Move
 
-	// Alteratively we could use the same "default" message for both "WITH_MSG" and "NO_MSG" and
-	// provide support for custom formatting by concatenating the formatting string instead of having the format inside the default message
+
+	// TODO: #IMPORTANT: __debugbreak() is windows only I believe, need to make this cross platform
 	#define RB_INTERNAL_ASSERT_IMPL(type, check, msg, ...) { if(!(check)) { RB##type##ERROR(msg, __VA_ARGS__); __debugbreak(); /*RB_DEBUGBREAK();*/ } }
 	#define RB_INTERNAL_ASSERT_WITH_MSG(type, check, ...) RB_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}", __VA_ARGS__)
 	#define RB_INTERNAL_ASSERT_NO_MSG(type, check) RB_INTERNAL_ASSERT_IMPL(type, check, "Assertion '{0}' failed at {1}:{2}", RB_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename().string(), __LINE__)
@@ -65,6 +65,7 @@
 	#define RB_ASSERT(...)
 	#define RB_CORE_ASSERT(...)
 #endif
+
 
 
 // Types and shortcuts
