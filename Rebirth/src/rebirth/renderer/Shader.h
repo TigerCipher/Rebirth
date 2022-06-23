@@ -39,8 +39,10 @@ namespace rebirth
 		void Unbind() const;
 
 		void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
+		void SetUniformVec4(const std::string& name, const glm::vec4& vec);
 	
 	private:
 		uint32_t mId = 0;
+	public:
 	};
 }

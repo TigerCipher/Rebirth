@@ -37,14 +37,16 @@ namespace rebirth
 	Application::Application()
 	{
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
+		RB_CORE_TRACE("Creating core application");
 		sInstance = this;
-		//mWindow = createScope<Win64Window>(Window::Create());
-		mWindow = std::unique_ptr<Window>(Window::Create());
+		mWindow = UniquePtr<Window>(Window::Create());
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		//mWindow->SetVSync(false);
 
 		mImguiLayer = new ImguiLayer();
 		PushOverlay(mImguiLayer);
+
+		RB_CORE_TRACE("Core application created");
 	}
 
 	void Application::Run()

@@ -119,7 +119,7 @@ public:
 
 	)";
 
-		const std::string vertSrc2 = R"(
+		const std::string vertSrcColor = R"(
 	#version 330 core
 
 	layout(location=0) in vec3 aPos;
@@ -138,27 +138,28 @@ public:
 
 	)";
 
-		const std::string fragSrc2 = R"(
+		const std::string fragSrcColor = R"(
 	#version 330 core
 
 	layout(location=0) out vec4 color;
 
 	in vec3 vPos;
 
+	uniform vec4 uColor;
+
 	void main()
 	{
-		color = vec4(0.2, 0.4, 0.7, 1.0);
+		color = uColor;
 	}
 
 	)";
 
 		mShader.reset(new rebirth::Shader(vertSrc, fragSrc));
-		mShaderNoColor.reset(new rebirth::Shader(vertSrc2, fragSrc2));
+		mShaderColor.reset(new rebirth::Shader(vertSrcColor, fragSrcColor));
 	}
 
 	void OnUpdate(rebirth::Timestep timestep) override
 	{
-		RB_CLIENT_TRACE("Delta time: {}s  -  {}ms", timestep.Seconds(), timestep.Milliseconds());
 		rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 		rebirth::RenderCommand::Clear();
 
@@ -199,13 +200,25 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
 
+
+		glm::vec4 red = { 0.6f, 0.2f, 0.2f, 1.0f };
+		glm::vec4 blue = { 0.2f, 0.2f, 0.6f, 1.0f };
 		for (int i = 0; i < 25; i++)
 		{
 			for (int j = 0; j < 25; j++)
 			{
 				glm::vec3 pos(j * 0.06f, i * 0.06f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				rebirth::Renderer::Submit(mShaderNoColor, mSquareVtxArray, transform);
+				if (j % 2 == 0)
+				{
+					mShaderColor->SetUniformVec4("uColor", blue);
+				}
+				else
+				{
+					mShaderColor->SetUniformVec4("uColor", mSquareColor);
+
+				}
+				rebirth::Renderer::Submit(mShaderColor, mSquareVtxArray, transform);
 			}
 		}
 
@@ -222,14 +235,16 @@ public:
 
 	void OnImguiRender() override
 	{
-		//ImGui::Begin("Test");
-		//ImGui::Text("Testing Rebirth Engine UI");
-		//ImGui::End();
+		ImGui::Begin("Color Changer");
+		float col[3] = { mSquareColor.r, mSquareColor.g, mSquareColor.b };
+		ImGui::ColorPicker3("Square Color", col);
+		ImGui::End();
+		mSquareColor = glm::vec4(col[0], col[1], col[2], 1.0f);
 	}
 
 private:
 	SharedPtr<rebirth::Shader> mShader;
-	SharedPtr<rebirth::Shader> mShaderNoColor;
+	SharedPtr<rebirth::Shader> mShaderColor;
 	SharedPtr<rebirth::VertexArray> mVertexArray;
 
 	SharedPtr<rebirth::VertexArray> mSquareVtxArray;
@@ -240,6 +255,7 @@ private:
 	float mCamRotSpeed = 60.0f;
 	float mCamRot = 0.0f;
 
+	glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
 	
 };
 
