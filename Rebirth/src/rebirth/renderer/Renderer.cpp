@@ -31,6 +31,11 @@ namespace rebirth
 {
 	Renderer::Data* Renderer::sData = new Renderer::Data;
 
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
+
 	void Renderer::BeginScene(OrthoCamera& camera)
 	{
 		sData->viewProj = camera.ViewProjectionMatrix();
@@ -49,4 +54,5 @@ namespace rebirth
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}
+
 }

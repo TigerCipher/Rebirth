@@ -29,6 +29,12 @@ namespace rebirth
 	class RenderCommand
 	{
 	public:
+
+		inline static void Init()
+		{
+			sRendererApi->Init();
+		}
+
 		inline static void SetClearColor(const glm::vec4& color)
 		{
 			sRendererApi->SetClearColor(color);

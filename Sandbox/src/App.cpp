@@ -199,7 +199,9 @@ public:
 		mShaderColor.reset(rebirth::Shader::Create(vertSrcColor, fragSrcColor));
 		mShaderTexture.reset(rebirth::Shader::Create(vertSrcTexture, fragSrcTexture));
 
-		mTexture = rebirth::Texture2D::Create("assets/textures/missing_texture.png");
+		mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
+		mTextureGun = rebirth::Texture2D::Create("assets/textures/Gun1.png");
+
 		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderTexture)->Bind();
 		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderTexture)->SetUniformInt("uTexture", 0);
 	}
@@ -263,6 +265,10 @@ public:
 
 		mTexture->Bind();
 		rebirth::Renderer::Submit(mShaderTexture, mSquareVtxArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		mTextureGun->Bind();
+		rebirth::Renderer::Submit(mShaderTexture, mSquareVtxArray, glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, -0.25f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
 		//rebirth::Renderer::Submit(mShader, mVertexArray);
 		rebirth::Renderer::EndScene();
 	}
@@ -288,6 +294,7 @@ private:
 	Ref<rebirth::VertexArray> mVertexArray;
 	Ref<rebirth::VertexArray> mSquareVtxArray;
 	Ref<rebirth::Texture> mTexture;
+	Ref<rebirth::Texture> mTextureGun;
 
 	rebirth::OrthoCamera mCamera;
 	glm::vec3 mCamPos{0.0f};

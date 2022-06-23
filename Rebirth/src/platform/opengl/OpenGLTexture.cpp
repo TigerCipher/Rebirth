@@ -37,17 +37,32 @@ namespace rebirth
 		RB_CORE_TRACE("Loading texture from file {}", path);
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
-		bytechar* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		byte* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		//TODO Perhaps default texture instead?
 		RB_CORE_ASSERT(data, "Failed to load texture file");
 		mWidth = width;
 		mHeight = height;
 
-		glCreateTextures(GL_TEXTURE_2D, 1, &mId);
-		glTextureStorage2D(mId, 1, GL_RGB8, mWidth, mHeight);
+		uint internalFormat = 0;
+		uint dataFormat = 0;
+		if (channels == 4)
+		{
+			internalFormat = GL_RGBA8;
+			dataFormat = GL_RGBA;
+		}
+		else if (channels == 3)
+		{
+			internalFormat = GL_RGB8;
+			dataFormat = GL_RGB;
+		}
 
+		RB_CORE_ASSERT(internalFormat & dataFormat, "Image format not supported");
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &mId);
+		glTextureStorage2D(mId, 1, internalFormat, mWidth, mHeight);
 		glTextureParameteri(mId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTextureSubImage2D(mId, 0, 0, 0, mWidth, mHeight, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(mId, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
 
 		stbi_image_free(data);
 

@@ -69,8 +69,12 @@
 
 // Types and shortcuts
 
-using uint = unsigned int;
-using bytechar = unsigned char;
+// encapsulating in namespace to avoid possible duplication
+namespace rebirth
+{
+	using uint = unsigned int;
+	using byte = unsigned char;
+}
 
 #define BIT(x) (1 << (x))
 

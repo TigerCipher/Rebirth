@@ -43,6 +43,10 @@ namespace rebirth
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		//mWindow->SetVSync(false);
 
+
+		Renderer::Init();
+
+
 		mImguiLayer = new ImguiLayer();
 		PushOverlay(mImguiLayer);
 
