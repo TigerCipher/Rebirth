@@ -27,6 +27,8 @@
 
 
 #include <glm/gtc/matrix_transform.hpp>
+#include "platform/opengl/OpenGLShader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 class SampleLayer final : public rebirth::Layer
 {
@@ -154,8 +156,8 @@ public:
 
 	)";
 
-		mShader.reset(new rebirth::Shader(vertSrc, fragSrc));
-		mShaderColor.reset(new rebirth::Shader(vertSrcColor, fragSrcColor));
+		mShader.reset(rebirth::Shader::Create(vertSrc, fragSrc));
+		mShaderColor.reset(rebirth::Shader::Create(vertSrcColor, fragSrcColor));
 	}
 
 	void OnUpdate(rebirth::Timestep timestep) override
@@ -201,23 +203,16 @@ public:
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
 
 
-		glm::vec4 red = { 0.6f, 0.2f, 0.2f, 1.0f };
-		glm::vec4 blue = { 0.2f, 0.2f, 0.6f, 1.0f };
+
+		mShaderColor->Bind();
+		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderColor)->SetUniformVec4("uColor", mSquareColor);
+
 		for (int i = 0; i < 25; i++)
 		{
 			for (int j = 0; j < 25; j++)
 			{
 				glm::vec3 pos(j * 0.06f, i * 0.06f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				if (j % 2 == 0)
-				{
-					mShaderColor->SetUniformVec4("uColor", blue);
-				}
-				else
-				{
-					mShaderColor->SetUniformVec4("uColor", mSquareColor);
-
-				}
 				rebirth::Renderer::Submit(mShaderColor, mSquareVtxArray, transform);
 			}
 		}
@@ -236,10 +231,8 @@ public:
 	void OnImguiRender() override
 	{
 		ImGui::Begin("Color Changer");
-		float col[3] = { mSquareColor.r, mSquareColor.g, mSquareColor.b };
-		ImGui::ColorPicker3("Square Color", col);
+		ImGui::ColorPicker3("Square Color", glm::value_ptr(mSquareColor));
 		ImGui::End();
-		mSquareColor = glm::vec4(col[0], col[1], col[2], 1.0f);
 	}
 
 private:

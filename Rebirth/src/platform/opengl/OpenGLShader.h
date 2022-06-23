@@ -15,25 +15,37 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Shader.h
-// Date File Created: 06/19/2022 at 2:50 PM
+// File Name: OpenGLShader.h
+// Date File Created: 6/22/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
+#include "rebirth/renderer/Shader.h"
+#include <glm/glm.hpp>
 
 namespace rebirth
 {
-	class Shader
+	class OpenGLShader : public Shader
 	{
 	public:
-		virtual ~Shader() = default;
+		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		virtual ~OpenGLShader();
 
-		virtual void Bind() const = 0;
-		virtual void Unbind() const = 0;
+		void Bind() const override;
+		void Unbind() const override;
 
-		static Shader* Create(const std::string& vertexSrc, const std::string& fragSrc);
+		void SetUniformInt(const std::string& name, const int value);
+		void SetUniformFloat(const std::string& name, const float value);
+		void SetUniformVec2(const std::string & name, const glm::vec2 & vec);
+		void SetUniformVec3(const std::string& name, const glm::vec3& vec);
+		void SetUniformVec4(const std::string& name, const glm::vec4& vec);
+		void SetUniformMat3(const std::string& name, const glm::mat3& matrix);
+		void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
+
+	private:
+		uint32_t mId = 0;
 	};
 }
+
