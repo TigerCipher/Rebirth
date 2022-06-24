@@ -15,30 +15,28 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Sandbox2D.h
+// File Name: Renderer2D.h
 // Date File Created: 6/24/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include <Rebirth.h>
+#include "OrthoCamera.h"
 
-class Sandbox2D : public rebirth::Layer
+namespace rebirth
 {
-public:
-	Sandbox2D() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-	virtual ~Sandbox2D() = default;
-	void OnAttach() override;
-	void OnDetach() override;
-	void OnUpdate(rebirth::Timestep ts) override;
-	void OnEvent(rebirth::Event& e) override;
-	void OnImguiRender() override;
-private:
-	rebirth::OrthoCameraController mCameraController;
+	class Renderer2D
+	{
+	public:
+		static void Init();
+		static void Shutdown();
 
-	// abstract to renderer
-	Ref<rebirth::Shader> mShader;
-	Ref<rebirth::VertexArray> mSquareVtxArray;
-	glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
-};
+		static void BeginScene(const OrthoCamera& camera);
+		static void EndScene();
+
+		static void DrawQuad(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color);
+		static void DrawQuad(const glm::vec3& pos, const glm::vec2& size, const glm::vec4& color);
+	};
+}
+

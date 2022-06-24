@@ -45,6 +45,7 @@
 
 // Renderer
 #include "rebirth/renderer/Renderer.h"
+#include "rebirth/renderer/Renderer2D.h"
 #include "rebirth/renderer/RenderCommand.h"
 #include "rebirth/renderer/Shader.h"
 #include "rebirth/renderer/Texture.h"

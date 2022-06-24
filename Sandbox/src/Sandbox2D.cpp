@@ -32,29 +32,7 @@
 
 void Sandbox2D::OnAttach()
 {
-	float sq_verts[5 * 4] =
-	{
-		-0.5f, -0.5f, 0.0f,	
-		0.5f, -0.5f, 0.0f,	
-		0.5f, 0.5f, 0.0f,	
-		-0.5f, 0.5f, 0.0f
-	};
 
-	mSquareVtxArray = rebirth::VertexArray::Create();
-
-	Ref<rebirth::VertexBuffer> svb = rebirth::VertexBuffer::Create(sizeof(sq_verts), sq_verts);
-	svb->SetLayout({
-			{ rebirth::ShaderDataType::FLOAT3, "aPos" }
-		});
-	mSquareVtxArray->AddVertexBuffer(svb);
-
-	uint32_t sq_indices[6] = { 0, 1, 2, 2, 3, 0 };
-	Ref<rebirth::IndexBuffer> sib = rebirth::IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices);
-
-	mSquareVtxArray->SetIndexBuffer(sib);
-
-
-	mShader = rebirth::Shader::Create("assets/shaders/FlatColor.glsl");
 
 }
 
@@ -70,14 +48,13 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 	rebirth::RenderCommand::Clear();
 
-	rebirth::Renderer::BeginScene(mCameraController.GetCamera());
+	rebirth::Renderer2D::BeginScene(mCameraController.GetCamera());
 
-	mShader->Bind();
-	std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShader)->SetUniformVec4("uColor", mSquareColor);
-	rebirth::Renderer::Submit(mShader, mSquareVtxArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, mSquareColor);
+	//mShader->Bind();
+	//std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShader)->SetUniformVec4("uColor", mSquareColor);
 
-
-	rebirth::Renderer::EndScene();
+	rebirth::Renderer2D::EndScene();
 }
 
 void Sandbox2D::OnEvent(rebirth::Event& e)

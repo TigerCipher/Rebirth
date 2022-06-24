@@ -26,6 +26,7 @@
 #include "Renderer.h"
 
 #include "platform/opengl/OpenGLShader.h"
+#include "Renderer2D.h"
 
 namespace rebirth
 {
@@ -34,6 +35,7 @@ namespace rebirth
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(const uint width, const uint height)
