@@ -30,7 +30,7 @@
 namespace rebirth
 {
 
-	VertexBuffer* VertexBuffer::Create(const uint32_t size, float* vertices)
+	Ref<VertexBuffer> VertexBuffer::Create(const uint32_t size, float* vertices)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -42,7 +42,7 @@ namespace rebirth
 
 		case RendererAPI::API::OPENGL:
 		{
-			return new OpenGLVertexBuffer(size, vertices);
+			return createRef<OpenGLVertexBuffer>(size, vertices);
 		}
 		}
 
@@ -50,7 +50,7 @@ namespace rebirth
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(const uint32_t count, uint32_t* indices)
+	Ref<IndexBuffer> IndexBuffer::Create(const uint32_t count, uint32_t* indices)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -62,7 +62,7 @@ namespace rebirth
 
 		case RendererAPI::API::OPENGL:
 		{
-			return new OpenGLIndexBuffer(count, indices);
+			return createRef<OpenGLIndexBuffer>(count, indices);
 		}
 		}
 

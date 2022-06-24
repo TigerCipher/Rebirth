@@ -25,30 +25,64 @@
 
 // Macros
 
-#ifdef RB_WINDOWS
-#ifdef RB_DYNAMIC_LINK
-	#ifdef RB_BUILD_DLL
-		#define RB_API __declspec(dllexport)
+// Platform detection
+#ifdef _WIN32
+	#ifdef _WIN64
+		#define RB_WINDOWS
 	#else
-		#define RB_API __declspec(dllimport)
+		#error "x86 (32 bit) Builds are not supported!"
 	#endif
-#else
-	#define RB_API
+	#elif defined(__APPLE__) || defined(__MACH__)
+		#include <TargetConditionals.h>
+		#if TARGET_IPHONE_SIMULATOR == 1
+			#error "IOS simulator is not supported!"
+		#elif TARGET_OS_IPHONE == 1
+			#define RB_IOS
+			#error "IOS is not supported!"
+		#elif TARGET_OS_MAC == 1
+			#define RB_MACOS
+			#error "MacOS is not supported!"
+		#else
+			#error "Unknown Apple platform!"
+	#endif
+	#elif defined(__ANDROID__)
+		#define HZ_PLATFORM_ANDROID
+		#error "Android is not supported!"
+	#elif defined(__linux__)
+#define HZ_PLATFORM_LINUX
+#error "Linux is not supported!"
+	#else
+		#error "Unknown platform!"
 #endif
+
+
+// DLL build check (might remove entirely)
+#ifdef RB_WINDOWS
+	#ifdef RB_DYNAMIC_LINK
+		#ifdef RB_BUILD_DLL
+			#define RB_API __declspec(dllexport)
+		#else
+			#define RB_API __declspec(dllimport)
+		#endif
+	#else
+		#define RB_API
+	#endif
 #else
 	#error Windows compatibility only (for now)
 #endif
 
+// Macro helpers
 #define RB_EXPAND_MACRO(x) x
 #define RB_STRINGIFY_MACRO(x) #x
 
+// Enable asserts or not
 #ifdef RB_DEBUG
 	#define RB_ENABLE_ASSERTS
 #endif
 
-
+// Assert system - based on the one I wrote for Hazel - the project that inspired Rebirth
 #ifdef RB_ENABLE_ASSERTS
-	#include <filesystem> //TODO: Move
+	#include <filesystem> //#TODO: Move
 
 	// TODO: #IMPORTANT: __debugbreak() is windows only I believe, need to make this cross platform
 	#define RB_INTERNAL_ASSERT_IMPL(type, check, msg, ...) { if(!(check)) { RB##type##FATAL(msg, __VA_ARGS__); RB##type##FATAL("Assertion check ({}) failed at {}:{}", RB_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename().string(), __LINE__); __debugbreak(); /*RB_DEBUGBREAK();*/ } }
@@ -59,7 +93,7 @@
 	#define RB_INTERNAL_ASSERT_GET_MACRO_NAME(arg1, arg2, arg3, macro, ...) macro
 	#define RB_INTERNAL_ASSERT_GET_MACRO(...) RB_EXPAND_MACRO( RB_INTERNAL_ASSERT_GET_MACRO_NAME(__VA_ARGS__, RB_INTERNAL_ASSERT_WITH_FMT_MSG, RB_INTERNAL_ASSERT_WITH_NOFMT_MSG, RB_INTERNAL_ASSERT_WITH_NO_MSG) )
 
-	// Currently accepts at least the condition and one additional parameter (the message) being optional
+	// Accepts just the check, a check and a message, or a check, a formatted message, and arguments
 	#define RB_ASSERT(...) RB_EXPAND_MACRO( RB_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CLIENT_, __VA_ARGS__) )
 	#define RB_CORE_ASSERT(...) RB_EXPAND_MACRO( RB_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CORE_, __VA_ARGS__) )
 #else

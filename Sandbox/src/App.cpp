@@ -35,8 +35,7 @@ class SampleLayer final : public rebirth::Layer
 public:
 	SampleLayer() : Layer("Sample"), mCameraController(1920.0f / 1080.0f, true)
 	{
-		mVertexArray.reset(rebirth::VertexArray::Create());
-
+		mVertexArray = rebirth::VertexArray::Create();
 		float triVerts[3 * 7] =
 		{
 			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, // lower left
@@ -44,8 +43,7 @@ public:
 			0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // top center
 		};
 
-		Ref<rebirth::VertexBuffer> triVertBuffer;
-		triVertBuffer.reset(rebirth::VertexBuffer::Create(sizeof(triVerts), triVerts));
+		Ref<rebirth::VertexBuffer> triVertBuffer = rebirth::VertexBuffer::Create(sizeof(triVerts), triVerts);
 
 		rebirth::BufferLayout triLayout = {
 			{ rebirth::ShaderDataType::FLOAT3, "aPos" },
@@ -57,8 +55,7 @@ public:
 
 
 		uint32_t triIndices[3] = { 0, 1, 2 };
-		Ref<rebirth::IndexBuffer> triIndBuffer;
-		triIndBuffer.reset(rebirth::IndexBuffer::Create(sizeof(triIndices) / sizeof(uint32_t), triIndices));
+		Ref<rebirth::IndexBuffer> triIndBuffer = rebirth::IndexBuffer::Create(sizeof(triIndices) / sizeof(uint32_t), triIndices);
 
 		mVertexArray->SetIndexBuffer(triIndBuffer);
 
@@ -72,9 +69,9 @@ public:
 			-0.5f, 0.5f, 0.0f,		0.0f, 1.0f
 		};
 
-		mSquareVtxArray.reset(rebirth::VertexArray::Create());
-		Ref<rebirth::VertexBuffer> svb;
-		svb.reset(rebirth::VertexBuffer::Create(sizeof(sq_verts), sq_verts));
+		mSquareVtxArray = rebirth::VertexArray::Create();
+
+		Ref<rebirth::VertexBuffer> svb = rebirth::VertexBuffer::Create(sizeof(sq_verts), sq_verts);
 		svb->SetLayout({
 				{ rebirth::ShaderDataType::FLOAT3, "aPos" },
 				{ rebirth::ShaderDataType::FLOAT2, "aTexCoord" }
@@ -82,8 +79,7 @@ public:
 		mSquareVtxArray->AddVertexBuffer(svb);
 
 		uint32_t sq_indices[6] = { 0, 1, 2, 2, 3, 0 };
-		Ref<rebirth::IndexBuffer> sib;
-		sib.reset(rebirth::IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices));
+		Ref<rebirth::IndexBuffer> sib = rebirth::IndexBuffer::Create(sizeof(sq_indices) / sizeof(uint32_t), sq_indices);
 
 		mSquareVtxArray->SetIndexBuffer(sib);
 
@@ -183,8 +179,6 @@ public:
 	void OnEvent(rebirth::Event& e) override
 	{
 		mCameraController.OnEvent(e);
-		//rebirth::EventDispatcher disp(e);
-		//disp.Dispatch<rebirth::KeyPressedEvent>(BIND_EVENT_FUNC(SampleLayer::OnKeyPressed));
 	}
 
 

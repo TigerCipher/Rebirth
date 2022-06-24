@@ -43,7 +43,6 @@ namespace rebirth
 		return 0;
 	}
 
-	// TODO Support using multiple files rather than only a single file
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
 		std::string src = Read(filepath);
@@ -182,6 +181,7 @@ namespace rebirth
 			RB_CORE_ASSERT(GetShaderType(type), "Invalid shader type preprocessor directive");
 
 			size_t nextLinePos = src.find_first_not_of("\r\n", eol);
+			RB_CORE_ASSERT(nextLinePos != std::string::npos, "Shader syntax error");
 			pos = src.find(typeDirective, nextLinePos);
 			sources[GetShaderType(type)] = src.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? src.size() - 1 : nextLinePos));
 		}
@@ -258,12 +258,13 @@ namespace rebirth
 			return;
 		}
 
+		mId = prog;
 		for (auto id : shaderIds)
 		{
 			glDetachShader(prog, id);
+			glDeleteShader(prog);
 		}
 
-		mId = prog;
 
 		RB_CORE_TRACE("Shader program {} successfully compiled", mId);
 	}

@@ -41,22 +41,27 @@ namespace rebirth
 		mCamSpeed = 2.0f * mZoom;
 		if (Input::IsKeyPressed(RB_KEY_A))
 		{
-			mCamPos.x -= mCamSpeed * ts;
+			mCamPos.x -= cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
+			mCamPos.y -= sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
+			//mCamPos.x -= mCamSpeed * ts;
 		}
 
 		if (Input::IsKeyPressed(RB_KEY_D))
 		{
-			mCamPos.x += mCamSpeed * ts;
+			mCamPos.x += cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
+			mCamPos.y += sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
 		}
 
 		if (Input::IsKeyPressed(RB_KEY_W))
 		{
-			mCamPos.y += mCamSpeed * ts;
+			mCamPos.x += -sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
+			mCamPos.y += cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
 		}
 
 		if (Input::IsKeyPressed(RB_KEY_S))
 		{
-			mCamPos.y -= mCamSpeed * ts;
+			mCamPos.x -= -sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
+			mCamPos.y -= cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
 		}
 
 		if (mUseRotation)
@@ -70,6 +75,9 @@ namespace rebirth
 			{
 				mCamRotation -= mCamRotationSpeed * ts;
 			}
+
+			if (mCamRotation > 180.0f) mCamRotation -= 360.0f;
+			if (mCamRotation <= -180.0f) mCamRotation += 360.0f;
 
 			mCamera.SetRotation(mCamRotation);
 		}

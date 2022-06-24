@@ -33,7 +33,7 @@
 namespace rebirth
 {
 
-	Input* Input::sInstance = new Win64Input();
+	Scope<Input> Input::sInstance = createScope<Win64Input>();
 
 	bool Win64Input::IsKeyPressedImpl(int keycode)
 	{

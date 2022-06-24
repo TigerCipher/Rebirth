@@ -29,11 +29,16 @@
 
 namespace rebirth
 {
-	Renderer::Data* Renderer::sData = new Renderer::Data;
+	Scope<Renderer::Data> Renderer::sData = createScope<Renderer::Data>();
 
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+	}
+
+	void Renderer::OnWindowResize(const uint width, const uint height)
+	{
+		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
 	void Renderer::BeginScene(OrthoCamera& camera)

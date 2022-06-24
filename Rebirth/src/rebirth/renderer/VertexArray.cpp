@@ -31,7 +31,7 @@
 namespace rebirth
 {
 
-	VertexArray* VertexArray::Create()
+	Ref<VertexArray> VertexArray::Create()
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -41,7 +41,7 @@ namespace rebirth
 				return nullptr;
 			}
 
-			case RendererAPI::API::OPENGL: return new OpenGLVertexArray();
+			case RendererAPI::API::OPENGL: return createRef<OpenGLVertexArray>();
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");

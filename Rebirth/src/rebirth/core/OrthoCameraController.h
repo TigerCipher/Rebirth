@@ -37,8 +37,11 @@ namespace rebirth
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
 
-		inline OrthoCamera& GetCamera() { return mCamera; }
-		inline const OrthoCamera& GetCamera() const { return mCamera; }
+		void SetZoom(const float zoom) { mZoom = zoom; }
+		float GetZoom() const { return mZoom; }
+
+		OrthoCamera& GetCamera() { return mCamera; }
+		const OrthoCamera& GetCamera() const { return mCamera; }
 	private:
 
 		bool OnMouseScrolled(MouseScrolledEvent& e);

@@ -58,14 +58,17 @@ namespace rebirth
 		while (mRunning)
 		{
 
-			// TODO: Abstract getTime to platform/opengl
+			// #TODO: Abstract getTime to platform/opengl
 			float time = static_cast<float>(glfwGetTime());
 			Timestep timestep = time - mLastFrameTime;
 			mLastFrameTime = time;
 
-			for (Layer* layer : mLayerStack)
+			if(!mMinimized)
 			{
-				layer->OnUpdate(timestep);
+				for (Layer* layer : mLayerStack)
+				{
+					layer->OnUpdate(timestep);
+				}
 			}
 
 			mImguiLayer->Begin();
@@ -82,7 +85,8 @@ namespace rebirth
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher disp(e);
-		disp.Dispatch<WindowCloseEvent>(std::bind(&Application::OnWindowClose, this, std::placeholders::_1));
+		disp.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
+		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(Application::OnWindowResize));
 
 		for (auto it = mLayerStack.end(); it != mLayerStack.begin();)
 		{
@@ -108,6 +112,19 @@ namespace rebirth
 	{
 		mRunning = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			mMinimized = true;
+			return false;
+		}
+		mMinimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 
 }

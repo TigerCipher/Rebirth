@@ -30,6 +30,6 @@
 namespace rebirth
 {
 	// Temp
-	RendererAPI* RenderCommand::sRendererApi = new OpenGLRendererAPI;
+	Scope<RendererAPI> RenderCommand::sRendererApi = createScope<OpenGLRendererAPI>();
 
 }

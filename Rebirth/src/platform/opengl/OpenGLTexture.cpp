@@ -39,6 +39,7 @@ namespace rebirth
 		stbi_set_flip_vertically_on_load(1);
 		byte* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 		//TODO Perhaps default texture instead?
+		// #NOTE perhaps default texture?
 		RB_CORE_ASSERT(data, "Failed to load texture file");
 		mWidth = width;
 		mHeight = height;

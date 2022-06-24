@@ -62,6 +62,14 @@ namespace rebirth
 		RB_CORE_INFO("Detected graphics unit: {} ({})", rendererName, vendorName);
 		RB_CORE_INFO("Available OpenGL Version: {}", glVersionName);
 
+#ifdef RB_ENABLE_ASSERTS
+		int majorVersion;
+		int minorVersion;
+		glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+		glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+		RB_CORE_ASSERT(majorVersion > 4 || (majorVersion == 4 && minorVersion >= 5), "Rebirth supports a minimum of OpenGL 4.5");
+#endif
+
 		#ifdef RB_DEBUG
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(GLErrorCallback, nullptr);

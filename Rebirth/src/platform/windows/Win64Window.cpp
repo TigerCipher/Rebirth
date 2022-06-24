@@ -110,7 +110,7 @@ namespace rebirth
 		const int maxHeight = GetSystemMetrics(SM_CYSCREEN);
 		glfwSetWindowMonitor(mWindow, nullptr, (maxWidth / 2) - (props.width / 2), (maxHeight / 2) - (props.height / 2), props.width, props.height, GLFW_DONT_CARE);
 
-		mContext = new OpenGLContext(mWindow);
+		mContext = createScope<OpenGLContext>(mWindow);
 		mContext->Init();
 
 

@@ -35,6 +35,11 @@ namespace rebirth
 			sRendererApi->Init();
 		}
 
+		inline static void SetViewport(const uint x, const uint y, const uint width, const uint height)
+		{
+			sRendererApi->SetViewport(x, y, width, height);
+		}
+
 		inline static void SetClearColor(const glm::vec4& color)
 		{
 			sRendererApi->SetClearColor(color);
@@ -51,7 +56,7 @@ namespace rebirth
 		}
 
 	private:
-		static RendererAPI* sRendererApi;
+		static Scope<RendererAPI> sRendererApi;
 	};
 
 }

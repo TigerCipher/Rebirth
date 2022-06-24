@@ -37,6 +37,7 @@ namespace rebirth
 	{
 	public:
 		static void Init();
+		static void OnWindowResize(uint width, uint height);
 
 		static void BeginScene(OrthoCamera& camera);
 		static void EndScene();
@@ -51,6 +52,6 @@ namespace rebirth
 			glm::mat4 viewProj;
 		};
 
-		static Data* sData;
+		static Scope<Data> sData;
 	};
 }

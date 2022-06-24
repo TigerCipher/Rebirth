@@ -66,7 +66,7 @@ namespace rebirth
 		
 	private:
 
-		static Input* sInstance;
+		static Scope<Input> sInstance;
 		
 	};
 }

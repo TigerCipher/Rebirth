@@ -54,7 +54,7 @@ namespace rebirth
 	
 	private:
 		GLFWwindow* mWindow;
-		GraphicsContext* mContext;
+		Scope<GraphicsContext> mContext;
 
 		struct WindowData
 		{

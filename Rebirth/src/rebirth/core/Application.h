@@ -61,12 +61,14 @@ namespace rebirth
 		static Application* sInstance;
 		
 		Scope<Window> mWindow;
-		bool mRunning = true;
 		LayerStack mLayerStack;
 		ImguiLayer* mImguiLayer;
 		float mLastFrameTime = 0.0f;
 
+		bool mRunning = true;
+		bool mMinimized = false;
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 	};
 
 	// Defined by game
