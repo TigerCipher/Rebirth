@@ -31,11 +31,13 @@ namespace rebirth
 	{
 	public:
 		OpenGLShader(const std::string& filepath);
-		OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 
 		void Bind() const override;
 		void Unbind() const override;
+
+		const std::string& GetName() const override { return mName; }
 
 		void SetUniformInt(const std::string& name, const int value);
 		void SetUniformFloat(const std::string& name, const float value);
@@ -46,10 +48,13 @@ namespace rebirth
 		void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
 
 	private:
-		uint32_t mId = 0;
 		std::string Read(const std::string& filepath);
 		std::unordered_map<uint, std::string> Preprocess(const std::string& src);
 		void Compile(const std::unordered_map<uint, std::string>& sources);
+
+
+		uint32_t mId = 0;
+		std::string mName;
 	};
 }
 

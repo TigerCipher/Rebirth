@@ -160,16 +160,17 @@ public:
 
 	)";
 
-		mShader.reset(rebirth::Shader::Create(vertSrc, fragSrc));
+		mShader = rebirth::Shader::Create("Triangle", vertSrc, fragSrc);
 
-		mShaderColor.reset(rebirth::Shader::Create(vertSrcColor, fragSrcColor));
-		mShaderTexture.reset(rebirth::Shader::Create("assets/shaders/texture.glsl"));
+		mShaderColor = rebirth::Shader::Create("FlatColor", vertSrcColor, fragSrcColor);
+
+		auto texShader = mLibrary.Load("assets/shaders/texture.glsl");
 
 		mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
 		mTextureGun = rebirth::Texture2D::Create("assets/textures/Gun1.png");
 
-		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderTexture)->Bind();
-		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderTexture)->SetUniformInt("uTexture", 0);
+		std::dynamic_pointer_cast<rebirth::OpenGLShader>(texShader)->Bind();
+		std::dynamic_pointer_cast<rebirth::OpenGLShader>(texShader)->SetUniformInt("uTexture", 0);
 	}
 
 	void OnUpdate(rebirth::Timestep timestep) override
@@ -230,10 +231,11 @@ public:
 		}
 
 		mTexture->Bind();
-		rebirth::Renderer::Submit(mShaderTexture, mSquareVtxArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		auto texShader = mLibrary["texture"];
+		rebirth::Renderer::Submit(texShader, mSquareVtxArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		mTextureGun->Bind();
-		rebirth::Renderer::Submit(mShaderTexture, mSquareVtxArray, glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, -0.25f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		rebirth::Renderer::Submit(texShader, mSquareVtxArray, glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, -0.25f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//rebirth::Renderer::Submit(mShader, mVertexArray);
 		rebirth::Renderer::EndScene();
@@ -254,9 +256,11 @@ public:
 	}
 
 private:
+
+	rebirth::ShaderLibrary mLibrary;
+
 	Ref<rebirth::Shader> mShader;
 	Ref<rebirth::Shader> mShaderColor;
-	Ref<rebirth::Shader> mShaderTexture;
 	Ref<rebirth::VertexArray> mVertexArray;
 	Ref<rebirth::VertexArray> mSquareVtxArray;
 	Ref<rebirth::Texture> mTexture;

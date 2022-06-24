@@ -28,6 +28,10 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#ifndef GLSL_MAX_SHADERS_PER_FILE
+#	define GLSL_MAX_SHADERS_PER_FILE 2
+#endif
+
 namespace rebirth
 {
 
@@ -45,9 +49,15 @@ namespace rebirth
 		auto sources = Preprocess(src);
 		Compile(sources);
 
+		auto lastSlash = filepath.find_last_of("/\\");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = filepath.rfind('.');
+		auto count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+		mName = filepath.substr(lastSlash, count);
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
+		mName(name)
 	{
 		std::unordered_map<uint, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -119,7 +129,7 @@ namespace rebirth
 	{
 		RB_CORE_TRACE("Loading shader file [{}]", filepath);
 		std::string result;
-		std::ifstream in(filepath, std::ios::in, std::ios::binary);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in)
 		{
 			in.seekg(0, std::ios::end);
@@ -166,14 +176,17 @@ namespace rebirth
 	void OpenGLShader::Compile(const std::unordered_map<uint, std::string>& sources)
 	{
 		uint prog = glCreateProgram();
+		RB_CORE_ASSERT(sources.size() <= GLSL_MAX_SHADERS_PER_FILE, "Rebirth currently only supports two shaders in a single file");
 		RB_CORE_TRACE("Compiling shader program {}", prog);
-		std::vector<uint> shaderIds(sources.size());
-
+		std::array<uint, GLSL_MAX_SHADERS_PER_FILE> shaderIds;
+		int shaderIdIndex = 0;
 		for (auto& kv : sources)
 		{
 			uint type = kv.first;
 			const std::string& src = kv.second;
-			RB_CORE_TRACE("Compiling shader type {}", type == GL_VERTEX_SHADER ? "GL_VERTEX_SHADER" : type == GL_FRAGMENT_SHADER ? "GL_FRAGMENT_SHADER" : "UNKNOWN");
+			RB_CORE_TRACE("Compiling shader type {}", type == GL_VERTEX_SHADER ? "GL_VERTEX_SHADER"
+													: type == GL_FRAGMENT_SHADER ? "GL_FRAGMENT_SHADER"
+													: "UNKNOWN");
 
 			uint shader = glCreateShader(type);
 			const char* source = src.c_str();
@@ -199,7 +212,7 @@ namespace rebirth
 			}
 
 			glAttachShader(prog, shader);
-			shaderIds.push_back(shader);
+			shaderIds[shaderIdIndex++] = shader;
 			RB_CORE_TRACE("Shader {} compiled and attached to shader program {}", shader, prog);
 		}
 

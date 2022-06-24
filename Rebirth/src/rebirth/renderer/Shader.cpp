@@ -31,7 +31,7 @@
 namespace rebirth
 {
 
-	rebirth::Shader* Shader::Create(const std::string& vertexSrc, const std::string& fragSrc)
+	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragSrc)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -39,14 +39,14 @@ namespace rebirth
 				RB_CORE_ASSERT(false, "Must use a graphics API");
 				return nullptr;
 
-			case RendererAPI::API::OPENGL: return new OpenGLShader(vertexSrc, fragSrc);
+			case RendererAPI::API::OPENGL: return createRef<OpenGLShader>(name, vertexSrc, fragSrc);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
 		return nullptr;
 	}
 
-	rebirth::Shader* Shader::Create(const std::string& filepath)
+	Ref<Shader> Shader::Create(const std::string& filepath)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -54,11 +54,48 @@ namespace rebirth
 				RB_CORE_ASSERT(false, "Must use a graphics API");
 				return nullptr;
 
-			case RendererAPI::API::OPENGL: return new OpenGLShader(filepath);
+			case RendererAPI::API::OPENGL: return createRef<OpenGLShader>(filepath);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
 		return nullptr;
+	}
+
+	void ShaderLibrary::Add(const Ref<Shader>& shader)
+	{
+		auto& name = shader->GetName();
+		Add(name, shader);
+	}
+
+	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
+	{
+		RB_CORE_ASSERT(mShaders.find(name) == mShaders.end(), "Shader already exists in the library");
+		mShaders[name] = shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& filepath)
+	{
+		auto shader = Shader::Create(filepath);
+		Add(shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+	{
+		auto shader = Shader::Create(filepath);
+		Add(name, shader);
+		return shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Get(const std::string& name)
+	{
+		RB_CORE_ASSERT(mShaders.find(name) != mShaders.end(), "Shader was not found in the library");
+		return mShaders[name];
+	}
+
+	Ref<rebirth::Shader> ShaderLibrary::operator[](const std::string& name)
+	{
+		return Get(name);
 	}
 
 }
