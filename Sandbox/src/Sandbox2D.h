@@ -15,39 +15,30 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: LayerStack.h
-// Date File Created: 06/16/2022 at 9:30 PM
+// File Name: Sandbox2D.h
+// Date File Created: 6/24/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-#include "rebirth/core/Common.h"
-#include "Layer.h"
+#include <Rebirth.h>
 
-#include <vector>
-
-namespace rebirth
+class Sandbox2D : public rebirth::Layer
 {
-	class RB_API LayerStack
-	{
-	public:
-		LayerStack() = default;
-		~LayerStack();
+public:
+	Sandbox2D() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f) {}
+	virtual ~Sandbox2D() = default;
+	void OnAttach() override;
+	void OnDetach() override;
+	void OnUpdate(rebirth::Timestep ts) override;
+	void OnEvent(rebirth::Event& e) override;
+	void OnImguiRender() override;
+private:
+	rebirth::OrthoCameraController mCameraController;
 
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* overlay);
-
-		void PopLayer(Layer* layer);
-		void PopOverlay(Layer* overlay);
-
-		std::vector<Layer*>::iterator begin() { return mLayers.begin(); }
-		std::vector<Layer*>::iterator end() { return mLayers.end(); }
-	
-	private:
-		std::vector<Layer*> mLayers;
-		uint mInsertIndex = 0;
-	};
-	
-}
+	// abstract to renderer
+	Ref<rebirth::Shader> mShader;
+	Ref<rebirth::VertexArray> mSquareVtxArray;
+	glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
+};

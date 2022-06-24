@@ -25,7 +25,7 @@
 
 #include "rbpch.h"
 
-#include "rebirth/Core.h"
+#include "rebirth/core/Common.h"
 #include "rebirth/events/Event.h"
 
 namespace rebirth

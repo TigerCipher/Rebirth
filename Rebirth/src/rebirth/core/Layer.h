@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "rebirth/Core.h"
+#include "rebirth/core/Common.h"
 #include "rebirth/events/Event.h"
 
 #include "Timestep.h"

@@ -25,21 +25,19 @@
 
 
 #ifdef RB_WINDOWS
+	extern rebirth::Application* rebirth::CreateApplication();
 
-extern rebirth::Application* rebirth::CreateApplication();
+	int main(int argc, char** argv)
+	{
+		rebirth::Log::Init();
+		RB_CORE_TRACE("Initializing engine");
 
-int main(int argc, char** argv)
-{
-	rebirth::Log::Init();
-	RB_CORE_TRACE("Initializing engine");
+		auto app = rebirth::CreateApplication();
+		app->Run();
+		delete app;
 
-	auto app = rebirth::CreateApplication();
-	app->Run();
-	delete app;
-
-	// TODO: Might be nice to return error codes for debug purposes
-	// though... during debugging, I'd just assert instead of return an error code. Error code for release/dist builds?
-	return 0;
-}
-
+		// TODO: Might be nice to return error codes for debug purposes
+		// though... during debugging, I'd just assert instead of return an error code. Error code for release/dist builds?
+		return 0;
+	}
 #endif

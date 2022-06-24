@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "rebirth/Core.h"
+#include "rebirth/core/Common.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>

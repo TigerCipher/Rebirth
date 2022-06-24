@@ -74,7 +74,6 @@ project "Rebirth"
 
 		defines
 		{
-			"RB_WINDOWS",
 			"RB_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
@@ -137,12 +136,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		systemversion "latest"
-
-		defines
-		{
-			"RB_WINDOWS"
-		}
-
 
 	filter "configurations:Debug"
 		defines

@@ -56,4 +56,4 @@
 
 
 // Main function
-#include "rebirth/core/EntryPoint.h"
+//#include "rebirth/core/EntryPoint.h"

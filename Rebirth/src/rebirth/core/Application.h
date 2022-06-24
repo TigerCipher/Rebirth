@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "rebirth/Core.h"
+#include "rebirth/core/Common.h"
 #include "Window.h"
 #include "LayerStack.h"
 #include "rebirth/events/Event.h"

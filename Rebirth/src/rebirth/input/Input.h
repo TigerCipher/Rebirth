@@ -24,7 +24,7 @@
 #pragma once
 
 
-#include "rebirth/Core.h"
+#include "rebirth/core/Common.h"
 
 namespace rebirth
 {
