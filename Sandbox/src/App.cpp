@@ -125,46 +125,12 @@ public:
 
 	)";
 
-		const std::string vertSrcColor = R"(
-	#version 330 core
-
-	layout(location=0) in vec3 aPos;
-
-	uniform mat4 uViewProj;
-	uniform mat4 uModelTransform;
-
-	out vec3 vPos;
-
-	
-	void main()
-	{
-		vPos = aPos;
-		gl_Position = uViewProj * uModelTransform * vec4(aPos, 1.0);
-	}
-
-	)";
-
-		const std::string fragSrcColor = R"(
-	#version 330 core
-
-	layout(location=0) out vec4 color;
-
-	in vec3 vPos;
-
-	uniform vec4 uColor;
-
-	void main()
-	{
-		color = uColor;
-	}
-
-	)";
 
 		mShader = rebirth::Shader::Create("Triangle", vertSrc, fragSrc);
 
-		mShaderColor = rebirth::Shader::Create("FlatColor", vertSrcColor, fragSrcColor);
+		mShaderColor = rebirth::Shader::Create("assets/shaders/FlatColor.glsl");
 
-		auto texShader = mLibrary.Load("assets/shaders/texture.glsl");
+		auto texShader = mLibrary.Load("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
 
 		mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
 		mTextureGun = rebirth::Texture2D::Create("assets/textures/Gun1.png");
@@ -229,9 +195,9 @@ public:
 				rebirth::Renderer::Submit(mShaderColor, mSquareVtxArray, transform);
 			}
 		}
-
+		//seperate separate 
 		mTexture->Bind();
-		auto texShader = mLibrary["texture"];
+		auto texShader = mLibrary["Texture"];
 		rebirth::Renderer::Submit(texShader, mSquareVtxArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		mTextureGun->Bind();

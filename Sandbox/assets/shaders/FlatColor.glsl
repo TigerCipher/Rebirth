@@ -2,16 +2,16 @@
 #version 330 core
 
 layout(location=0) in vec3 aPos;
-layout(location=1) in vec2 aTexCoord;
 
 uniform mat4 uViewProj;
 uniform mat4 uModelTransform;
 
-out vec2 vTexCoord;
+out vec3 vPos;
+
 	
 void main()
 {
-	vTexCoord = aTexCoord;
+	vPos = aPos;
 	gl_Position = uViewProj * uModelTransform * vec4(aPos, 1.0);
 }
 
@@ -21,11 +21,11 @@ void main()
 
 layout(location=0) out vec4 color;
 
-in vec2 vTexCoord;
+in vec3 vPos;
 
-uniform sampler2D uTexture;
+uniform vec4 uColor;
 
 void main()
 {
-	color = texture(uTexture, vTexCoord);
+	color = uColor;
 }

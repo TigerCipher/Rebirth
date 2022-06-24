@@ -23,6 +23,8 @@
 
 #pragma once
 
+#define RB_SHADER_SINGLEFILE 0
+#define RB_SHADER_MULTIFILE 1
 
 namespace rebirth
 {
@@ -36,8 +38,9 @@ namespace rebirth
 
 		virtual const std::string& GetName() const = 0;
 
-		static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragSrc);
+		static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& pixelSrc);
 		static Ref<Shader> Create(const std::string& filepath);
+		static Ref<Shader> Create(const std::string& vertexPath, const std::string& pixelPath);
 	};
 
 	class ShaderLibrary
@@ -46,7 +49,8 @@ namespace rebirth
 		void Add(const Ref<Shader>& shader);
 		void Add(const std::string& name, const Ref<Shader>& shader);
 		Ref<Shader> Load(const std::string& filepath);
-		Ref<Shader> Load(const std::string& name, const std::string& filepath);
+		Ref<Shader> Load(const std::string& vertexPath, const std::string& pixelPath);
+		Ref<Shader> Load(const std::string& name, const std::string& vertexSrc, const std::string& pixelSrc);
 
 		Ref<Shader> Get(const std::string& name);
 		Ref<Shader> operator[](const std::string& name);

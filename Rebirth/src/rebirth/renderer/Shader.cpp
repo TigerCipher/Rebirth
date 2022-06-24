@@ -61,6 +61,21 @@ namespace rebirth
 		return nullptr;
 	}
 
+	Ref<rebirth::Shader> Shader::Create(const std::string& vertexPath, const std::string& pixelPath)
+	{
+		switch (Renderer::GetAPI())
+		{
+			case RendererAPI::API::NONE:
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+
+			case RendererAPI::API::OPENGL: return createRef<OpenGLShader>(vertexPath, pixelPath);
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
+
 	void ShaderLibrary::Add(const Ref<Shader>& shader)
 	{
 		auto& name = shader->GetName();
@@ -80,16 +95,23 @@ namespace rebirth
 		return shader;
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+	Ref<Shader> ShaderLibrary::Load(const std::string& vertexPath, const std::string& pixelPath)
 	{
-		auto shader = Shader::Create(filepath);
+		auto shader = Shader::Create(vertexPath, pixelPath);
+		Add(shader);
+		return shader;
+	}
+
+	Ref<rebirth::Shader> ShaderLibrary::Load(const std::string& name, const std::string& vertexSrc, const std::string& pixelSrc)
+	{
+		auto shader = Shader::Create(name, vertexSrc, pixelSrc);
 		Add(name, shader);
 		return shader;
 	}
 
 	Ref<Shader> ShaderLibrary::Get(const std::string& name)
 	{
-		RB_CORE_ASSERT(mShaders.find(name) != mShaders.end(), "Shader was not found in the library");
+		RB_CORE_ASSERT(mShaders.find(name) != mShaders.end(), "Shader [{}] was not found in the library", name);
 		return mShaders[name];
 	}
 

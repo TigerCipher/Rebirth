@@ -31,6 +31,7 @@ namespace rebirth
 	{
 	public:
 		OpenGLShader(const std::string& filepath);
+		OpenGLShader(const std::string& vertexPath, const std::string& pixelPath);
 		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader();
 

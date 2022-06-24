@@ -43,6 +43,7 @@ namespace rebirth
 		return 0;
 	}
 
+	// TODO Support using multiple files rather than only a single file
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
 		std::string src = Read(filepath);
@@ -66,6 +67,22 @@ namespace rebirth
 	}
 
 
+
+	OpenGLShader::OpenGLShader(const std::string& vertexPath, const std::string& pixelPath)
+	{
+		std::string vertSrc = Read(vertexPath);
+		std::string fragSrc = Read(pixelPath);
+		std::unordered_map<uint, std::string> sources;
+		sources[GL_VERTEX_SHADER] = vertSrc;
+		sources[GL_FRAGMENT_SHADER] = fragSrc;
+		Compile(sources);
+
+		auto lastSlash = vertexPath.find_last_of("/\\");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = vertexPath.rfind('.');
+		auto count = lastDot == std::string::npos ? vertexPath.size() - lastSlash : lastDot - lastSlash;
+		mName = vertexPath.substr(lastSlash, count);
+	}
 
 	OpenGLShader::~OpenGLShader()
 	{
