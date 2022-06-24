@@ -27,7 +27,6 @@
 #include <imgui/imgui.h>
 
 
-#include <platform/opengl/OpenGLShader.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -132,8 +131,8 @@ public:
 		mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
 		mTextureGun = rebirth::Texture2D::Create("assets/textures/Gun1.png");
 
-		std::dynamic_pointer_cast<rebirth::OpenGLShader>(texShader)->Bind();
-		std::dynamic_pointer_cast<rebirth::OpenGLShader>(texShader)->SetUniformInt("uTexture", 0);
+		texShader->Bind();
+		texShader->SetInt("uTexture", 0);
 	}
 
 	void OnUpdate(rebirth::Timestep timestep) override
@@ -153,7 +152,7 @@ public:
 
 
 		mShaderColor->Bind();
-		std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShaderColor)->SetUniformVec4("uColor", mSquareColor);
+		mShaderColor->SetFloat4("uColor", mSquareColor);
 
 		for (int i = 0; i < 25; i++)
 		{

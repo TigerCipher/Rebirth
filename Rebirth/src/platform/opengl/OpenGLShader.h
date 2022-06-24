@@ -23,7 +23,7 @@
 #pragma once
 
 #include "rebirth/renderer/Shader.h"
-#include <glm/glm.hpp>
+
 
 namespace rebirth
 {
@@ -40,9 +40,17 @@ namespace rebirth
 
 		const std::string& GetName() const override { return mName; }
 
+		void SetInt(const std::string& name, const int value) override;
+		void SetFloat(const std::string& name, const float value) override;
+		void SetFloat2(const std::string& name, const glm::vec2& vec) override;
+		void SetFloat3(const std::string& name, const glm::vec3& vec) override;
+		void SetFloat4(const std::string& name, const glm::vec4& vec) override;
+		void SetMat3(const std::string& name, const glm::mat3& matrix) override;
+		void SetMat4(const std::string& name, const glm::mat4& matrix) override;
+
 		void SetUniformInt(const std::string& name, const int value);
 		void SetUniformFloat(const std::string& name, const float value);
-		void SetUniformVec2(const std::string & name, const glm::vec2 & vec);
+		void SetUniformVec2(const std::string& name, const glm::vec2& vec);
 		void SetUniformVec3(const std::string& name, const glm::vec3& vec);
 		void SetUniformVec4(const std::string& name, const glm::vec4& vec);
 		void SetUniformMat3(const std::string& name, const glm::mat3& matrix);

@@ -10,6 +10,6 @@ out vec2 vTexCoord;
 	
 void main()
 {
-	vTexCoord = aTexCoord;
+	vTexCoord = aTexCoord * 10;
 	gl_Position = uViewProj * uModelTransform * vec4(aPos, 1.0);
 }

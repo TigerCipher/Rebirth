@@ -24,7 +24,6 @@
 #include "Renderer2D.h"
 #include "VertexArray.h"
 #include "Shader.h"
-#include "platform/opengl/OpenGLShader.h"
 #include "RenderCommand.h"
 
 namespace rebirth
@@ -33,7 +32,8 @@ namespace rebirth
 	struct Storage
 	{
 		Ref<VertexArray> vertexArray;
-		Ref<Shader> shader;
+		Ref<Shader> flatColorShader;
+		Ref<Shader> textureShader;
 	};
 
 	static Storage* sStorage;
@@ -41,19 +41,21 @@ namespace rebirth
 	void Renderer2D::Init()
 	{
 		sStorage = new Storage();
-		float sq_verts[3 * 4] =
+		float sq_verts[5 * 4] =
 		{
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f,
-			-0.5f, 0.5f, 0.0f
+			/* Positions              Tex coords*/
+			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
 		};
 
 		sStorage->vertexArray = VertexArray::Create();
 
 		Ref<VertexBuffer> svb = VertexBuffer::Create(sizeof(sq_verts), sq_verts);
 		svb->SetLayout({
-				{ ShaderDataType::FLOAT3, "aPos" }
+				{ ShaderDataType::FLOAT3, "aPos" },
+				{ ShaderDataType::FLOAT2, "aTexCoord" },
 			});
 		sStorage->vertexArray->AddVertexBuffer(svb);
 
@@ -63,7 +65,10 @@ namespace rebirth
 		sStorage->vertexArray->SetIndexBuffer(sib);
 
 
-		sStorage->shader = Shader::Create("assets/shaders/FlatColor.glsl");
+		sStorage->flatColorShader = Shader::Create("assets/shaders/FlatColor.glsl");
+		sStorage->textureShader = Shader::Create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
+		sStorage->textureShader->Bind();
+		sStorage->textureShader->SetInt("uTexture", 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -77,9 +82,11 @@ namespace rebirth
 
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(sStorage->shader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(sStorage->shader)->SetUniformMat4("uViewProj", camera.ViewProjectionMatrix());
-		std::dynamic_pointer_cast<OpenGLShader>(sStorage->shader)->SetUniformMat4("uModelTransform", glm::mat4(1.0f));
+		sStorage->flatColorShader->Bind();
+		sStorage->flatColorShader->SetMat4("uViewProj", camera.ViewProjectionMatrix());
+
+		sStorage->textureShader->Bind();
+		sStorage->textureShader->SetMat4("uViewProj", camera.ViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
@@ -87,15 +94,50 @@ namespace rebirth
 
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(	const glm::vec2& pos,
+								const glm::vec4& color,
+								const glm::vec2& size,
+								const float angle)
 	{
-		DrawQuad({ pos.x, pos.y, 0.0f }, size, color);
+		DrawQuad({ pos.x, pos.y, 0.0f }, color, size, angle);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(	const glm::vec3& pos,
+								const glm::vec4& color,
+								const glm::vec2& size,
+								const float angle)
 	{
-		sStorage->shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(sStorage->shader)->SetUniformVec4("uColor", color);
+		sStorage->flatColorShader->Bind();
+		sStorage->flatColorShader->SetFloat4("uColor", color);
+
+		// translation * rotation * scale
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
+		sStorage->flatColorShader->SetMat4("uModelTransform", transform);
+
+		sStorage->vertexArray->Bind();
+		RenderCommand::DrawIndexed(sStorage->vertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float angle)
+	{
+		DrawQuad({ pos.x, pos.y, 0.0f }, texture, size, angle);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float angle)
+	{
+		sStorage->textureShader->Bind();
+
+		// translation * rotation * scale
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		sStorage->textureShader->SetMat4("uModelTransform", transform);
+
+		texture->Bind();
 
 		sStorage->vertexArray->Bind();
 		RenderCommand::DrawIndexed(sStorage->vertexArray);

@@ -25,7 +25,6 @@
 #include "rbpch.h"
 #include "Renderer.h"
 
-#include "platform/opengl/OpenGLShader.h"
 #include "Renderer2D.h"
 
 namespace rebirth
@@ -56,8 +55,8 @@ namespace rebirth
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform /*= glm::mat4(1.0f)*/)
 	{
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetUniformMat4("uViewProj", sData->viewProj);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->SetUniformMat4("uModelTransform", transform);
+		shader->SetMat4("uViewProj", sData->viewProj);
+		shader->SetMat4("uModelTransform", transform);
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}
