@@ -1,6 +1,7 @@
 .vs/
 bin/
 bin_int/
+.va/
 
 *.user
 *.sln
