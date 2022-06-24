@@ -32,7 +32,7 @@ namespace rebirth
 	public:
 		OrthoCamera(float left, float right, float bottom, float top);
 
-
+		void SetProjection(float left, float right, float bottom, float top);
 
 		void SetPosition(const glm::vec3& pos);
 		const glm::vec3& GetPosition() const { return mPosition; }

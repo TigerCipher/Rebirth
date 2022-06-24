@@ -29,6 +29,7 @@ namespace rebirth
 	public:
 		Timestep(float time = 0.0f) : mTime(time) {}
 
+		// Returns time in seconds
 		operator float() const { return mTime; }
 
 		float Seconds() const { return mTime; }

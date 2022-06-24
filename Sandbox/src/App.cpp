@@ -33,7 +33,7 @@
 class SampleLayer final : public rebirth::Layer
 {
 public:
-	SampleLayer() : Layer("Sample"), mCamera(-1.6f, 1.6f, -0.9f, 0.9f)
+	SampleLayer() : Layer("Sample"), mCameraController(1920.0f / 1080.0f, true)
 	{
 		mVertexArray.reset(rebirth::VertexArray::Create());
 
@@ -141,43 +141,15 @@ public:
 
 	void OnUpdate(rebirth::Timestep timestep) override
 	{
+		// tick/update
+		mCameraController.OnUpdate(timestep);
+
+		// render
+
 		rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 		rebirth::RenderCommand::Clear();
 
-		float time = timestep;
-		if (rebirth::Input::IsKeyPressed(RB_KEY_A))
-		{
-			mCamPos.x -= mCamSpeed * time;
-		}
-
-		if (rebirth::Input::IsKeyPressed(RB_KEY_D))
-		{
-			mCamPos.x += mCamSpeed * time;
-		}
-
-		if (rebirth::Input::IsKeyPressed(RB_KEY_W))
-		{
-			mCamPos.y += mCamSpeed * time;
-		}
-
-		if (rebirth::Input::IsKeyPressed(RB_KEY_S))
-		{
-			mCamPos.y -= mCamSpeed * time;
-		}
-
-		if (rebirth::Input::IsKeyPressed(RB_KEY_Q))
-		{
-			mCamRot += mCamRotSpeed * time;
-		}
-
-		if (rebirth::Input::IsKeyPressed(RB_KEY_E))
-		{
-			mCamRot -= mCamRotSpeed * time;
-		}
-
-		mCamera.SetPosition(mCamPos);
-		mCamera.SetRotation(mCamRot);
-		rebirth::Renderer::BeginScene(mCamera);
+		rebirth::Renderer::BeginScene(mCameraController.GetCamera());
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
 
@@ -195,13 +167,14 @@ public:
 				rebirth::Renderer::Submit(mShaderColor, mSquareVtxArray, transform);
 			}
 		}
-		//seperate separate 
+
 		mTexture->Bind();
 		auto texShader = mLibrary["Texture"];
 		rebirth::Renderer::Submit(texShader, mSquareVtxArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		mTextureGun->Bind();
-		rebirth::Renderer::Submit(texShader, mSquareVtxArray, glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, -0.25f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		rebirth::Renderer::Submit(texShader, mSquareVtxArray,
+			glm::translate(glm::mat4(1.0f), glm::vec3(-0.25f, -0.25f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//rebirth::Renderer::Submit(mShader, mVertexArray);
 		rebirth::Renderer::EndScene();
@@ -209,7 +182,8 @@ public:
 
 	void OnEvent(rebirth::Event& e) override
 	{
-		rebirth::EventDispatcher disp(e);
+		mCameraController.OnEvent(e);
+		//rebirth::EventDispatcher disp(e);
 		//disp.Dispatch<rebirth::KeyPressedEvent>(BIND_EVENT_FUNC(SampleLayer::OnKeyPressed));
 	}
 
@@ -232,11 +206,7 @@ private:
 	Ref<rebirth::Texture> mTexture;
 	Ref<rebirth::Texture> mTextureGun;
 
-	rebirth::OrthoCamera mCamera;
-	glm::vec3 mCamPos{0.0f};
-	float mCamSpeed = 5.0f;
-	float mCamRotSpeed = 60.0f;
-	float mCamRot = 0.0f;
+	rebirth::OrthoCameraController mCameraController;
 
 	glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
 	

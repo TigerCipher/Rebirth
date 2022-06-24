@@ -15,45 +15,47 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Rebirth.h
-// Date File Created: 06/13/2022 at 3:12 PM
+// File Name: OrthoCameraController.h
+// Date File Created: 6/23/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-// Core
-#include "rebirth/core/Application.h"
-#include "rebirth/core/Layer.h"
+#include "rebirth/renderer/OrthoCamera.h"
 #include "rebirth/core/Timestep.h"
-#include "rebirth/core/OrthoCameraController.h"
-
-// Debug
-#include "rebirth/debug/Log.h"
-
-// Events
-#include "rebirth/events/KeyEvent.h"
+#include "rebirth/events/AppEvent.h"
 #include "rebirth/events/MouseEvent.h"
 
+namespace rebirth
+{
+	class OrthoCameraController
+	{
+	public:
+		OrthoCameraController(const float aspectRatio, const bool useRotation = false);
 
-// Input
-#include "rebirth/input/Input.h"
-#include "rebirth/input/KeyCodes.h"
-#include "rebirth/input/MouseCodes.h"
+		void OnUpdate(Timestep ts);
+		void OnEvent(Event& e);
+
+		inline OrthoCamera& GetCamera() { return mCamera; }
+		inline const OrthoCamera& GetCamera() const { return mCamera; }
+	private:
+
+		bool OnMouseScrolled(MouseScrolledEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 
-// Renderer
-#include "rebirth/renderer/Renderer.h"
-#include "rebirth/renderer/RenderCommand.h"
-#include "rebirth/renderer/Shader.h"
-#include "rebirth/renderer/Texture.h"
-#include "rebirth/renderer/VertexArray.h"
-#include "rebirth/renderer/OrthoCamera.h"
+		float mAspectRatio;
+		bool mUseRotation;
 
-// GUI
-#include "rebirth/imgui/ImguiLayer.h"
+		float mZoom = 1.0f;
+		OrthoCamera mCamera;
 
+		glm::vec3 mCamPos{ 0.0f };
+		float mCamRotation = 0.0f;
+		
+		float mCamSpeed = 2.0f;
+		float mCamRotationSpeed = 60.0f;
+	};
+}
 
-// Main function
-#include "rebirth/core/EntryPoint.h"
