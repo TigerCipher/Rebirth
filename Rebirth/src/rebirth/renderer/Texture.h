@@ -35,6 +35,7 @@ namespace rebirth
 
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
+		virtual bool operator==(const Texture& other) const = 0;
 	};
 
 	class Texture2D : public Texture
@@ -44,5 +45,6 @@ namespace rebirth
 
 		static Ref<Texture2D> Create(const std::string& path);
 		static Ref<Texture2D> Create(uint width, uint height);
+
 	};
 }

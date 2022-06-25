@@ -51,7 +51,8 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 
 	rebirth::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.6f, 0.3f, 0.15f, 1.0f }, { 0.8f, 0.8f });
 	rebirth::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.2f, 0.5f, 0.7f, 1.0f }, { 0.8f, 0.8f });
-	//rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 10.0f, 10.0f }, 5.0f, {1.0f, 0.5f, 0.5f, 1.0f});
+	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 10.0f, 10.0f }, 5.0f);
+	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.0f }, mTexture, { 1.0f, 1.0f }, 25.0f);
 	//rebirth::Renderer2D::DrawRotatedQuad(mSquarePos, mSquareColor, glm::radians(mSquareAngle), mSquareSize);
 
 	rebirth::Renderer2D::EndScene();

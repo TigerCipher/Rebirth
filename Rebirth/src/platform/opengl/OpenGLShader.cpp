@@ -243,6 +243,12 @@ namespace rebirth
 		SetUniformInt(name, value);
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& name, const int* values, const uint count)
+	{
+		RB_PROFILE_FUNC();
+		SetUniformIntArray(name, values, count);
+	}
+
 	void OpenGLShader::SetFloat(const std::string& name, const float value)
 	{
 		RB_PROFILE_FUNC();
@@ -283,6 +289,12 @@ namespace rebirth
 	{
 		int loc = glGetUniformLocation(mId, name.c_str());
 		glUniform1i(loc, value);
+	}
+
+	void OpenGLShader::SetUniformIntArray(const std::string& name, const int* values, const uint count)
+	{
+		int loc = glGetUniformLocation(mId, name.c_str());
+		glUniform1iv(loc, count, values);
 	}
 
 	void OpenGLShader::SetUniformFloat(const std::string& name, const float value)

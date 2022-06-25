@@ -36,6 +36,7 @@ namespace rebirth
 		virtual const std::string& GetName() const = 0;
 
 		virtual void SetInt(const std::string& name, const int value) = 0;
+		virtual void SetIntArray(const std::string& name, const int* values, const uint count) = 0;
 		virtual void SetFloat(const std::string& name, const float value) = 0;
 		virtual void SetFloat2(const std::string& name, const glm::vec2& vec) = 0;
 		virtual void SetFloat3(const std::string& name, const glm::vec3& vec) = 0;
