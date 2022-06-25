@@ -30,6 +30,14 @@ void Sandbox2D::OnAttach()
 {
 	RB_PROFILE_FUNC();
 	mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
+
+	mParticle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+	mParticle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+	mParticle.SizeBegin = 0.5f, mParticle.SizeVariation = 0.3f, mParticle.SizeEnd = 0.0f;
+	mParticle.LifeTime = 5.0f;
+	mParticle.Velocity = { 0.0f, 0.0f };
+	mParticle.VelocityVariation = { 3.0f, 1.0f };
+	mParticle.Position = { 0.0f, 0.0f };
 }
 
 void Sandbox2D::OnDetach()
@@ -55,8 +63,8 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	rebirth::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.6f, 0.3f, 0.15f, 1.0f }, { 0.8f, 0.8f });
 	rebirth::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.2f, 0.5f, 0.7f, 1.0f }, { 0.8f, 0.8f });
 	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 20.0f, 20.0f }, 5.0f);
-	rebirth::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, 0.0f }, mTexture, rot, { 1.0f, 1.0f }, 25.0f);
-	rebirth::Renderer2D::DrawRotatedQuad(mSquarePos, mSquareColor, mSquareAngle, mSquareSize);
+	rebirth::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, 0.0f }, mTexture, glm::radians(rot), { 1.0f, 1.0f }, 25.0f);
+	rebirth::Renderer2D::DrawRotatedQuad(mSquarePos, mSquareColor, glm::radians(mSquareAngle), mSquareSize);
 
 	for (float y = -5.0f; y < 5.0f; y += 0.5f)
 	{
@@ -68,6 +76,24 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	}
 
 	rebirth::Renderer2D::EndScene();
+
+	if (rebirth::Input::IsMouseButtonPressed(RB_MOUSE_BUTTON_LEFT))
+	{
+		auto [x, y] = rebirth::Input::GetMousePos();
+		auto width = rebirth::Application::Instance().GetWindow().GetWidth();
+		auto height = rebirth::Application::Instance().GetWindow().GetHeight();
+
+		auto bounds = mCameraController.GetBounds();
+		auto pos = mCameraController.GetCamera().GetPosition();
+		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		mParticle.Position = { x + pos.x, y + pos.y };
+		for (int i = 0; i < 10; i++)
+			mParticleSystem.Emit(mParticle);
+	}
+
+	mParticleSystem.OnUpdate(ts);
+	mParticleSystem.OnRender(mCameraController.GetCamera());
 }
 
 void Sandbox2D::OnEvent(rebirth::Event& e)

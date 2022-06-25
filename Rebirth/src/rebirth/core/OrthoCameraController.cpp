@@ -30,7 +30,7 @@ namespace rebirth
 {
 
 	OrthoCameraController::OrthoCameraController(const float aspectRatio, const bool useRotation /*= false*/) :
-		mAspectRatio(aspectRatio), mUseRotation(useRotation), mCamera(-mAspectRatio * mZoom, mAspectRatio* mZoom, -mZoom, mZoom)
+		mAspectRatio(aspectRatio), mUseRotation(useRotation), mBounds({ -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom }), mCamera(mBounds.Left, mBounds.Right, mBounds.Bottom, mBounds.Top)
 	{
 
 	}
@@ -99,6 +99,7 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		mZoom -= e.GetYOffset() * 0.25f;
 		mZoom = std::max(mZoom, 0.25f);
+		mBounds = { -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom };
 		mCamera.SetProjection(-mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom);
 		return false;
 	}
@@ -107,6 +108,7 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 		mAspectRatio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
+		mBounds = { -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom };
 		mCamera.SetProjection(-mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom);
 		return false;
 	}

@@ -24,10 +24,12 @@
 
 #include <Rebirth.h>
 
+#include "Particles.h"
+
 class Sandbox2D : public rebirth::Layer
 {
 public:
-	Sandbox2D() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
+	Sandbox2D() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true), mParticleSystem(100000) {}
 	virtual ~Sandbox2D() = default;
 	void OnAttach() override;
 	void OnDetach() override;
@@ -46,5 +48,8 @@ private:
 	float mSquareAngle = 45.0f;
 
 	Ref<rebirth::Texture2D> mTexture;
+
+	ParticleSystem mParticleSystem;
+	ParticleProps mParticle;
 
 };

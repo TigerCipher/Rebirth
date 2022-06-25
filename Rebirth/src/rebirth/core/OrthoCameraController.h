@@ -29,6 +29,15 @@
 
 namespace rebirth
 {
+	struct OrthoCameraBounds
+	{
+		float left, right;
+		float bottom, rop;
+
+		float GetWidth() { return right - left; }
+		float GetHeight() { return rop - bottom; }
+	};
+
 	class OrthoCameraController
 	{
 	public:
@@ -42,6 +51,8 @@ namespace rebirth
 
 		OrthoCamera& GetCamera() { return mCamera; }
 		const OrthoCamera& GetCamera() const { return mCamera; }
+
+		const OrthoCameraBounds& GetBounds() const { return mBounds; }
 	private:
 
 		bool OnMouseScrolled(MouseScrolledEvent& e);
@@ -52,6 +63,7 @@ namespace rebirth
 		bool mUseRotation;
 
 		float mZoom = 1.0f;
+		OrthoCameraBounds mBounds;
 		OrthoCamera mCamera;
 
 		glm::vec3 mCamPos{ 0.0f };

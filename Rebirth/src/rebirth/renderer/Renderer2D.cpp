@@ -319,7 +319,7 @@ namespace rebirth
 		constexpr float tilingFactor = 1.0f;
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(angle), { 0, 0, 1 })
+			* glm::rotate(glm::mat4(1.0f), angle, { 0, 0, 1 })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		sData.quadVertexBufferPtr->pos = transform * sData.quadVertexPos[0];
@@ -391,7 +391,7 @@ namespace rebirth
 		}
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(angle), { 0, 0, 1 })
+			* glm::rotate(glm::mat4(1.0f), angle, { 0, 0, 1 })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		sData.quadVertexBufferPtr->pos = transform * sData.quadVertexPos[0];
