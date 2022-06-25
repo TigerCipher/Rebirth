@@ -96,20 +96,20 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2& size, const float angle)
+	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2& size)
 	{
-		DrawQuad({ pos.x, pos.y, 0.0f }, color, size, angle);
+		DrawQuad({ pos.x, pos.y, 0.0f }, color, size);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2& size, const float angle)
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2& size)
 	{
 		RB_PROFILE_FUNC();
 		sStorage->textureShader->SetFloat4("uColor", color);
+		sStorage->textureShader->SetFloat("uTilingFactor", 1.0f);
 		sStorage->whiteTexture->Bind();
 
 		// translation * rotation * scale
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
 		sStorage->textureShader->SetMat4("uModelTransform", transform);
@@ -118,21 +118,68 @@ namespace rebirth
 		RenderCommand::DrawIndexed(sStorage->vertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float angle)
+	void Renderer2D::DrawQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
 	{
-		DrawQuad({ pos.x, pos.y, 0.0f }, texture, size, angle);
+		DrawQuad({ pos.x, pos.y, 0.0f }, texture, size, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float angle)
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
 	{
 		RB_PROFILE_FUNC();
-		// #TODO: Create overloaded method for the color tint
-		sStorage->textureShader->SetFloat4("uColor", {1.0f, 1.0f, 1.0f, 1.0f});
+		sStorage->textureShader->SetFloat4("uColor", tintColor);
+		sStorage->textureShader->SetFloat("uTilingFactor", tilingFactor);
 		texture->Bind();
 
 		// translation * rotation * scale
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		sStorage->textureShader->SetMat4("uModelTransform", transform);
+
+
+		sStorage->vertexArray->Bind();
+		RenderCommand::DrawIndexed(sStorage->vertexArray);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec4& color, float angle, const glm::vec2& size /*= {1.0f, 1.0f}*/)
+	{
+		DrawRotatedQuad({ pos.x, pos.y, 0.0f }, color, angle, size);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec4& color, float angle, const glm::vec2& size /*= {1.0f, 1.0f}*/)
+	{
+		RB_PROFILE_FUNC();
+		sStorage->textureShader->SetFloat4("uColor", color);
+		sStorage->textureShader->SetFloat("uTilingFactor", 1.0f);
+		sStorage->whiteTexture->Bind();
+
+		// translation * rotation * scale
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
+			* glm::rotate(glm::mat4(1.0f), angle, { 0, 0, 1 })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		sStorage->textureShader->SetMat4("uModelTransform", transform);
+
+		sStorage->vertexArray->Bind();
+		RenderCommand::DrawIndexed(sStorage->vertexArray);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
+	{
+		DrawRotatedQuad({ pos.x, pos.y, 0.0f }, texture, angle, size, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
+	{
+		RB_PROFILE_FUNC();
+		// #TODO: Create overloaded method for the color tint
+		sStorage->textureShader->SetFloat4("uColor", tintColor);
+		sStorage->textureShader->SetFloat("uTilingFactor", tilingFactor);
+		texture->Bind();
+
+		// translation * rotation * scale
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
+			* glm::rotate(glm::mat4(1.0f), angle, {0, 0, 1})
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		sStorage->textureShader->SetMat4("uModelTransform", transform);

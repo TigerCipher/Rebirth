@@ -23,7 +23,9 @@
 
 #pragma once
 
-#include "rebirth/debug/Profiler.h"
+// Configuration
+#define RB_ENABLE_PROFILER 0
+
 // Macros
 
 // Platform detection

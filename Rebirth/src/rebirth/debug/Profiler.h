@@ -33,9 +33,9 @@ namespace rebirth
 	struct ProfileResult
 	{
 		std::string name;
-		long long start;
-		long long end;
-		uint32_t threadId;
+		std::chrono::duration<double, std::micro> start;
+		std::chrono::microseconds elapsed;
+		std::thread::id threadId;
 	};
 
 	struct ProfileSession
@@ -51,23 +51,37 @@ namespace rebirth
 
 		void BeginSession(const std::string& name, const std::string& filepath = "results.json")
 		{
+			std::lock_guard lock(mMutex);
+
 			mOutput.open(filepath);
-			WriteHeader();
-			mSession = new ProfileSession{name};
+			if (mOutput.is_open())
+			{
+				WriteHeader();
+				mSession = new ProfileSession{ name };
+			}
+			else
+			{
+#ifdef RB_DEBUG
+				if (Log::GetCoreLogger())
+				{
+					RB_CORE_ERROR("Profiler failed to open file '{}'", filepath);
+				}
+#endif
+			}
 		}
 
 		void EndSession()
 		{
+			std::lock_guard lock(mMutex);
 			WriteFooter();
 			mOutput.close();
 			delete mSession;
 			mSession = nullptr;
-			mProfileCount = 0;
 		}
 
 		void WriteHeader()
 		{
-			mOutput << "{\"otherData\": {},\"traceEvents\":[";
+			mOutput << "{\"otherData\": {},\"traceEvents\":[{}";
 			mOutput.flush();
 		}
 
@@ -79,23 +93,26 @@ namespace rebirth
 
 		void WriteProfile(const ProfileResult& result)
 		{
-			if (mProfileCount++ > 0)
-				mOutput << ",";
-
+			std::stringstream json;
 			std::string name = result.name;
 			std::replace(name.begin(), name.end(), '"', '\'');
 
-			mOutput << "{";
-			mOutput << "\"cat\":\"function\",";
-			mOutput << "\"dur\":" << (result.end - result.start) << ',';
-			mOutput << "\"name\":\"" << name << "\",";
-			mOutput << "\"ph\":\"X\",";
-			mOutput << "\"pid\":0,";
-			mOutput << "\"tid\":" << result.threadId << ",";
-			mOutput << "\"ts\":" << result.start;
-			mOutput << "}";
+			json << ",{";
+			json << "\"cat\":\"function\",";
+			json << "\"dur\":" << result.elapsed.count() << ',';
+			json << "\"name\":\"" << name << "\",";
+			json << "\"ph\":\"X\",";
+			json << "\"pid\":0,";
+			json << "\"tid\":" << result.threadId << ",";
+			json << "\"ts\":" << result.start.count();
+			json << "}";
 
-			mOutput.flush();
+			std::lock_guard lock(mMutex);
+			if (mSession)
+			{
+				mOutput << json.str();
+				mOutput.flush();
+			}
 		}
 
 		static Profiler& Get()
@@ -106,8 +123,8 @@ namespace rebirth
 
 	private:
 		ProfileSession* mSession = nullptr;
-		int mProfileCount = 0;
 		std::ofstream mOutput;
+		std::mutex mMutex;
 	};
 
 	class ProfileTimer
@@ -125,12 +142,11 @@ namespace rebirth
 
 		void Stop()
 		{
-			auto endPoint = std::chrono::high_resolution_clock::now();
-			long long start = std::chrono::time_point_cast<std::chrono::microseconds>(mStartPoint).time_since_epoch().count();
-			long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endPoint).time_since_epoch().count();
+			auto endPoint = std::chrono::steady_clock::now();
+			auto highResStart = std::chrono::duration<double, std::micro>{ mStartPoint.time_since_epoch() };
+			auto duration = std::chrono::time_point_cast<std::chrono::microseconds>(endPoint).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(mStartPoint).time_since_epoch();
 
-			uint32_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
-			Profiler::Get().WriteProfile({ mName, start, end, threadId });
+			Profiler::Get().WriteProfile({ mName, highResStart, duration, std::this_thread::get_id() });
 
 			mStopped = true;
 		}
@@ -140,8 +156,6 @@ namespace rebirth
 		bool mStopped;
 	};
 }
-
-#define RB_ENABLE_PROFILER 1
 
 #if RB_ENABLE_PROFILER
 #	define RB_PROFILE_BEGIN_SESSION(name, filepath) ::rebirth::Profiler::Get().BeginSession(name, filepath)

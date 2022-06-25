@@ -317,16 +317,8 @@ namespace rebirth
 
 	void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		RB_PROFILE_FUNC();
-		uint loc = -1;
-		{
-			RB_PROFILE_SCOPE("glGetUniformLocation");
-			loc = glGetUniformLocation(mId, name.c_str());
-		}
-		{
-			RB_PROFILE_SCOPE("Setting matrix uniform");
-			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
-		}
+		uint loc = glGetUniformLocation(mId, name.c_str());
+		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 
 	}
 }
