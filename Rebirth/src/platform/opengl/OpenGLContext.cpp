@@ -48,6 +48,7 @@ namespace rebirth
 
 	void OpenGLContext::Init()
 	{
+		RB_PROFILE_FUNC();
 		RB_CORE_TRACE("Creating OpenGL context");
 		glfwMakeContextCurrent(mWindow);
 
@@ -80,6 +81,7 @@ namespace rebirth
 
 	void OpenGLContext::SwapBuffers()
 	{
+		RB_PROFILE_FUNC();
 		glfwSwapBuffers(mWindow);
 	}
 }

@@ -46,4 +46,21 @@ namespace rebirth
 		return nullptr;
 	}
 
+	Ref<rebirth::Texture2D> Texture2D::Create(uint width, uint height)
+	{
+		switch (Renderer::GetAPI())
+		{
+			case RendererAPI::API::NONE:
+			{
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+			}
+
+			case RendererAPI::API::OPENGL: return createRef<OpenGLTexture2D>(width, height);
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
+
 }

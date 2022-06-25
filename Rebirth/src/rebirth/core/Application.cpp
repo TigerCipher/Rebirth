@@ -36,12 +36,13 @@ namespace rebirth
 
 	Application::Application()
 	{
+		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
 		RB_CORE_TRACE("Creating core application");
 		sInstance = this;
 		mWindow = Scope<Window>(Window::Create());
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-		//mWindow->SetVSync(false);
+		//mWindow->SetVSync(false); //#NOTE: Should maybe leave on by default
 
 
 		Renderer::Init();
@@ -53,11 +54,18 @@ namespace rebirth
 		RB_CORE_TRACE("Core application created");
 	}
 
+	Application::~Application()
+	{
+		RB_PROFILE_FUNC();
+		Renderer::Shutdown();
+	}
+
 	void Application::Run()
 	{
+		RB_PROFILE_FUNC();
 		while (mRunning)
 		{
-
+			RB_PROFILE_SCOPE("Run Loop");
 			// #TODO: Abstract getTime to platform/opengl
 			float time = static_cast<float>(glfwGetTime());
 			Timestep timestep = time - mLastFrameTime;
@@ -65,6 +73,7 @@ namespace rebirth
 
 			if(!mMinimized)
 			{
+				RB_PROFILE_SCOPE("Update LayerStack");
 				for (Layer* layer : mLayerStack)
 				{
 					layer->OnUpdate(timestep);
@@ -72,9 +81,12 @@ namespace rebirth
 			}
 
 			mImguiLayer->Begin();
-			for (Layer* layer : mLayerStack)
 			{
-				layer->OnImguiRender();
+				RB_PROFILE_SCOPE("LayerStack render imgui");
+				for (Layer* layer : mLayerStack)
+				{
+					layer->OnImguiRender();
+				}
 			}
 			mImguiLayer->End();
 
@@ -84,6 +96,7 @@ namespace rebirth
 
 	void Application::OnEvent(Event& e)
 	{
+		RB_PROFILE_FUNC();
 		EventDispatcher disp(e);
 		disp.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
 		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(Application::OnWindowResize));
@@ -100,12 +113,16 @@ namespace rebirth
 
 	void Application::PushLayer(Layer* layer)
 	{
+		RB_PROFILE_FUNC();
 		mLayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
+		RB_PROFILE_FUNC();
 		mLayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -116,6 +133,7 @@ namespace rebirth
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		RB_PROFILE_FUNC();
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			mMinimized = true;

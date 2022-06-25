@@ -45,6 +45,7 @@ namespace rebirth
 
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
+		RB_PROFILE_FUNC();
 		std::string src = Read(filepath);
 		auto sources = Preprocess(src);
 		Compile(sources);
@@ -59,6 +60,7 @@ namespace rebirth
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) :
 		mName(name)
 	{
+		RB_PROFILE_FUNC();
 		std::unordered_map<uint, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -69,6 +71,7 @@ namespace rebirth
 
 	OpenGLShader::OpenGLShader(const std::string& vertexPath, const std::string& pixelPath)
 	{
+		RB_PROFILE_FUNC();
 		std::string vertSrc = Read(vertexPath);
 		std::string fragSrc = Read(pixelPath);
 		std::unordered_map<uint, std::string> sources;
@@ -85,22 +88,26 @@ namespace rebirth
 
 	OpenGLShader::~OpenGLShader()
 	{
+		RB_PROFILE_FUNC();
 		glDeleteShader(mId);
 	}
 
 	void OpenGLShader::Bind() const
 	{
+		RB_PROFILE_FUNC();
 		glUseProgram(mId);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
+		RB_PROFILE_FUNC();
 		glUseProgram(0);
 	}
 
 
 	std::string OpenGLShader::Read(const std::string& filepath)
 	{
+		RB_PROFILE_FUNC();
 		RB_CORE_TRACE("Loading shader file [{}]", filepath);
 		std::string result;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
@@ -123,6 +130,7 @@ namespace rebirth
 
 	std::unordered_map<uint, std::string> OpenGLShader::Preprocess(const std::string& src)
 	{
+		RB_PROFILE_FUNC();
 		RB_CORE_TRACE("Preprocessing shader file");
 		std::unordered_map<uint, std::string> sources;
 
@@ -150,6 +158,7 @@ namespace rebirth
 
 	void OpenGLShader::Compile(const std::unordered_map<uint, std::string>& sources)
 	{
+		RB_PROFILE_FUNC();
 		uint prog = glCreateProgram();
 		RB_CORE_ASSERT(sources.size() <= GLSL_MAX_SHADERS_PER_FILE, "Rebirth currently only supports two shaders in a single file");
 		RB_CORE_TRACE("Compiling shader program {}", prog);
@@ -230,36 +239,43 @@ namespace rebirth
 
 	void OpenGLShader::SetInt(const std::string& name, const int value)
 	{
+		RB_PROFILE_FUNC();
 		SetUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat(const std::string& name, const float value)
 	{
+		RB_PROFILE_FUNC();
 		SetUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& vec)
 	{
+		RB_PROFILE_FUNC();
 		SetUniformVec2(name, vec);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& vec)
 	{
+		RB_PROFILE_FUNC();
 		SetUniformVec3(name, vec);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& vec)
 	{
+		RB_PROFILE_FUNC();
 		SetUniformVec4(name, vec);
 	}
 
 	void OpenGLShader::SetMat3(const std::string& name, const glm::mat3& matrix)
 	{
+		RB_PROFILE_FUNC();
 		SetUniformMat3(name, matrix);
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& matrix)
 	{
+		RB_PROFILE_FUNC();
 		SetUniformMat4(name, matrix);
 	}
 
@@ -301,8 +317,17 @@ namespace rebirth
 
 	void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		int loc = glGetUniformLocation(mId, name.c_str());
-		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
+		RB_PROFILE_FUNC();
+		uint loc = -1;
+		{
+			RB_PROFILE_SCOPE("glGetUniformLocation");
+			loc = glGetUniformLocation(mId, name.c_str());
+		}
+		{
+			RB_PROFILE_SCOPE("Setting matrix uniform");
+			glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
+		}
+
 	}
 }
 

@@ -31,6 +31,7 @@
 
 // Debug
 #include "rebirth/debug/Log.h"
+#include "rebirth/debug/Profiler.h"
 
 // Events
 #include "rebirth/events/KeyEvent.h"

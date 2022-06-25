@@ -25,8 +25,10 @@
 
 #include <imgui/imgui.h>
 
+
 void Sandbox2D::OnAttach()
 {
+	RB_PROFILE_FUNC();
 	mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
 }
 
@@ -37,19 +39,17 @@ void Sandbox2D::OnDetach()
 
 void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 {
+	RB_PROFILE_FUNC();
 	mCameraController.OnUpdate(ts);
+
 
 	rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 	rebirth::RenderCommand::Clear();
-
 	rebirth::Renderer2D::BeginScene(mCameraController.GetCamera());
 
-	rebirth::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.6f, 0.3f, 0.15f, 1.0f } , { 0.8f, 0.8f });
-	//rebirth::Renderer2D::DrawQuad({0.0f, 0.0f}, mTexture);
-	rebirth::Renderer2D::DrawQuad({0.0f, 0.0f, -0.1f}, mTexture, {10.0f, 10.0f});
+	rebirth::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.6f, 0.3f, 0.15f, 1.0f }, { 0.8f, 0.8f });
+	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 10.0f, 10.0f });
 	rebirth::Renderer2D::DrawQuad(mSquarePos, mSquareColor, mSquareSize, mSquareAngle);
-	//mShader->Bind();
-	//std::dynamic_pointer_cast<rebirth::OpenGLShader>(mShader)->SetUniformVec4("uColor", mSquareColor);
 
 	rebirth::Renderer2D::EndScene();
 }
@@ -66,5 +66,17 @@ void Sandbox2D::OnImguiRender()
 	ImGui::DragFloat2("Square Position", glm::value_ptr(mSquarePos), 0.2f, -1.0f, 1.0f);
 	ImGui::DragFloat2("Square Size", glm::value_ptr(mSquareSize), 0.2f, 0.05f, 10.0f);
 	ImGui::DragFloat("Square Angle", &mSquareAngle, 0.2f, 0.0f, 360.0f);
+
+
+	for (auto& res : mProfileResults)
+	{
+		char label[50];
+		strcpy(label, "%.3fms ");
+		strcat(label, res.name);
+		ImGui::Text(label, res.time);
+	}
+
+	mProfileResults.clear();
+
 	ImGui::End();
 }

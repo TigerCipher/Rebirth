@@ -43,6 +43,7 @@ namespace rebirth
 
 	void ImguiLayer::OnAttach()
 	{
+		RB_PROFILE_FUNC();
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
@@ -72,6 +73,7 @@ namespace rebirth
 
 	void ImguiLayer::OnDetach()
 	{
+		RB_PROFILE_FUNC();
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -85,6 +87,7 @@ namespace rebirth
 
 	void ImguiLayer::Begin()
 	{
+		RB_PROFILE_FUNC();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -92,6 +95,7 @@ namespace rebirth
 
 	void ImguiLayer::End()
 	{
+		RB_PROFILE_FUNC();
 		Application& app = Application::Instance();
 
 		ImGuiIO& io = ImGui::GetIO();

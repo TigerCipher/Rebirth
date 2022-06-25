@@ -54,26 +54,31 @@ namespace rebirth
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
+		RB_PROFILE_FUNC();
 		glCreateVertexArrays(1, &mId);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		RB_PROFILE_FUNC();
 		glDeleteVertexArrays(1, &mId);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
+		RB_PROFILE_FUNC();
 		glBindVertexArray(mId);
 	}
 
 	void OpenGLVertexArray::Unbind() const
 	{
+		RB_PROFILE_FUNC();
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& buffer)
 	{
+		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(buffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout");
 
 		glBindVertexArray(mId);
@@ -94,6 +99,7 @@ namespace rebirth
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& buffer)
 	{
+		RB_PROFILE_FUNC();
 		glBindVertexArray(mId);
 		buffer->Bind();
 		mIndexBuffer = buffer;

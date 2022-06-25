@@ -37,6 +37,7 @@ namespace rebirth
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size, float* vertices)
 	{
+		RB_PROFILE_FUNC();
 		glCreateBuffers(1, &mId);
 		glBindBuffer(GL_ARRAY_BUFFER, mId);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
@@ -44,16 +45,19 @@ namespace rebirth
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
+		RB_PROFILE_FUNC();
 		glDeleteBuffers(1, &mId);
 	}
 
 	void OpenGLVertexBuffer::Bind() const
 	{
+		RB_PROFILE_FUNC();
 		glBindBuffer(GL_ARRAY_BUFFER, mId);
 	}
 
 	void OpenGLVertexBuffer::Unbind() const
 	{
+		RB_PROFILE_FUNC();
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
@@ -66,6 +70,7 @@ namespace rebirth
 	OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t count, uint32_t* indices) :
 		mCount(count)
 	{
+		RB_PROFILE_FUNC();
 		glCreateBuffers(1, &mId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mId);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
@@ -73,16 +78,19 @@ namespace rebirth
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
+		RB_PROFILE_FUNC();
 		glDeleteBuffers(1, &mId);
 	}
 
 	void OpenGLIndexBuffer::Bind() const
 	{
+		RB_PROFILE_FUNC();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mId);
 	}
 
 	void OpenGLIndexBuffer::Unbind() const
 	{
+		RB_PROFILE_FUNC();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 

@@ -31,6 +31,8 @@ namespace rebirth
 	public:
 		virtual void Bind(uint slot = 0) const = 0;
 
+		virtual void SetData(void* data, uint size) = 0;
+
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
 	};
@@ -41,5 +43,6 @@ namespace rebirth
 		virtual ~Texture2D() = default;
 
 		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create(uint width, uint height);
 	};
 }

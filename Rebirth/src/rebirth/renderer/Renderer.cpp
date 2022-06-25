@@ -33,8 +33,14 @@ namespace rebirth
 
 	void Renderer::Init()
 	{
+		RB_PROFILE_FUNC();
 		RenderCommand::Init();
 		Renderer2D::Init();
+	}
+
+	void Renderer::Shutdown()
+	{
+		Renderer2D::Shutdown();
 	}
 
 	void Renderer::OnWindowResize(const uint width, const uint height)

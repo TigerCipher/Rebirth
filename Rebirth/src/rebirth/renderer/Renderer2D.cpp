@@ -32,14 +32,15 @@ namespace rebirth
 	struct Storage
 	{
 		Ref<VertexArray> vertexArray;
-		Ref<Shader> flatColorShader;
 		Ref<Shader> textureShader;
+		Ref<Texture2D> whiteTexture;
 	};
 
 	static Storage* sStorage;
 
 	void Renderer2D::Init()
 	{
+		RB_PROFILE_FUNC();
 		sStorage = new Storage();
 		float sq_verts[5 * 4] =
 		{
@@ -64,8 +65,10 @@ namespace rebirth
 
 		sStorage->vertexArray->SetIndexBuffer(sib);
 
+		sStorage->whiteTexture = Texture2D::Create(1, 1);
+		uint32_t whiteData = 0xffffffff;
+		sStorage->whiteTexture->SetData(&whiteData, sizeof(uint32_t));
 
-		sStorage->flatColorShader = Shader::Create("assets/shaders/FlatColor.glsl");
 		sStorage->textureShader = Shader::Create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
 		sStorage->textureShader->Bind();
 		sStorage->textureShader->SetInt("uTexture", 0);
@@ -73,6 +76,7 @@ namespace rebirth
 
 	void Renderer2D::Shutdown()
 	{
+		RB_PROFILE_FUNC();
 		if (sStorage)
 		{
 			delete sStorage;
@@ -82,40 +86,33 @@ namespace rebirth
 
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
 	{
-		sStorage->flatColorShader->Bind();
-		sStorage->flatColorShader->SetMat4("uViewProj", camera.ViewProjectionMatrix());
-
+		RB_PROFILE_FUNC();
 		sStorage->textureShader->Bind();
 		sStorage->textureShader->SetMat4("uViewProj", camera.ViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
 	{
-
+		RB_PROFILE_FUNC();
 	}
 
-	void Renderer2D::DrawQuad(	const glm::vec2& pos,
-								const glm::vec4& color,
-								const glm::vec2& size,
-								const float angle)
+	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2& size, const float angle)
 	{
 		DrawQuad({ pos.x, pos.y, 0.0f }, color, size, angle);
 	}
 
-	void Renderer2D::DrawQuad(	const glm::vec3& pos,
-								const glm::vec4& color,
-								const glm::vec2& size,
-								const float angle)
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2& size, const float angle)
 	{
-		sStorage->flatColorShader->Bind();
-		sStorage->flatColorShader->SetFloat4("uColor", color);
+		RB_PROFILE_FUNC();
+		sStorage->textureShader->SetFloat4("uColor", color);
+		sStorage->whiteTexture->Bind();
 
 		// translation * rotation * scale
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
 			* glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
 
-		sStorage->flatColorShader->SetMat4("uModelTransform", transform);
+		sStorage->textureShader->SetMat4("uModelTransform", transform);
 
 		sStorage->vertexArray->Bind();
 		RenderCommand::DrawIndexed(sStorage->vertexArray);
@@ -128,7 +125,10 @@ namespace rebirth
 
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float angle)
 	{
-		sStorage->textureShader->Bind();
+		RB_PROFILE_FUNC();
+		// #TODO: Create overloaded method for the color tint
+		sStorage->textureShader->SetFloat4("uColor", {1.0f, 1.0f, 1.0f, 1.0f});
+		texture->Bind();
 
 		// translation * rotation * scale
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
@@ -137,7 +137,6 @@ namespace rebirth
 
 		sStorage->textureShader->SetMat4("uModelTransform", transform);
 
-		texture->Bind();
 
 		sStorage->vertexArray->Bind();
 		RenderCommand::DrawIndexed(sStorage->vertexArray);

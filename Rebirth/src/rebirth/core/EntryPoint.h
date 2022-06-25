@@ -31,13 +31,15 @@
 	{
 		rebirth::Log::Init();
 		RB_CORE_TRACE("Initializing engine");
-
+		RB_PROFILE_BEGIN_SESSION("Startup", "Rebirth-Startup.json");
 		auto app = rebirth::CreateApplication();
+		RB_PROFILE_END_SESSION();
+		RB_PROFILE_BEGIN_SESSION("Runtime", "Rebirth-Runtime.json");
 		app->Run();
+		RB_PROFILE_END_SESSION();
+		RB_PROFILE_BEGIN_SESSION("Shutdown", "Rebirth-Shutdown.json");
 		delete app;
-
-		// TODO: Might be nice to return error codes for debug purposes
-		// though... during debugging, I'd just assert instead of return an error code. Error code for release/dist builds?
+		RB_PROFILE_END_SESSION();
 		return 0;
 	}
 #endif

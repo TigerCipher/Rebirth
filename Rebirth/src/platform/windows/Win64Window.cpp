@@ -47,22 +47,26 @@ namespace rebirth
 
 	Win64Window::Win64Window(const WindowProperties& props)
 	{
+		RB_PROFILE_FUNC();
 		Init(props);
 	}
 
 	Win64Window::~Win64Window()
 	{
+		RB_PROFILE_FUNC();
 		Shutdown();
 	}
 
 	void Win64Window::OnUpdate()
 	{
+		RB_PROFILE_FUNC();
 		glfwPollEvents();
 		mContext->SwapBuffers();
 	}
 
 	void Win64Window::SetVSync(bool enabled)
 	{
+		RB_PROFILE_FUNC();
 		if (enabled)
 		{
 			glfwSwapInterval(1);
@@ -82,6 +86,7 @@ namespace rebirth
 
 	void Win64Window::Init(const WindowProperties& props)
 	{
+		RB_PROFILE_FUNC();
 		mData.title = props.title;
 		mData.width = props.width;
 		mData.height = props.height;
@@ -103,8 +108,11 @@ namespace rebirth
 		}
 
 		RB_CORE_TRACE("Creating glfw window");
-		mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
-			nullptr, nullptr);
+		{
+			RB_PROFILE_SCOPE("glfwCreateWindow in Win64Window::Init(const WindowProps&)");
+			mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
+				nullptr, nullptr);
+		}
 
 		const int maxWidth = GetSystemMetrics(SM_CXSCREEN);
 		const int maxHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -204,6 +212,7 @@ namespace rebirth
 
 	void Win64Window::Shutdown()
 	{
+		RB_PROFILE_FUNC();
 		glfwDestroyWindow(mWindow);
 	}
 

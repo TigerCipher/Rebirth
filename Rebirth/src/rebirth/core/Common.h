@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include "rebirth/debug/Profiler.h"
 // Macros
 
 // Platform detection

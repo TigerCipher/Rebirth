@@ -8,5 +8,7 @@ bin_int/
 *.vcxproj
 *.vcxproj.*
 
+*.json
+
 # Exceptions
 !/vendor/bin/

@@ -40,6 +40,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "rebirth/debug/Log.h"
+#include "rebirth/debug/Profiler.h"
 
 #ifdef RB_WINDOWS
 	#include <Windows.h>

@@ -34,52 +34,84 @@ namespace rebirth
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path) :
 		mPath(path)
 	{
+		RB_PROFILE_FUNC();
 		RB_CORE_TRACE("Loading texture from file {}", path);
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
-		byte* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-		//TODO Perhaps default texture instead?
-		// #NOTE perhaps default texture?
+		byte* data = nullptr;
+		{
+			RB_PROFILE_SCOPE("stbi_load in OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
+			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		}
+
+		// #NOTE perhaps default texture ? -Or perhaps better is to make default texture be when creating a quad/sprite/model/etc
+		// If a texture fails to load, it should be an assert so we can catch it easier
+
 		RB_CORE_ASSERT(data, "Failed to load texture file");
 		mWidth = width;
 		mHeight = height;
 
-		uint internalFormat = 0;
-		uint dataFormat = 0;
 		if (channels == 4)
 		{
-			internalFormat = GL_RGBA8;
-			dataFormat = GL_RGBA;
+			mInternalFormat = GL_RGBA8;
+			mDataFormat = GL_RGBA;
 		}
 		else if (channels == 3)
 		{
-			internalFormat = GL_RGB8;
-			dataFormat = GL_RGB;
+			mInternalFormat = GL_RGB8;
+			mDataFormat = GL_RGB;
 		}
 
-		RB_CORE_ASSERT(internalFormat & dataFormat, "Image format not supported");
+		RB_CORE_ASSERT(mInternalFormat & mDataFormat, "Image format not supported");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &mId);
-		glTextureStorage2D(mId, 1, internalFormat, mWidth, mHeight);
+		glTextureStorage2D(mId, 1, mInternalFormat, mWidth, mHeight);
+
 		glTextureParameteri(mId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTextureParameteri(mId, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(mId, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTextureSubImage2D(mId, 0, 0, 0, mWidth, mHeight, dataFormat, GL_UNSIGNED_BYTE, data);
+
+		glTextureSubImage2D(mId, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
 
 		stbi_image_free(data);
 
 		RB_CORE_TRACE("Texture {} loaded", path);
 	}
 
+	OpenGLTexture2D::OpenGLTexture2D(uint width, uint height) :
+		mWidth(width), mHeight(height)
+	{
+		RB_PROFILE_FUNC();
+		mInternalFormat = GL_RGBA8;
+		mDataFormat = GL_RGBA;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &mId);
+		glTextureStorage2D(mId, 1, mInternalFormat, mWidth, mHeight);
+
+		glTextureParameteri(mId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(mId, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(mId, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		RB_PROFILE_FUNC();
 		glDeleteTextures(1, &mId);
 	}
 
 	void OpenGLTexture2D::Bind(const uint slot /*= 0*/) const
 	{
+		RB_PROFILE_FUNC();
 		glBindTextureUnit(slot, mId);
+	}
+
+	void OpenGLTexture2D::SetData(void* data, uint size)
+	{
+		RB_PROFILE_FUNC();
+		RB_CORE_ASSERT(size == mWidth * mHeight * (mDataFormat == GL_RGBA ? 4 : 3), "Data must contain entire texture");
+		glTextureSubImage2D(mId, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 }

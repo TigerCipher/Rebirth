@@ -37,31 +37,31 @@ namespace rebirth
 	void LayerStack::PushLayer(Layer* layer)
 	{
 		mLayers.emplace(mLayers.begin() + mInsertIndex, layer);
-		layer->OnAttach();
+		//layer->OnAttach();
 	}
 
 	void LayerStack::PushOverlay(Layer* overlay)
 	{
 		mLayers.emplace_back(overlay);
-		overlay->OnAttach();
+		//overlay->OnAttach();
 	}
 
 	void LayerStack::PopLayer(Layer* layer)
 	{
-		if (const auto it = std::find(mLayers.begin(), mLayers.end(), layer); it != mLayers.end())
+		if (const auto it = std::find(mLayers.begin() + mInsertIndex, mLayers.end(), layer); it != mLayers.begin() + mInsertIndex)
 		{
+			layer->OnDetach();
 			mLayers.erase(it);
 			--mInsertIndex;
-			layer->OnDetach();
 		}
 	}
 
 	void LayerStack::PopOverlay(Layer* overlay)
 	{
-		if (const auto it = std::find(mLayers.begin(), mLayers.end(), overlay); it != mLayers.end())
+		if (const auto it = std::find(mLayers.begin() + mInsertIndex, mLayers.end(), overlay); it != mLayers.end())
 		{
-			mLayers.erase(it);
 			overlay->OnDetach();
+			mLayers.erase(it);
 		}
 	}
 

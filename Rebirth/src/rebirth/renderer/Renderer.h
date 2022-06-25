@@ -37,6 +37,7 @@ namespace rebirth
 	{
 	public:
 		static void Init();
+		static void Shutdown();
 		static void OnWindowResize(uint width, uint height);
 
 		static void BeginScene(OrthoCamera& camera);

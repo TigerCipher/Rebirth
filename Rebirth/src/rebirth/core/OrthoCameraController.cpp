@@ -37,6 +37,7 @@ namespace rebirth
 
 	void OrthoCameraController::OnUpdate(Timestep ts)
 	{
+		RB_PROFILE_FUNC();
 		// mul by 2 because 2 is currently default
 		mCamSpeed = 2.0f * mZoom;
 		if (Input::IsKeyPressed(RB_KEY_A))
@@ -87,6 +88,7 @@ namespace rebirth
 
 	void OrthoCameraController::OnEvent(Event& e)
 	{
+		RB_PROFILE_FUNC();
 		EventDispatcher disp(e);
 		disp.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNC(OrthoCameraController::OnMouseScrolled));
 		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OrthoCameraController::OnWindowResize));
@@ -94,6 +96,7 @@ namespace rebirth
 
 	bool OrthoCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
+		RB_PROFILE_FUNC();
 		mZoom -= e.GetYOffset() * 0.25f;
 		mZoom = std::max(mZoom, 0.25f);
 		mCamera.SetProjection(-mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom);
@@ -102,6 +105,7 @@ namespace rebirth
 
 	bool OrthoCameraController::OnWindowResize(WindowResizeEvent& e)
 	{
+		RB_PROFILE_FUNC();
 		mAspectRatio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
 		mCamera.SetProjection(-mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom);
 		return false;

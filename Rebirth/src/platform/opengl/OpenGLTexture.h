@@ -31,9 +31,12 @@ namespace rebirth
 	{
 	public:
 		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(uint width, uint height);
 		virtual ~OpenGLTexture2D();
 
 		void Bind(uint slot = 0) const override;
+
+		void SetData(void* data, uint size) override;
 
 		int GetWidth() const override
 		{
@@ -48,6 +51,8 @@ namespace rebirth
 		int mWidth;
 		int mHeight;
 		uint mId;
+		uint mInternalFormat;
+		uint mDataFormat;
 
 		std::string mPath;
 	};
