@@ -47,12 +47,4 @@ private:
 
 	Ref<rebirth::Texture2D> mTexture;
 
-
-	struct ProfileResult
-	{
-		const char* name;
-		float time;
-	};
-
-	std::vector<ProfileResult> mProfileResults;
 };

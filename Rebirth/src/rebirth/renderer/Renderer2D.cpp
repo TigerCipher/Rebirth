@@ -40,9 +40,9 @@ namespace rebirth
 
 	struct RenderData
 	{
-		const uint32_t MAX_QUADS = 10000;
-		const uint32_t MAX_VERTS = MAX_QUADS * 4;
-		const uint32_t MAX_INDICES = MAX_QUADS * 6;
+		static const uint32_t MAX_QUADS = 10000;
+		static const uint32_t MAX_VERTS = MAX_QUADS * 4;
+		static const uint32_t MAX_INDICES = MAX_QUADS * 6;
 		static const uint32_t MAX_TEXTURE_SLOTS = 32; // #TODO: Detect max texture slots from gpu?
 
 		Ref<VertexArray> vertexArray;
@@ -59,6 +59,9 @@ namespace rebirth
 		uint32_t textureSlotIndex = 1; // we use 0 for our default white texture
 
 		glm::vec4 quadVertexPos[4];
+
+
+		Renderer2D::Stats stats;
 	};
 
 	static RenderData sData;
@@ -136,6 +139,7 @@ namespace rebirth
 		sData.textureShader->SetMat4("uViewProj", camera.ViewProjectionMatrix());
 		sData.quadIndexCount = 0;
 		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+		sData.textureSlotIndex = 1;
 	}
 
 	void Renderer2D::EndScene()
@@ -157,7 +161,17 @@ namespace rebirth
 		}
 
 		RenderCommand::DrawIndexed(sData.vertexArray, sData.quadIndexCount);
+		sData.stats.drawCalls++;
 	}
+
+	void Renderer2D::ResetBatch()
+	{
+		EndScene();
+		sData.quadIndexCount = 0;
+		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+		sData.textureSlotIndex = 1;
+	}
+
 
 	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2& size)
 	{
@@ -167,6 +181,11 @@ namespace rebirth
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2& size)
 	{
 		RB_PROFILE_FUNC();
+
+		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
+		{
+			ResetBatch();
+		}
 
 		constexpr float textureIndex = 0; // our default white texture
 		constexpr float tilingFactor = 1.0f;
@@ -204,6 +223,9 @@ namespace rebirth
 
 		sData.quadIndexCount += 6;
 
+
+		sData.stats.quads++;
+
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
@@ -214,6 +236,11 @@ namespace rebirth
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
 	{
 		RB_PROFILE_FUNC();
+
+		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
+		{
+			ResetBatch();
+		}
 
 		// #TODO: tint color for textures?
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -269,6 +296,9 @@ namespace rebirth
 
 		sData.quadIndexCount += 6;
 
+
+		sData.stats.quads++;
+
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec4& color, float angle, const glm::vec2& size /*= {1.0f, 1.0f}*/)
@@ -279,6 +309,11 @@ namespace rebirth
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec4& color, float angle, const glm::vec2& size /*= {1.0f, 1.0f}*/)
 	{
 		RB_PROFILE_FUNC();
+
+		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
+		{
+			ResetBatch();
+		}
 
 		constexpr float textureIndex = 0; // default white texture
 		constexpr float tilingFactor = 1.0f;
@@ -316,6 +351,8 @@ namespace rebirth
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;
+
+		sData.stats.quads++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
@@ -326,6 +363,13 @@ namespace rebirth
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
 	{
 		RB_PROFILE_FUNC();
+
+		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
+		{
+			ResetBatch();
+		}
+
+
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		float textureIndex = 0.0f;
@@ -379,7 +423,21 @@ namespace rebirth
 		sData.quadVertexBufferPtr++;
 
 		sData.quadIndexCount += 6;
+
+		sData.stats.quads++;
 	}
+
+	Renderer2D::Stats Renderer2D::GetStats()
+	{
+		return sData.stats;
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&sData.stats, 0, sizeof(Stats));
+	}
+
+
 
 }
 

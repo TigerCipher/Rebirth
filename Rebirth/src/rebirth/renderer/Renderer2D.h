@@ -49,6 +49,22 @@ namespace rebirth
 		static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec4& color, float angle, const glm::vec2 & size = {1.0f, 1.0f});
 		static void DrawRotatedQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2 & size = {1.0f, 1.0f}, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 		static void DrawRotatedQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2 & size = {1.0f, 1.0f}, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+
+
+		struct Stats
+		{
+			uint drawCalls = 0;
+			uint quads = 0;
+
+			uint GetVertCount() { return quads * 4; }
+			uint GetIndicesCount() { return quads * 6; }
+		};
+		static Stats GetStats();
+		static void ResetStats();
+
+	private:
+		static void ResetBatch();
+
 	};
 }
 

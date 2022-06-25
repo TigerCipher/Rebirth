@@ -42,6 +42,7 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	RB_PROFILE_FUNC();
 	mCameraController.OnUpdate(ts);
 
+	rebirth::Renderer2D::ResetStats();
 
 	rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 	rebirth::RenderCommand::Clear();
@@ -53,9 +54,18 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 
 	rebirth::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.6f, 0.3f, 0.15f, 1.0f }, { 0.8f, 0.8f });
 	rebirth::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.2f, 0.5f, 0.7f, 1.0f }, { 0.8f, 0.8f });
-	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 10.0f, 10.0f }, 5.0f);
+	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 20.0f, 20.0f }, 5.0f);
 	rebirth::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, 0.0f }, mTexture, rot, { 1.0f, 1.0f }, 25.0f);
 	rebirth::Renderer2D::DrawRotatedQuad(mSquarePos, mSquareColor, mSquareAngle, mSquareSize);
+
+	for (float y = -5.0f; y < 5.0f; y += 0.5f)
+	{
+		for (float x = -5.0f; x < 5.0f; x += 0.5f)
+		{
+			glm::vec4 rgb = { (x + 5.0f) / 10.0f, (y + 5.0f) / 10.0f, 0.2f, 0.75f };
+			rebirth::Renderer2D::DrawQuad({ x, y }, rgb, { 0.45f, 0.45f });
+		}
+	}
 
 	rebirth::Renderer2D::EndScene();
 }
@@ -72,17 +82,14 @@ void Sandbox2D::OnImguiRender()
 	ImGui::DragFloat2("Square Position", glm::value_ptr(mSquarePos), 0.2f, -1.0f, 1.0f);
 	ImGui::DragFloat2("Square Size", glm::value_ptr(mSquareSize), 0.2f, 0.05f, 10.0f);
 	ImGui::DragFloat("Square Angle", &mSquareAngle, 0.2f, -360.0f, 360.0f);
+	ImGui::End();
 
-
-	for (auto& res : mProfileResults)
-	{
-		char label[50];
-		strcpy(label, "%.3fms ");
-		strcat(label, res.name);
-		ImGui::Text(label, res.time);
-	}
-
-	mProfileResults.clear();
-
+	auto stats = rebirth::Renderer2D::GetStats();
+	ImGui::Begin("Statistics");
+	ImGui::Text("Render Batch Stats:");
+	ImGui::Text("Draw Calls: %d", stats.drawCalls);
+	ImGui::Text("Quads: %d", stats.quads);
+	ImGui::Text("Vertex Count: %d", stats.GetVertCount());
+	ImGui::Text("Index Count: %d", stats.GetIndicesCount());
 	ImGui::End();
 }
