@@ -37,6 +37,8 @@ namespace rebirth
 		static void BeginScene(const OrthoCamera& camera);
 		static void EndScene();
 
+		static void Flush();
+
 		static void DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2 & size = {1.0f, 1.0f});
 		static void DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2 & size = {1.0f, 1.0f});
 

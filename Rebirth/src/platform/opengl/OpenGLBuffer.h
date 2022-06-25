@@ -31,6 +31,7 @@ namespace rebirth
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
+		OpenGLVertexBuffer(uint32_t size);
 		OpenGLVertexBuffer(uint32_t size, float* vertices);
 		~OpenGLVertexBuffer() override;
 		void Bind() const override;
@@ -45,6 +46,8 @@ namespace rebirth
 		{
 			return mLayout;
 		}
+
+		void SetData(const void* data, uint32_t size) override;
 	
 	private:
 		uint32_t mId;

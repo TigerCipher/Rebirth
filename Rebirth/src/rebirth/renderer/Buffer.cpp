@@ -30,6 +30,23 @@
 namespace rebirth
 {
 
+	Ref<rebirth::VertexBuffer> VertexBuffer::Create(uint32_t size)
+	{
+		switch (Renderer::GetAPI())
+		{
+			case RendererAPI::API::NONE:
+			{
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+			}
+
+			case RendererAPI::API::OPENGL: return createRef<OpenGLVertexBuffer>(size);
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
+
 	Ref<VertexBuffer> VertexBuffer::Create(const uint32_t size, float* vertices)
 	{
 		switch (Renderer::GetAPI())
@@ -40,15 +57,14 @@ namespace rebirth
 			return nullptr;
 		}
 
-		case RendererAPI::API::OPENGL:
-		{
-			return createRef<OpenGLVertexBuffer>(size, vertices);
-		}
+		case RendererAPI::API::OPENGL: return createRef<OpenGLVertexBuffer>(size, vertices);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
 		return nullptr;
 	}
+
+
 
 	Ref<IndexBuffer> IndexBuffer::Create(const uint32_t count, uint32_t* indices)
 	{

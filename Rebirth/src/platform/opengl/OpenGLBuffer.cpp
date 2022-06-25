@@ -34,6 +34,14 @@ namespace rebirth
 /// Vertex Buffer ///////////////////
 /////////////////////////////////////
 
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size)
+	{
+		RB_PROFILE_FUNC();
+
+		glCreateBuffers(1, &mId);
+		glBindBuffer(GL_ARRAY_BUFFER, mId);
+		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+	}
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size, float* vertices)
 	{
@@ -42,6 +50,7 @@ namespace rebirth
 		glBindBuffer(GL_ARRAY_BUFFER, mId);
 		glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 	}
+
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
@@ -61,6 +70,12 @@ namespace rebirth
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+
+	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, mId);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+	}
 
 	/////////////////////////////////////
 	/// Index Buffer ////////////////////

@@ -33,6 +33,6 @@ namespace rebirth
 		void SetViewport(uint x, uint y, uint width, uint height) override;
 		void SetClearColor(const glm::vec4& color) override;
 		void Clear() override;
-		void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
+		void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0) override;
 	};
 }
