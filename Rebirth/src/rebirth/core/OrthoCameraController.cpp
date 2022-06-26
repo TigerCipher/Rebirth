@@ -30,7 +30,9 @@ namespace rebirth
 {
 
 	OrthoCameraController::OrthoCameraController(const float aspectRatio, const bool useRotation /*= false*/) :
-		mAspectRatio(aspectRatio), mUseRotation(useRotation), mBounds({ -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom }), mCamera(mBounds.Left, mBounds.Right, mBounds.Bottom, mBounds.Top)
+		mAspectRatio(aspectRatio), mUseRotation(useRotation),
+		mBounds({ -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom }),
+		mCamera(mBounds.left, mBounds.right, mBounds.bottom, mBounds.top)
 	{
 
 	}

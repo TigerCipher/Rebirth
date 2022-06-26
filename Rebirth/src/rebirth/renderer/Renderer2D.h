@@ -25,6 +25,7 @@
 #include "OrthoCamera.h"
 
 #include "Texture.h"
+#include "SubTexture.h"
 
 namespace rebirth
 {
@@ -45,11 +46,17 @@ namespace rebirth
 		static void DrawQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, const glm::vec2 & size = {1.0f, 1.0f}, float tilingFactor = 1.0f, const glm::vec4& tintColor = {1.0f, 1.0f, 1.0f, 1.0f});
 		static void DrawQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, const glm::vec2 & size = {1.0f, 1.0f}, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 
+		static void DrawQuad(const glm::vec2& pos, const Ref<SubTexture2D>& subtexture, const glm::vec2& size = { 1.0f, 1.0f }, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawQuad(const glm::vec3& pos, const Ref<SubTexture2D>& subtexture, const glm::vec2& size = { 1.0f, 1.0f }, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+
 		static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec4& color, float angle, const glm::vec2 & size = {1.0f, 1.0f});
 		static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec4& color, float angle, const glm::vec2 & size = {1.0f, 1.0f});
+
 		static void DrawRotatedQuad(const glm::vec2& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2 & size = {1.0f, 1.0f}, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 		static void DrawRotatedQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, float angle, const glm::vec2 & size = {1.0f, 1.0f}, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 
+		static void DrawRotatedQuad(const glm::vec2& pos, const Ref<SubTexture2D>& subtexture, float angle, const glm::vec2& size = { 1.0f, 1.0f }, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawRotatedQuad(const glm::vec3& pos, const Ref<SubTexture2D>& subtexture, float angle, const glm::vec2& size = { 1.0f, 1.0f }, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 
 		struct Stats
 		{
@@ -64,7 +71,8 @@ namespace rebirth
 
 	private:
 		static void ResetBatch();
-
+		static void CreateQuad(const glm::mat4& transform, const glm::vec4 color, const glm::vec2* texCoord, float texIndex, float tilingFactor);
+		static float GetTextureIndex(const Ref<Texture2D>& texture);
 	};
 }
 

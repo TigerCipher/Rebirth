@@ -30,6 +30,10 @@ void Sandbox2D::OnAttach()
 {
 	RB_PROFILE_FUNC();
 	mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
+	mSpritesheet = rebirth::Texture2D::Create("assets/textures/RPGpack_sheet_2X.png");
+	mStairsSprite = rebirth::SubTexture2D::CreateFromCoords(mSpritesheet, { 7, 6 }, { 128, 128 });
+	mBarrelSprite = rebirth::SubTexture2D::CreateFromCoords(mSpritesheet, { 8, 2 }, { 128, 128 });
+	mTreeSprite = rebirth::SubTexture2D::CreateFromCoords(mSpritesheet, { 2, 1 }, { 128, 128 }, {1, 2});
 
 	mParticle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	mParticle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
@@ -55,6 +59,7 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 	rebirth::RenderCommand::Clear();
 
+#if 0
 	static float rot = 0.0f;
 	rot += ts * 40.0f;
 
@@ -76,6 +81,7 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	}
 
 	rebirth::Renderer2D::EndScene();
+#endif
 
 	if (rebirth::Input::IsMouseButtonPressed(RB_MOUSE_BUTTON_LEFT))
 	{
@@ -94,6 +100,12 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 
 	mParticleSystem.OnUpdate(ts);
 	mParticleSystem.OnRender(mCameraController.GetCamera());
+
+	rebirth::Renderer2D::BeginScene(mCameraController.GetCamera());
+	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.5f }, mStairsSprite);
+	rebirth::Renderer2D::DrawQuad({ 1.0f, 0.0f, 0.5f }, mBarrelSprite);
+	rebirth::Renderer2D::DrawQuad({ -1.0f, 0.0f, 0.5f }, mTreeSprite, {1.0f, 2.0f});
+	rebirth::Renderer2D::EndScene();
 }
 
 void Sandbox2D::OnEvent(rebirth::Event& e)

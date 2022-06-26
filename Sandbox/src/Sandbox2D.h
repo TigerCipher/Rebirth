@@ -48,6 +48,10 @@ private:
 	float mSquareAngle = 45.0f;
 
 	Ref<rebirth::Texture2D> mTexture;
+	Ref<rebirth::Texture2D> mSpritesheet;
+	Ref<rebirth::SubTexture2D> mStairsSprite;
+	Ref<rebirth::SubTexture2D> mBarrelSprite;
+	Ref<rebirth::SubTexture2D> mTreeSprite;
 
 	ParticleSystem mParticleSystem;
 	ParticleProps mParticle;

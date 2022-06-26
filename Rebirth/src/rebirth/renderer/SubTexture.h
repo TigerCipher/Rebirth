@@ -15,45 +15,29 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: OpenGLVertexArray.h
-// Date File Created: 06/20/2022 at 5:08 PM
+// File Name: SubTexture.h
+// Date File Created: 6/25/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-#include "rebirth/renderer/VertexArray.h"
+#include "Texture.h"
 
 namespace rebirth
 {
-	class OpenGLVertexArray : public VertexArray
+	class SubTexture2D
 	{
 	public:
-		OpenGLVertexArray();
-		~OpenGLVertexArray() override;
-		
-		void Bind() const override;
-		void Unbind() const override;
+		SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& min, const glm::vec2& max);
 
-		void AddVertexBuffer(const Ref<VertexBuffer>& buffer) override;
-		void SetIndexBuffer(const Ref<IndexBuffer>& buffer) override;
+		const Ref<Texture2D> GetTexture() const { return mTexture; }
+		const glm::vec2* GetTexCoords() const { return mTexCoords; }
 
-		const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const override
-		{
-			return mVertexBuffers;
-		}
-
-		const Ref<IndexBuffer>& GetIndexBuffer() const override
-		{
-			return mIndexBuffer;
-		}
-	
+		static Ref<SubTexture2D> CreateFromCoords(const Ref<Texture2D>& texture, const glm::vec2& coords, const glm::vec2& cellSize, const glm::vec2& spriteSize = {1, 1});
 	private:
-		uint32_t mId = 0;
-		uint32_t mVertexBufferIndex = 0;
-		std::vector<Ref<VertexBuffer>> mVertexBuffers;
-		Ref<IndexBuffer> mIndexBuffer;
+		Ref<Texture2D> mTexture;
+		glm::vec2 mTexCoords[4];
 	};
 }
 

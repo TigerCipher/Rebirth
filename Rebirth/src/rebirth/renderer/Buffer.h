@@ -46,22 +46,20 @@ namespace rebirth
 	{
 		switch (type)
 		{
-		case ShaderDataType::FLOAT: return 4;
-		case ShaderDataType::FLOAT2: return 4 * 2;
-		case ShaderDataType::FLOAT3: return 4 * 3;
-		case ShaderDataType::FLOAT4: return 4 * 4;
-		case ShaderDataType::MAT3: return 4 * 3 * 3;
-		case ShaderDataType::MAT4: return 4 * 4 * 4;
-		case ShaderDataType::INT: return 4;
-		case ShaderDataType::INT2: return 4 * 2;
-		case ShaderDataType::INT3: return 4 * 3;
-		case ShaderDataType::INT4: return 4 * 4;
-		case ShaderDataType::BOOL: return 1;
-		case ShaderDataType::NONE:
-			{
+			case ShaderDataType::FLOAT: return 4;
+			case ShaderDataType::FLOAT2: return 4 * 2;
+			case ShaderDataType::FLOAT3: return 4 * 3;
+			case ShaderDataType::FLOAT4: return 4 * 4;
+			case ShaderDataType::MAT3: return 4 * 3 * 3;
+			case ShaderDataType::MAT4: return 4 * 4 * 4;
+			case ShaderDataType::INT: return 4;
+			case ShaderDataType::INT2: return 4 * 2;
+			case ShaderDataType::INT3: return 4 * 3;
+			case ShaderDataType::INT4: return 4 * 4;
+			case ShaderDataType::BOOL: return 1;
+			case ShaderDataType::NONE:
 				RB_CORE_ASSERT(false, "Unknown shader data type");
 				return 0;
-			}
 		}
 
 		RB_CORE_ASSERT(false, "Unknown shader data type");
@@ -89,8 +87,8 @@ namespace rebirth
 			case ShaderDataType::FLOAT2: return 2;
 			case ShaderDataType::FLOAT3: return 3;
 			case ShaderDataType::FLOAT4: return 4;
-			case ShaderDataType::MAT3: return 3 * 3;
-			case ShaderDataType::MAT4: return 4 * 4;
+			case ShaderDataType::MAT3: return 3;// *3;
+			case ShaderDataType::MAT4: return 4;// *4;
 			case ShaderDataType::INT: return 1;
 			case ShaderDataType::INT2: return 2;
 			case ShaderDataType::INT3: return 3;

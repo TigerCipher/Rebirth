@@ -83,15 +83,48 @@ namespace rebirth
 
 		glBindVertexArray(mId);
 		buffer->Bind();
-		uint32_t index = 0;
 		const auto& layout = buffer->GetLayout();
 		for (const auto& elem : layout)
 		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, elem.GetComponentCount(), GetGlType(elem.type),
-				elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
-				reinterpret_cast<const void*>(static_cast<uintptr_t>(elem.offset)));
-			index++;
+			switch (elem.type)
+			{
+				case rebirth::ShaderDataType::FLOAT:
+				case rebirth::ShaderDataType::FLOAT2:
+				case rebirth::ShaderDataType::FLOAT3:
+				case rebirth::ShaderDataType::FLOAT4:
+				case rebirth::ShaderDataType::INT:
+				case rebirth::ShaderDataType::INT2:
+				case rebirth::ShaderDataType::INT3:
+				case rebirth::ShaderDataType::INT4:
+				case rebirth::ShaderDataType::BOOL:
+				{
+					glEnableVertexAttribArray(mVertexBufferIndex);
+					glVertexAttribPointer(mVertexBufferIndex, elem.GetComponentCount(), GetGlType(elem.type),
+						elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
+						reinterpret_cast<const void*>(static_cast<uintptr_t>(elem.offset)));
+					mVertexBufferIndex++;
+					break;
+				}
+				case rebirth::ShaderDataType::MAT3:
+				case rebirth::ShaderDataType::MAT4:
+				{
+					uint8_t count = elem.GetComponentCount();
+					for (uint8_t i = 0; i < count; i++)
+					{
+						glEnableVertexAttribArray(mVertexBufferIndex);
+						glVertexAttribPointer(mVertexBufferIndex, count, GetGlType(elem.type),
+							elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
+							reinterpret_cast<const void*>(static_cast<uintptr_t>(sizeof(float) * count * i)));
+						glVertexAttribDivisor(mVertexBufferIndex, 1);
+						mVertexBufferIndex++;
+					}
+					break;
+				}
+				case rebirth::ShaderDataType::NONE:
+				default:
+					RB_CORE_ASSERT(false, "Unknown shader data type");
+
+			}
 		}
 
 		mVertexBuffers.push_back(buffer);

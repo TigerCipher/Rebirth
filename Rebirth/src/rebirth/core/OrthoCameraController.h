@@ -32,10 +32,10 @@ namespace rebirth
 	struct OrthoCameraBounds
 	{
 		float left, right;
-		float bottom, rop;
+		float bottom, top;
 
 		float GetWidth() { return right - left; }
-		float GetHeight() { return rop - bottom; }
+		float GetHeight() { return top - bottom; }
 	};
 
 	class OrthoCameraController
