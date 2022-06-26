@@ -48,6 +48,8 @@ namespace rebirth
 			return mHeight;
 		}
 
+		uint GetId() const override { return mId; }
+
 		bool operator==(const Texture& other) const override
 		{
 			return mId == ((OpenGLTexture2D&)other).mId;

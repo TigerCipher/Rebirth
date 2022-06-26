@@ -46,7 +46,7 @@ namespace rebirth
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
 
-		void SetZoom(const float zoom) { mZoom = zoom; }
+		void SetZoom(const float zoom) { mZoom = zoom; CalculateView(); }
 		float GetZoom() const { return mZoom; }
 
 		OrthoCamera& GetCamera() { return mCamera; }
@@ -54,7 +54,7 @@ namespace rebirth
 
 		const OrthoCameraBounds& GetBounds() const { return mBounds; }
 	private:
-
+		void CalculateView();
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 

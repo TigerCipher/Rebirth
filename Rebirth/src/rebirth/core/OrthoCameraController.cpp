@@ -96,13 +96,18 @@ namespace rebirth
 		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OrthoCameraController::OnWindowResize));
 	}
 
+	void OrthoCameraController::CalculateView()
+	{
+		mBounds = { -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom };
+		mCamera.SetProjection(mBounds.left, mBounds.right, mBounds.bottom, mBounds.top);
+	}
+
 	bool OrthoCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
 		RB_PROFILE_FUNC();
 		mZoom -= e.GetYOffset() * 0.25f;
 		mZoom = std::max(mZoom, 0.25f);
-		mBounds = { -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom };
-		mCamera.SetProjection(-mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom);
+		CalculateView();
 		return false;
 	}
 
@@ -110,8 +115,7 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 		mAspectRatio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
-		mBounds = { -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom };
-		mCamera.SetProjection(-mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom);
+		CalculateView();
 		return false;
 	}
 

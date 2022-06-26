@@ -112,7 +112,7 @@
 // encapsulating in namespace to avoid possible duplication
 namespace rebirth
 {
-	using uint = unsigned int;
+	using uint = uint32_t;
 	using byte = unsigned char;
 }
 

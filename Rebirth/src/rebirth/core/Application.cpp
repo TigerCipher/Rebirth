@@ -60,6 +60,11 @@ namespace rebirth
 		Renderer::Shutdown();
 	}
 
+	void Application::Close()
+	{
+		mRunning = false;
+	}
+
 	void Application::Run()
 	{
 		RB_PROFILE_FUNC();

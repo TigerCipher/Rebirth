@@ -47,6 +47,7 @@ namespace rebirth
 		virtual ~Application();
 
 		void Run();
+		void Close();
 
 		void OnEvent(Event& e);
 
@@ -58,6 +59,7 @@ namespace rebirth
 		static Application& Instance() { return *sInstance; }
 
 	private:
+
 		static Application* sInstance;
 		
 		Scope<Window> mWindow;
