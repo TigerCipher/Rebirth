@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------
 // 
-// Rebirth
+// Sandbox
 //    Copyright 2022 Matthew Rogers
 // 
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,38 +15,34 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Sandbox2D.h
-// Date File Created: 6/24/2022
+// File Name: ReeditApp.cpp
+// Date File Created: 06/26/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-#pragma once
 
 #include <Rebirth.h>
+#include <rebirth/core/EntryPoint.h>
 
+//#include "SampleLayer.h"
+#include "EditorLayer.h"
 
-class Sandbox2D : public rebirth::Layer
+namespace rebirth
 {
-public:
-	Sandbox2D() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-	virtual ~Sandbox2D() = default;
-	void OnAttach() override;
-	void OnDetach() override;
-	void OnUpdate(rebirth::Timestep ts) override;
-	void OnEvent(rebirth::Event& e) override;
-	void OnImguiRender() override;
-private:
-	rebirth::OrthoCameraController mCameraController;
+	class ReeditApp final : public Application
+	{
+	public:
+		ReeditApp() : Application("Rebirth Reedit")
+		{
+			PushLayer(new EditorLayer());
+		}
+		~ReeditApp() override = default;
 
-	// abstract to renderer
-	Ref<rebirth::Shader> mShader;
-	Ref<rebirth::VertexArray> mSquareVtxArray;
-	glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
-	glm::vec2 mSquarePos{ 0.0f, 0.0f};
-	glm::vec2 mSquareSize{ 0.5f, 0.64f};
-	float mSquareAngle = 45.0f;
+	};
 
-	Ref<rebirth::Texture2D> mTexture;
 
-	//Ref<rebirth::Framebuffer> mFramebuffer;
-};
+	Application* CreateApplication()
+	{
+		return new ReeditApp();
+	}
+}

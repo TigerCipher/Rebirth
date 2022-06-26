@@ -15,8 +15,8 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Sandbox2D.h
-// Date File Created: 6/24/2022
+// File Name: EditorLayer.h
+// Date File Created: 6/26/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
@@ -24,29 +24,31 @@
 
 #include <Rebirth.h>
 
-
-class Sandbox2D : public rebirth::Layer
+namespace rebirth
 {
-public:
-	Sandbox2D() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-	virtual ~Sandbox2D() = default;
-	void OnAttach() override;
-	void OnDetach() override;
-	void OnUpdate(rebirth::Timestep ts) override;
-	void OnEvent(rebirth::Event& e) override;
-	void OnImguiRender() override;
-private:
-	rebirth::OrthoCameraController mCameraController;
+	class EditorLayer : public Layer
+	{
+	public:
+		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
+		virtual ~EditorLayer() = default;
+		void OnAttach() override;
+		void OnDetach() override;
+		void OnUpdate(Timestep ts) override;
+		void OnEvent(Event& e) override;
+		void OnImguiRender() override;
+	private:
+		OrthoCameraController mCameraController;
 
-	// abstract to renderer
-	Ref<rebirth::Shader> mShader;
-	Ref<rebirth::VertexArray> mSquareVtxArray;
-	glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
-	glm::vec2 mSquarePos{ 0.0f, 0.0f};
-	glm::vec2 mSquareSize{ 0.5f, 0.64f};
-	float mSquareAngle = 45.0f;
+		// abstract to renderer
+		Ref<Shader> mShader;
+		Ref<VertexArray> mSquareVtxArray;
+		glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
+		glm::vec2 mSquarePos{ 0.0f, 0.0f };
+		glm::vec2 mSquareSize{ 0.5f, 0.64f };
+		float mSquareAngle = 45.0f;
 
-	Ref<rebirth::Texture2D> mTexture;
+		Ref<Texture2D> mTexture;
 
-	//Ref<rebirth::Framebuffer> mFramebuffer;
-};
+		Ref<Framebuffer> mFramebuffer;
+	};
+}

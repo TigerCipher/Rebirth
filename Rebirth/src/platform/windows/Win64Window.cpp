@@ -34,9 +34,9 @@ namespace rebirth
 {
 	static bool gGlfwInitialized = false;
 
-	Window* Window::Create(const WindowProperties& props)
+	Scope<Window> Window::Create(const WindowProperties& props)
 	{
-		return new Win64Window(props);
+		return createScope<Win64Window>(props);
 	}
 
 	static void GlfwErrorCallback(int error, const char* desc)

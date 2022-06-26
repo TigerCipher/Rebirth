@@ -34,13 +34,13 @@ namespace rebirth
 {
 	Application* Application::sInstance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
 		RB_CORE_TRACE("Creating core application");
 		sInstance = this;
-		mWindow = Scope<Window>(Window::Create());
+		mWindow = Window::Create(WindowProperties(name));
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
 

@@ -1,6 +1,6 @@
 workspace "Rebirth"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Rebirth-Reedit"
 
 	configurations
 	{
@@ -107,6 +107,60 @@ project "Rebirth"
 
 project "Sandbox"
 	location "Sandbox"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Rebirth/libs/spdlog/include",
+		"Rebirth/src",
+		"%{IncludeDir.glm}",
+		"Rebirth/libs"
+	}
+
+	links
+	{
+		"Rebirth"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+	filter "configurations:Debug"
+		defines
+		{
+			"RB_DEBUG"
+		}
+		symbols "on"
+		runtime "Debug"
+
+	filter "configurations:Release"
+		defines "RB_RELEASE"
+		optimize "on"
+		runtime "Release"
+
+	filter "configurations:Dist"
+		defines "RB_DIST"
+		runtime "Release"
+		optimize "on"
+
+
+
+
+
+project "Rebirth-Reedit"
+	location "Rebirth-Reedit"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
