@@ -50,8 +50,8 @@ namespace rebirth
 		}
 	
 	private:
-		uint32_t mId = 0;
-		uint32_t mVertexBufferIndex = 0;
+		uint32 mId = 0;
+		uint32 mVertexBufferIndex = 0;
 		std::vector<Ref<VertexBuffer>> mVertexBuffers;
 		Ref<IndexBuffer> mIndexBuffer;
 	};

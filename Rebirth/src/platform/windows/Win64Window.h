@@ -40,8 +40,8 @@ namespace rebirth
 
 		void OnUpdate() override;
 
-		uint GetWidth() const override { return mData.width; }
-		uint GetHeight() const override { return mData.height; }
+		uint32 GetWidth() const override { return mData.width; }
+		uint32 GetHeight() const override { return mData.height; }
 
 		void SetEventCallback(const EventCallbackFn& callback) override { mData.eventCallback = callback; }
 
@@ -59,7 +59,7 @@ namespace rebirth
 		struct WindowData
 		{
 			std::string title;
-			uint width, height;
+			uint32 width, height;
 			bool vSync;
 			EventCallbackFn eventCallback;
 		};

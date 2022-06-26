@@ -40,23 +40,23 @@ namespace rebirth
 
 	struct RenderData
 	{
-		static const uint32_t MAX_QUADS = 10000;
-		static const uint32_t MAX_VERTS = MAX_QUADS * 4;
-		static const uint32_t MAX_INDICES = MAX_QUADS * 6;
-		static const uint32_t MAX_TEXTURE_SLOTS = 32; // #TODO: Detect max texture slots from gpu?
+		static const uint32 MAX_QUADS = 10000;
+		static const uint32 MAX_VERTS = MAX_QUADS * 4;
+		static const uint32 MAX_INDICES = MAX_QUADS * 6;
+		static const uint32 MAX_TEXTURE_SLOTS = 32; // #TODO: Detect max texture slots from gpu?
 
 		Ref<VertexArray> vertexArray;
 		Ref<VertexBuffer> vertexBuffer;
 		Ref<Shader> textureShader;
 		Ref<Texture2D> whiteTexture;
 
-		uint quadIndexCount = 0;
+		uint32 quadIndexCount = 0;
 
 		QuadVertex* quadVertexBufferBase = nullptr;
 		QuadVertex* quadVertexBufferPtr = nullptr;
 
 		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> textureSlots;
-		uint32_t textureSlotIndex = 1; // we use 0 for our default white texture
+		uint32 textureSlotIndex = 1; // we use 0 for our default white texture
 
 		glm::vec4 quadVertexPos[4];
 
@@ -85,10 +85,10 @@ namespace rebirth
 
 		sData.quadVertexBufferBase = new QuadVertex[sData.MAX_VERTS];
 
-		uint32_t* quadIndices = new uint32_t[sData.MAX_INDICES];
+		uint32* quadIndices = new uint32[sData.MAX_INDICES];
 
-		uint32_t offset = 0;
-		for (uint32_t i = 0; i < sData.MAX_INDICES; i += 6)
+		uint32 offset = 0;
+		for (uint32 i = 0; i < sData.MAX_INDICES; i += 6)
 		{
 			quadIndices[i + 0] = offset + 0;
 			quadIndices[i + 1] = offset + 1;
@@ -106,11 +106,11 @@ namespace rebirth
 		delete[] quadIndices;
 
 		sData.whiteTexture = Texture2D::Create(1, 1);
-		uint32_t whiteData = 0xffffffff;
-		sData.whiteTexture->SetData(&whiteData, sizeof(uint32_t));
+		uint32 whiteData = 0xffffffff;
+		sData.whiteTexture->SetData(&whiteData, sizeof(uint32));
 
 		int32_t samplers[sData.MAX_TEXTURE_SLOTS];
-		for (uint i = 0; i < sData.MAX_TEXTURE_SLOTS; i++)
+		for (uint32 i = 0; i < sData.MAX_TEXTURE_SLOTS; i++)
 		{
 			samplers[i] = i;
 		}
@@ -145,7 +145,7 @@ namespace rebirth
 	void Renderer2D::EndScene()
 	{
 		RB_PROFILE_FUNC();
-		uint32_t size = (uint32_t)((uint8_t*) sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
+		uint32 size = (uint32)((uint8_t*) sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
 		sData.vertexBuffer->SetData(sData.quadVertexBufferBase, size);
 
 		Flush();
@@ -155,7 +155,7 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 
-		for (uint32_t i = 0; i < sData.textureSlotIndex; i++)
+		for (uint32 i = 0; i < sData.textureSlotIndex; i++)
 		{
 			sData.textureSlots[i]->Bind(i);
 		}
@@ -194,7 +194,7 @@ namespace rebirth
 	float Renderer2D::GetTextureIndex(const Ref<Texture2D>& texture)
 	{
 		float textureIndex = 0.0f;
-		for (uint32_t i = 1; i < sData.textureSlotIndex; i++)
+		for (uint32 i = 1; i < sData.textureSlotIndex; i++)
 		{
 			if (*sData.textureSlots[i].get() == *texture.get())
 			{

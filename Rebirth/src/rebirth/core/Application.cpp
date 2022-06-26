@@ -42,7 +42,6 @@ namespace rebirth
 		sInstance = this;
 		mWindow = Scope<Window>(Window::Create());
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-		//mWindow->SetVSync(false); //#NOTE: Should maybe leave on by default
 
 
 		Renderer::Init();

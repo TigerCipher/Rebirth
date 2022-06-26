@@ -38,7 +38,7 @@ namespace rebirth
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void OpenGLRendererAPI::SetViewport(const uint x, const uint y, const uint width, const uint height)
+	void OpenGLRendererAPI::SetViewport(const uint32 x, const uint32 y, const uint32 width, const uint32 height)
 	{
 		glViewport(x, y, width, height);
 	}
@@ -53,9 +53,9 @@ namespace rebirth
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count)
+	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count)
 	{
-		uint32_t indexCount = count ? vertexArray->GetIndexBuffer()->GetCount() : count;
+		uint32 indexCount = count ? vertexArray->GetIndexBuffer()->GetCount() : count;
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	}
 }

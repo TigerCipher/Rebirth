@@ -46,7 +46,7 @@ namespace rebirth
 		return nullptr;
 	}
 
-	Ref<rebirth::Texture2D> Texture2D::Create(uint width, uint height)
+	Ref<rebirth::Texture2D> Texture2D::Create(uint32 width, uint32 height)
 	{
 		switch (Renderer::GetAPI())
 		{

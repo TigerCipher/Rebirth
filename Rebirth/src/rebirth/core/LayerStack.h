@@ -47,7 +47,7 @@ namespace rebirth
 	
 	private:
 		std::vector<Layer*> mLayers;
-		uint mInsertIndex = 0;
+		uint32 mInsertIndex = 0;
 	};
 	
 }

@@ -47,4 +47,6 @@ private:
 	float mSquareAngle = 45.0f;
 
 	Ref<rebirth::Texture2D> mTexture;
+
+	Ref<rebirth::Framebuffer> mFramebuffer;
 };

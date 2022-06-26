@@ -30,6 +30,11 @@ void Sandbox2D::OnAttach()
 {
 	RB_PROFILE_FUNC();
 	mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
+
+	rebirth::FramebufferSpecification spec;
+	spec.width = 1920;
+	spec.height = 1080;
+	mFramebuffer = rebirth::Framebuffer::Create(spec);
 }
 
 void Sandbox2D::OnDetach()
@@ -44,6 +49,8 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 
 	rebirth::Renderer2D::ResetStats();
 
+	mFramebuffer->Bind();
+
 	rebirth::RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 	rebirth::RenderCommand::Clear();
 
@@ -57,7 +64,7 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	rebirth::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.2f, 0.5f, 0.7f, 1.0f }, { 0.8f, 0.8f });
 	rebirth::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 20.0f, 20.0f }, 5.0f);
 	rebirth::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, 0.0f }, mTexture, glm::radians(rot), { 1.0f, 1.0f }, 25.0f);
-	rebirth::Renderer2D::DrawRotatedQuad(mSquarePos, mSquareColor, glm::radians(mSquareAngle), mSquareSize);
+	rebirth::Renderer2D::DrawRotatedQuad({-1.5f, 0.75f}, mSquareColor, glm::radians(mSquareAngle), mSquareSize);
 
 	for (float y = -5.0f; y < 5.0f; y += 0.5f)
 	{
@@ -69,6 +76,8 @@ void Sandbox2D::OnUpdate(rebirth::Timestep ts)
 	}
 
 	rebirth::Renderer2D::EndScene();
+
+	mFramebuffer->Unbind();
 
 }
 
@@ -152,10 +161,10 @@ void Sandbox2D::OnImguiRender()
 		ImGui::Text("Vertex Count: %d", stats.GetVertCount());
 		ImGui::Text("Index Count: %d", stats.GetIndicesCount());
 
-		ImGui::ColorPicker4("Square Color", glm::value_ptr(mSquareColor));
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(mSquareColor));
 
-		uint32_t textureID = mTexture->GetId();
-		ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
+		uint32_t textureID = mFramebuffer->GetColorAttachmentID();
+		ImGui::Image((void*)textureID, ImVec2{ 1280.0f, 720.0f }, ImVec2{0, 1}, ImVec2{1, 0});
 		ImGui::End();
 
 		ImGui::End();
@@ -178,6 +187,5 @@ void Sandbox2D::OnImguiRender()
 		ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
 		ImGui::End();
 
-		ImGui::End();
 	}
 }

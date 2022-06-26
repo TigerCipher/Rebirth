@@ -33,10 +33,10 @@ namespace rebirth
 	struct WindowProperties
 	{
 		std::string title;
-		uint width;
-		uint height;
+		uint32 width;
+		uint32 height;
 
-		WindowProperties(const std::string& pTitle = "Rebirth Engine", uint pWidth = 1920, uint pHeight = 1080) : title(pTitle), width(pWidth), height(pHeight) {}
+		WindowProperties(const std::string& pTitle = "Rebirth Engine", uint32 pWidth = 1920, uint32 pHeight = 1080) : title(pTitle), width(pWidth), height(pHeight) {}
 	};
 
 	class RB_API Window
@@ -47,8 +47,8 @@ namespace rebirth
 		virtual ~Window() {}
 
 		virtual void OnUpdate() = 0;
-		virtual uint GetWidth() const = 0;
-		virtual uint GetHeight() const = 0;
+		virtual uint32 GetWidth() const = 0;
+		virtual uint32 GetHeight() const = 0;
 
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetVSync(bool enabled) = 0;

@@ -31,12 +31,12 @@ namespace rebirth
 	{
 	public:
 		OpenGLTexture2D(const std::string& path);
-		OpenGLTexture2D(uint width, uint height);
+		OpenGLTexture2D(uint32 width, uint32 height);
 		virtual ~OpenGLTexture2D();
 
-		void Bind(uint slot = 0) const override;
+		void Bind(uint32 slot = 0) const override;
 
-		void SetData(void* data, uint size) override;
+		void SetData(void* data, uint32 size) override;
 
 		int GetWidth() const override
 		{
@@ -48,7 +48,7 @@ namespace rebirth
 			return mHeight;
 		}
 
-		uint GetId() const override { return mId; }
+		uint32 GetId() const override { return mId; }
 
 		bool operator==(const Texture& other) const override
 		{
@@ -57,9 +57,9 @@ namespace rebirth
 	private:
 		int mWidth;
 		int mHeight;
-		uint mId;
-		uint mInternalFormat;
-		uint mDataFormat;
+		uint32 mId;
+		uint32 mInternalFormat;
+		uint32 mDataFormat;
 
 		std::string mPath;
 	};

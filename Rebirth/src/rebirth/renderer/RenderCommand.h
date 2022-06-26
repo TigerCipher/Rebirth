@@ -35,7 +35,7 @@ namespace rebirth
 			sRendererApi->Init();
 		}
 
-		inline static void SetViewport(const uint x, const uint y, const uint width, const uint height)
+		inline static void SetViewport(const uint32 x, const uint32 y, const uint32 width, const uint32 height)
 		{
 			sRendererApi->SetViewport(x, y, width, height);
 		}
@@ -50,7 +50,7 @@ namespace rebirth
 			sRendererApi->Clear();
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count = 0)
 		{
 			sRendererApi->DrawIndexed(vertexArray, count);
 		}

@@ -15,44 +15,35 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Renderer.h
-// Date File Created: 06/19/2022 at 4:18 PM
+// File Name: Framebuffer.cpp
+// Date File Created: 6/26/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+#include "rbpch.h"
+#include "Framebuffer.h"
 
-
-#pragma once
-
-#include "RenderCommand.h"
-
-#include "OrthoCamera.h"
-#include "Shader.h"
+#include "Renderer.h"
+#include "platform/opengl/OpenGLFramebuffer.h"
 
 namespace rebirth
 {
 
-
-	class Renderer
+	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
-	public:
-		static void Init();
-		static void Shutdown();
-		static void OnWindowResize(uint32 width, uint32 height);
-
-		static void BeginScene(OrthoCamera& camera);
-		static void EndScene();
-
-		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
-
-		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
-
-	private:
-		struct Data
+		switch (Renderer::GetAPI())
 		{
-			glm::mat4 viewProj;
-		};
+			case RendererAPI::API::NONE:
+			{
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+			}
 
-		static Scope<Data> sData;
-	};
+			case RendererAPI::API::OPENGL: return createRef<OpenGLFramebuffer>(spec);
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
+
 }

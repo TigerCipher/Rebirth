@@ -60,11 +60,11 @@ namespace rebirth
 
 		struct Stats
 		{
-			uint drawCalls = 0;
-			uint quads = 0;
+			uint32 drawCalls = 0;
+			uint32 quads = 0;
 
-			uint GetVertCount() { return quads * 4; }
-			uint GetIndicesCount() { return quads * 6; }
+			uint32 GetVertCount() { return quads * 4; }
+			uint32 GetIndicesCount() { return quads * 6; }
 		};
 		static Stats GetStats();
 		static void ResetStats();

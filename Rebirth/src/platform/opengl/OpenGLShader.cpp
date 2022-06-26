@@ -35,7 +35,7 @@
 namespace rebirth
 {
 
-	static uint GetShaderType(const std::string& type)
+	static uint32 GetShaderType(const std::string& type)
 	{
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		if (type == "fragment" || type == "pixel") return GL_FRAGMENT_SHADER;
@@ -61,7 +61,7 @@ namespace rebirth
 		mName(name)
 	{
 		RB_PROFILE_FUNC();
-		std::unordered_map<uint, std::string> sources;
+		std::unordered_map<uint32, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
 		Compile(sources);
@@ -74,7 +74,7 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		std::string vertSrc = Read(vertexPath);
 		std::string fragSrc = Read(pixelPath);
-		std::unordered_map<uint, std::string> sources;
+		std::unordered_map<uint32, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertSrc;
 		sources[GL_FRAGMENT_SHADER] = fragSrc;
 		Compile(sources);
@@ -128,11 +128,11 @@ namespace rebirth
 		return result;
 	}
 
-	std::unordered_map<uint, std::string> OpenGLShader::Preprocess(const std::string& src)
+	std::unordered_map<uint32, std::string> OpenGLShader::Preprocess(const std::string& src)
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_TRACE("Preprocessing shader file");
-		std::unordered_map<uint, std::string> sources;
+		std::unordered_map<uint32, std::string> sources;
 
 		const char* typeDirective = "#type";
 		size_t typeDirectiveLength = strlen(typeDirective);
@@ -156,23 +156,23 @@ namespace rebirth
 		return sources;
 	}
 
-	void OpenGLShader::Compile(const std::unordered_map<uint, std::string>& sources)
+	void OpenGLShader::Compile(const std::unordered_map<uint32, std::string>& sources)
 	{
 		RB_PROFILE_FUNC();
-		uint prog = glCreateProgram();
+		uint32 prog = glCreateProgram();
 		RB_CORE_ASSERT(sources.size() <= GLSL_MAX_SHADERS_PER_FILE, "Rebirth currently only supports two shaders in a single file");
 		RB_CORE_TRACE("Compiling shader program {}", prog);
-		std::array<uint, GLSL_MAX_SHADERS_PER_FILE> shaderIds;
+		std::array<uint32, GLSL_MAX_SHADERS_PER_FILE> shaderIds;
 		int shaderIdIndex = 0;
 		for (auto& kv : sources)
 		{
-			uint type = kv.first;
+			uint32 type = kv.first;
 			const std::string& src = kv.second;
 			RB_CORE_TRACE("Compiling shader type {}", type == GL_VERTEX_SHADER ? "GL_VERTEX_SHADER"
 													: type == GL_FRAGMENT_SHADER ? "GL_FRAGMENT_SHADER"
 													: "UNKNOWN");
 
-			uint shader = glCreateShader(type);
+			uint32 shader = glCreateShader(type);
 			const char* source = src.c_str();
 			glShaderSource(shader, 1, &source, 0);
 
@@ -243,7 +243,7 @@ namespace rebirth
 		SetUniformInt(name, value);
 	}
 
-	void OpenGLShader::SetIntArray(const std::string& name, const int* values, const uint count)
+	void OpenGLShader::SetIntArray(const std::string& name, const int* values, const uint32 count)
 	{
 		RB_PROFILE_FUNC();
 		SetUniformIntArray(name, values, count);
@@ -291,7 +291,7 @@ namespace rebirth
 		glUniform1i(loc, value);
 	}
 
-	void OpenGLShader::SetUniformIntArray(const std::string& name, const int* values, const uint count)
+	void OpenGLShader::SetUniformIntArray(const std::string& name, const int* values, const uint32 count)
 	{
 		int loc = glGetUniformLocation(mId, name.c_str());
 		glUniform1iv(loc, count, values);
@@ -329,7 +329,7 @@ namespace rebirth
 
 	void OpenGLShader::SetUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		uint loc = glGetUniformLocation(mId, name.c_str());
+		uint32 loc = glGetUniformLocation(mId, name.c_str());
 		glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
 
 	}

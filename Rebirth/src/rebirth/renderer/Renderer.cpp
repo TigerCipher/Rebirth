@@ -43,7 +43,7 @@ namespace rebirth
 		Renderer2D::Shutdown();
 	}
 
-	void Renderer::OnWindowResize(const uint width, const uint height)
+	void Renderer::OnWindowResize(const uint32 width, const uint32 height)
 	{
 		RenderCommand::SetViewport(0, 0, width, height);
 	}

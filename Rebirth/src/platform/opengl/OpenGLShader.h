@@ -41,7 +41,7 @@ namespace rebirth
 		const std::string& GetName() const override { return mName; }
 
 		void SetInt(const std::string& name, const int value) override;
-		void SetIntArray(const std::string& name, const int* values, const uint count);
+		void SetIntArray(const std::string& name, const int* values, const uint32 count);
 		void SetFloat(const std::string& name, const float value) override;
 		void SetFloat2(const std::string& name, const glm::vec2& vec) override;
 		void SetFloat3(const std::string& name, const glm::vec3& vec) override;
@@ -50,7 +50,7 @@ namespace rebirth
 		void SetMat4(const std::string& name, const glm::mat4& matrix) override;
 
 		void SetUniformInt(const std::string& name, const int value);
-		void SetUniformIntArray(const std::string& name, const int* values, const uint count);
+		void SetUniformIntArray(const std::string& name, const int* values, const uint32 count);
 		void SetUniformFloat(const std::string& name, const float value);
 		void SetUniformVec2(const std::string& name, const glm::vec2& vec);
 		void SetUniformVec3(const std::string& name, const glm::vec3& vec);
@@ -60,11 +60,11 @@ namespace rebirth
 
 	private:
 		std::string Read(const std::string& filepath);
-		std::unordered_map<uint, std::string> Preprocess(const std::string& src);
-		void Compile(const std::unordered_map<uint, std::string>& sources);
+		std::unordered_map<uint32, std::string> Preprocess(const std::string& src);
+		void Compile(const std::unordered_map<uint32, std::string>& sources);
 
 
-		uint32_t mId = 0;
+		uint32 mId = 0;
 		std::string mName;
 	};
 }

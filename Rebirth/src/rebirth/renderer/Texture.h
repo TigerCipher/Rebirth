@@ -29,13 +29,13 @@ namespace rebirth
 	class Texture
 	{
 	public:
-		virtual void Bind(uint slot = 0) const = 0;
+		virtual void Bind(uint32 slot = 0) const = 0;
 
-		virtual void SetData(void* data, uint size) = 0;
+		virtual void SetData(void* data, uint32 size) = 0;
 
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
-		virtual uint GetId() const = 0;
+		virtual uint32 GetId() const = 0;
 		virtual bool operator==(const Texture& other) const = 0;
 	};
 
@@ -45,7 +45,7 @@ namespace rebirth
 		virtual ~Texture2D() = default;
 
 		static Ref<Texture2D> Create(const std::string& path);
-		static Ref<Texture2D> Create(uint width, uint height);
+		static Ref<Texture2D> Create(uint32 width, uint32 height);
 
 	};
 }

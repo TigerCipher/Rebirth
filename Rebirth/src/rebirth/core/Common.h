@@ -112,7 +112,8 @@
 // encapsulating in namespace to avoid possible duplication
 namespace rebirth
 {
-	using uint = uint32_t;
+	// ensure 32 bit, but I hate using _t, it looks ugly
+	using uint32 = uint32_t;
 	using byte = unsigned char;
 }
 

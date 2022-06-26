@@ -79,7 +79,7 @@ namespace rebirth
 		RB_CORE_TRACE("Texture {} loaded", path);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(uint width, uint height) :
+	OpenGLTexture2D::OpenGLTexture2D(uint32 width, uint32 height) :
 		mWidth(width), mHeight(height)
 	{
 		RB_PROFILE_FUNC();
@@ -101,13 +101,13 @@ namespace rebirth
 		glDeleteTextures(1, &mId);
 	}
 
-	void OpenGLTexture2D::Bind(const uint slot /*= 0*/) const
+	void OpenGLTexture2D::Bind(const uint32 slot /*= 0*/) const
 	{
 		RB_PROFILE_FUNC();
 		glBindTextureUnit(slot, mId);
 	}
 
-	void OpenGLTexture2D::SetData(void* data, uint size)
+	void OpenGLTexture2D::SetData(void* data, uint32 size)
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(size == mWidth * mHeight * (mDataFormat == GL_RGBA ? 4 : 3), "Data must contain entire texture");

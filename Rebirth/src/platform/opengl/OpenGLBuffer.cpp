@@ -34,7 +34,7 @@ namespace rebirth
 /// Vertex Buffer ///////////////////
 /////////////////////////////////////
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32 size)
 	{
 		RB_PROFILE_FUNC();
 
@@ -43,7 +43,7 @@ namespace rebirth
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size, float* vertices)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32 size, float* vertices)
 	{
 		RB_PROFILE_FUNC();
 		glCreateBuffers(1, &mId);
@@ -71,7 +71,7 @@ namespace rebirth
 	}
 
 
-	void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+	void OpenGLVertexBuffer::SetData(const void* data, uint32 size)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, mId);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
@@ -82,13 +82,13 @@ namespace rebirth
 	/////////////////////////////////////
 
 
-	OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t count, uint32_t* indices) :
+	OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32 count, uint32* indices) :
 		mCount(count)
 	{
 		RB_PROFILE_FUNC();
 		glCreateBuffers(1, &mId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mId);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32), indices, GL_STATIC_DRAW);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()

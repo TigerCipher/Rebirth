@@ -31,8 +31,8 @@ namespace rebirth
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
-		OpenGLVertexBuffer(uint32_t size);
-		OpenGLVertexBuffer(uint32_t size, float* vertices);
+		OpenGLVertexBuffer(uint32 size);
+		OpenGLVertexBuffer(uint32 size, float* vertices);
 		~OpenGLVertexBuffer() override;
 		void Bind() const override;
 		void Unbind() const override;
@@ -47,25 +47,25 @@ namespace rebirth
 			return mLayout;
 		}
 
-		void SetData(const void* data, uint32_t size) override;
+		void SetData(const void* data, uint32 size) override;
 	
 	private:
-		uint32_t mId;
+		uint32 mId;
 		BufferLayout mLayout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
-		OpenGLIndexBuffer(uint32_t count, uint32_t* indices);
+		OpenGLIndexBuffer(uint32 count, uint32* indices);
 		~OpenGLIndexBuffer() override;
 		void Bind() const override;
 		void Unbind() const override;
 
-		uint32_t GetCount() const override { return mCount; }
+		uint32 GetCount() const override { return mCount; }
 
 	private:
-		uint32_t mId;
-		uint32_t mCount;
+		uint32 mId;
+		uint32 mCount;
 	};
 }

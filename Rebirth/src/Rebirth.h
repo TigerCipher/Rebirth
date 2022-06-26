@@ -53,6 +53,7 @@
 #include "rebirth/renderer/SubTexture.h"
 #include "rebirth/renderer/VertexArray.h"
 #include "rebirth/renderer/OrthoCamera.h"
+#include "rebirth/renderer/Framebuffer.h"
 
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"

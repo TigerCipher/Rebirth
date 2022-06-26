@@ -32,10 +32,10 @@ namespace rebirth
 	class RB_API WindowResizeEvent : public Event
 	{
 	public:
-		WindowResizeEvent(uint width, uint height) : mWidth(width), mHeight(height) {}
+		WindowResizeEvent(uint32 width, uint32 height) : mWidth(width), mHeight(height) {}
 
-		[[nodiscard]] uint GetWidth() const { return mWidth; }
-		[[nodiscard]] uint GetHeight() const { return mHeight; }
+		[[nodiscard]] uint32 GetWidth() const { return mWidth; }
+		[[nodiscard]] uint32 GetHeight() const { return mHeight; }
 
 		[[nodiscard]] std::string ToString() const override
 		{
@@ -48,8 +48,8 @@ namespace rebirth
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
 
 	private:
-		uint mWidth;
-		uint mHeight;
+		uint32 mWidth;
+		uint32 mHeight;
 	};
 
 	class RB_API WindowCloseEvent : public Event

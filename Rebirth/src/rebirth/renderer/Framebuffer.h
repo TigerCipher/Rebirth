@@ -15,44 +15,37 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Renderer.h
-// Date File Created: 06/19/2022 at 4:18 PM
+// File Name: Framebuffer.h
+// Date File Created: 6/26/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
-
 #pragma once
 
-#include "RenderCommand.h"
-
-#include "OrthoCamera.h"
-#include "Shader.h"
 
 namespace rebirth
 {
 
+	struct FramebufferSpecification
+	{
+		uint32 width, height;
+		uint32 samples = 1;
 
-	class Renderer
+		bool swapChainTarget = false;
+	};
+
+	class Framebuffer
 	{
 	public:
-		static void Init();
-		static void Shutdown();
-		static void OnWindowResize(uint32 width, uint32 height);
 
-		static void BeginScene(OrthoCamera& camera);
-		static void EndScene();
+		virtual ~Framebuffer() = default;
 
-		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
+		virtual void Bind() = 0;
+		virtual void Unbind() = 0;
 
-		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+		virtual uint32 GetColorAttachmentID() const = 0;
+		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
-	private:
-		struct Data
-		{
-			glm::mat4 viewProj;
-		};
-
-		static Scope<Data> sData;
+		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);
 	};
 }

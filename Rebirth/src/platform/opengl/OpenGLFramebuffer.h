@@ -15,44 +15,38 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Renderer.h
-// Date File Created: 06/19/2022 at 4:18 PM
+// File Name: OpenGLFramebuffer.h
+// Date File Created: 6/26/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
-
 #pragma once
 
-#include "RenderCommand.h"
-
-#include "OrthoCamera.h"
-#include "Shader.h"
+#include "rebirth/renderer/Framebuffer.h"
 
 namespace rebirth
 {
-
-
-	class Renderer
+	class OpenGLFramebuffer : public Framebuffer
 	{
 	public:
-		static void Init();
-		static void Shutdown();
-		static void OnWindowResize(uint32 width, uint32 height);
+		OpenGLFramebuffer(const FramebufferSpecification& spec);
+		virtual ~OpenGLFramebuffer();
 
-		static void BeginScene(OrthoCamera& camera);
-		static void EndScene();
+		void Invalidate();
+		void Bind() override;
+		void Unbind() override;
 
-		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));
 
-		static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+		uint32 GetColorAttachmentID() const override { return mColorAttachment; }
+		const FramebufferSpecification& GetSpecification() const override
+		{
+			return mSpecification;
+		}
 
 	private:
-		struct Data
-		{
-			glm::mat4 viewProj;
-		};
-
-		static Scope<Data> sData;
+		uint32 mId;
+		FramebufferSpecification mSpecification;
+		uint32 mColorAttachment;
+		uint32 mDepthAttachment;
 	};
 }

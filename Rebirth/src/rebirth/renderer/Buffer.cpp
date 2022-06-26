@@ -30,7 +30,7 @@
 namespace rebirth
 {
 
-	Ref<rebirth::VertexBuffer> VertexBuffer::Create(uint32_t size)
+	Ref<rebirth::VertexBuffer> VertexBuffer::Create(uint32 size)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -47,7 +47,7 @@ namespace rebirth
 		return nullptr;
 	}
 
-	Ref<VertexBuffer> VertexBuffer::Create(const uint32_t size, float* vertices)
+	Ref<VertexBuffer> VertexBuffer::Create(const uint32 size, float* vertices)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -66,7 +66,7 @@ namespace rebirth
 
 
 
-	Ref<IndexBuffer> IndexBuffer::Create(const uint32_t count, uint32_t* indices)
+	Ref<IndexBuffer> IndexBuffer::Create(const uint32 count, uint32* indices)
 	{
 		switch (Renderer::GetAPI())
 		{
