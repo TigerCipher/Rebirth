@@ -43,10 +43,14 @@ namespace rebirth
 			return mSpecification;
 		}
 
+
+		void Resize(uint32 width, uint32 height) override;
+
 	private:
-		uint32 mId;
 		FramebufferSpecification mSpecification;
-		uint32 mColorAttachment;
-		uint32 mDepthAttachment;
+		uint32 mId = 0;
+
+		uint32 mColorAttachment = 0;
+		uint32 mDepthAttachment = 0;
 	};
 }

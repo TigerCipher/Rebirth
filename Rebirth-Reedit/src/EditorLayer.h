@@ -43,9 +43,7 @@ namespace rebirth
 		Ref<Shader> mShader;
 		Ref<VertexArray> mSquareVtxArray;
 		glm::vec4 mSquareColor{ 0.6f, 0.2f, 0.2f, 1.0f };
-		glm::vec2 mSquarePos{ 0.0f, 0.0f };
-		glm::vec2 mSquareSize{ 0.5f, 0.64f };
-		float mSquareAngle = 45.0f;
+		glm::vec2 mViewportSize{0.0f};
 
 		Ref<Texture2D> mTexture;
 

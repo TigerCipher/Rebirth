@@ -85,6 +85,13 @@ namespace rebirth
 		//ImGui::ShowDemoWindow(&show);
 	}
 
+	void ImguiLayer::OnEvent(Event& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		e.mHandled |= e.IsInCategory(EVENT_CATEGORY_MOUSE) & io.WantCaptureMouse;
+		e.mHandled |= e.IsInCategory(EVENT_CATEGORY_KEYBOARD) & io.WantCaptureKeyboard;
+	}
+
 	void ImguiLayer::Begin()
 	{
 		RB_PROFILE_FUNC();

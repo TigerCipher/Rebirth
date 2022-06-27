@@ -43,6 +43,7 @@ namespace rebirth
 		RENDER,
 		KEY_PRESSED,
 		KEY_RELEASED,
+		KEY_TYPED,
 		MOUSE_BUTTON_PRESSED,
 		MOUSE_BUTTON_RELEASED,
 		MOUSE_MOVED_EVENT,
@@ -52,11 +53,11 @@ namespace rebirth
 	enum EventCategory
 	{
 		NONE = 0,
-		EVENT_CATEGORY_APP = BIT(0),
-		EVENT_CATEGORY_INPUT = BIT(1),
-		EVENT_CATEGORY_KEYBOARD = BIT(2),
-		EVENT_CATEGORY_MOUSE = BIT(3),
-		EVENT_CATEGORY_MOUSE_BUTTON = BIT(4)
+		EVENT_CATEGORY_APP =			BIT(0),
+		EVENT_CATEGORY_INPUT =			BIT(1),
+		EVENT_CATEGORY_KEYBOARD =		BIT(2),
+		EVENT_CATEGORY_MOUSE =			BIT(3),
+		EVENT_CATEGORY_MOUSE_BUTTON =	BIT(4)
 	};
 
 	#define EVENT_CLASS_TYPE(type)	static EventType GetStaticType() { return EventType::##type; }					\
@@ -65,7 +66,7 @@ namespace rebirth
 
 	#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-	class RB_API Event
+	class Event
 	{
 		friend class EventDispatcher;
 	public:
@@ -80,9 +81,10 @@ namespace rebirth
 		}
 
 		virtual bool WasHandled() { return mHandled; }
+		virtual void SetHandled(bool handled) { mHandled = handled; }
 
-	protected:
 		bool mHandled = false;
+	protected:
 	};
 
 

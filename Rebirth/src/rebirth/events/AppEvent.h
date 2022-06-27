@@ -29,15 +29,15 @@
 
 namespace rebirth
 {
-	class RB_API WindowResizeEvent : public Event
+	class WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(uint32 width, uint32 height) : mWidth(width), mHeight(height) {}
 
-		[[nodiscard]] uint32 GetWidth() const { return mWidth; }
-		[[nodiscard]] uint32 GetHeight() const { return mHeight; }
+		uint32 GetWidth() const { return mWidth; }
+		uint32 GetHeight() const { return mHeight; }
 
-		[[nodiscard]] std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "WindowResizeEvent: " << mWidth << ", " << mHeight;
@@ -52,7 +52,7 @@ namespace rebirth
 		uint32 mHeight;
 	};
 
-	class RB_API WindowCloseEvent : public Event
+	class WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent() = default;
@@ -61,7 +61,7 @@ namespace rebirth
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
 	};
 
-	class RB_API TickEvent : public Event
+	class TickEvent : public Event
 	{
 	public:
 		TickEvent() = default;
@@ -70,7 +70,7 @@ namespace rebirth
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
 	};
 
-	class RB_API UpdateEvent : public Event
+	class UpdateEvent : public Event
 	{
 	public:
 		UpdateEvent() = default;
@@ -79,7 +79,7 @@ namespace rebirth
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
 	};
 
-	class RB_API RenderEvent : public Event
+	class RenderEvent : public Event
 	{
 	public:
 		RenderEvent() = default;

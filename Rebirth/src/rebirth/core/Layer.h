@@ -30,7 +30,7 @@
 
 namespace rebirth
 {
-	class RB_API Layer
+	class Layer
 	{
 	public:
 		Layer(const std::string& name = "Layer") : mName(name) {}

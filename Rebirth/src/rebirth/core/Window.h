@@ -39,7 +39,7 @@ namespace rebirth
 		WindowProperties(const std::string& pTitle = "Rebirth Engine", uint32 pWidth = 1920, uint32 pHeight = 1080) : title(pTitle), width(pWidth), height(pHeight) {}
 	};
 
-	class RB_API Window
+	class Window
 	{
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;

@@ -39,7 +39,7 @@
 
 namespace rebirth
 {
-	class RB_API Application
+	class Application
 	{
 	public:
 

@@ -105,13 +105,13 @@ namespace rebirth
 		disp.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
 		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(Application::OnWindowResize));
 
-		for (auto it = mLayerStack.end(); it != mLayerStack.begin();)
+		for (auto it = mLayerStack.rbegin(); it != mLayerStack.rend(); ++it)
 		{
-			(*--it)->OnEvent(e);
 			if (e.WasHandled())
 			{
 				break;
 			}
+			(*it)->OnEvent(e);
 		}
 	}
 

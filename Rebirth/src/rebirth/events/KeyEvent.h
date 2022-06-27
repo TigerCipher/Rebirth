@@ -29,10 +29,10 @@
 
 namespace rebirth
 {
-	class RB_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
-		[[nodiscard]] int GetKeyCode() const { return mKeyCode; }
+		int GetKeyCode() const { return mKeyCode; }
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
 	protected:
@@ -42,15 +42,15 @@ namespace rebirth
 		int mKeyCode;
 	};
 
-	class RB_API KeyPressedEvent : public KeyEvent
+	class  KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(const int keycode, const int repeatCount)
 			: KeyEvent(keycode), mRepeatCount(repeatCount) {}
 
-		[[nodiscard]] int GetRepeatCount() const { return mRepeatCount; }
+		int GetRepeatCount() const { return mRepeatCount; }
 
-		[[nodiscard]] std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyPressedEvent: " << mKeyCode << " (" << mRepeatCount << " repeats)";
@@ -62,13 +62,13 @@ namespace rebirth
 		int mRepeatCount;
 	};
 
-	class RB_API KeyReleasedEvent : public KeyEvent
+	class  KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(const int keycode)
 			: KeyEvent(keycode) {}
 
-		[[nodiscard]] std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyReleasedEvent: " << mKeyCode;

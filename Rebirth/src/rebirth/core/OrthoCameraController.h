@@ -46,6 +46,8 @@ namespace rebirth
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
 
+		void ResizeBounds(float width, float height);
+
 		void SetZoom(const float zoom) { mZoom = zoom; CalculateView(); }
 		float GetZoom() const { return mZoom; }
 

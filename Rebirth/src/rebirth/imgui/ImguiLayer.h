@@ -27,7 +27,7 @@
 
 namespace rebirth
 {
-	class RB_API ImguiLayer : public Layer
+	class ImguiLayer : public Layer
 	{
 	public:
 		ImguiLayer();
@@ -36,6 +36,7 @@ namespace rebirth
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnImguiRender() override;
+		void OnEvent(Event& e) override;
 
 		void Begin();
 		void End();

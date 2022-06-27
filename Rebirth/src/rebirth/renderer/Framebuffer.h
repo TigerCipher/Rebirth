@@ -31,7 +31,8 @@ namespace rebirth
 		uint32 width, height;
 		uint32 samples = 1;
 
-		bool swapChainTarget = false;
+		// #FUTURE: Will likely want this for Vulkan, maybe directx - not opengl though I don't think
+		//bool swapChainTarget = false;
 	};
 
 	class Framebuffer
@@ -42,6 +43,8 @@ namespace rebirth
 
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
+
+		virtual void Resize(uint32 width, uint32 height) = 0;
 
 		virtual uint32 GetColorAttachmentID() const = 0;
 		virtual const FramebufferSpecification& GetSpecification() const = 0;

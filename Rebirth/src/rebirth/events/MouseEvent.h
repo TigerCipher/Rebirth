@@ -29,14 +29,14 @@
 
 namespace rebirth
 {
-	class RB_API MouseMovedEvent : public Event
+	class MouseMovedEvent : public Event
 	{
 	public:
 		MouseMovedEvent(const float x, const float y)
 			: mMouseX(x), mMouseY(y) {}
 
-		[[nodiscard]] float GetX() const { return mMouseX; }
-		[[nodiscard]] float GetY() const { return mMouseY; }
+		float GetX() const { return mMouseX; }
+		float GetY() const { return mMouseY; }
 
 		[[nodiscard]] std::string ToString() const override
 		{
@@ -52,16 +52,16 @@ namespace rebirth
 		float mMouseY;
 	};
 
-	class RB_API MouseScrolledEvent : public Event
+	class MouseScrolledEvent : public Event
 	{
 	public:
 		MouseScrolledEvent(const float xOffset, const float yOffset)
 			: mXOffset(xOffset), mYOffset(yOffset) {}
 
-		[[nodiscard]] float GetXOffset() const { return mXOffset; }
-		[[nodiscard]] float GetYOffset() const { return mYOffset; }
+		float GetXOffset() const { return mXOffset; }
+		float GetYOffset() const { return mYOffset; }
 
-		[[nodiscard]] std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseScrolledEvent: " << GetXOffset() << ", " << GetYOffset();
@@ -75,10 +75,10 @@ namespace rebirth
 		float mYOffset;
 	};
 
-	class RB_API MouseButtonEvent : public Event
+	class MouseButtonEvent : public Event
 	{
 	public:
-		[[nodiscard]] int GetMouseButton() const { return mButton; }
+		int GetMouseButton() const { return mButton; }
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	protected:
@@ -88,13 +88,13 @@ namespace rebirth
 		int mButton;
 	};
 
-	class RB_API MouseButtonPressedEvent : public MouseButtonEvent
+	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(const int button)
 			: MouseButtonEvent(button) {}
 
-		[[nodiscard]] std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent: " << mButton;
@@ -104,13 +104,13 @@ namespace rebirth
 		EVENT_CLASS_TYPE(MOUSE_BUTTON_PRESSED)
 	};
 
-	class RB_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(const int button)
 			: MouseButtonEvent(button) {}
 
-		[[nodiscard]] std::string ToString() const override
+		std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent: " << mButton;

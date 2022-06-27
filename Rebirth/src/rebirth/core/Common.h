@@ -63,9 +63,9 @@
 #ifdef RB_WINDOWS
 	#ifdef RB_DYNAMIC_LINK
 		#ifdef RB_BUILD_DLL
-			#define RB_API __declspec(dllexport)
+			#define  __declspec(dllexport)
 		#else
-			#define RB_API __declspec(dllimport)
+			#define  __declspec(dllimport)
 		#endif
 	#else
 		#define RB_API

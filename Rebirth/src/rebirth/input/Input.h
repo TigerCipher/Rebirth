@@ -28,7 +28,7 @@
 
 namespace rebirth
 {
-	class RB_API Input
+	class Input
 	{
 	public:
 
@@ -63,10 +63,10 @@ namespace rebirth
 		virtual float GetMouseXImpl() = 0;
 		virtual float GetMouseYImpl() = 0;
 		virtual std::pair<float, float> GetMousePosImpl() = 0;
-		
+
 	private:
 
 		static Scope<Input> sInstance;
-		
+
 	};
 }

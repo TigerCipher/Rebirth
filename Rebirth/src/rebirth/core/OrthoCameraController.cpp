@@ -96,6 +96,12 @@ namespace rebirth
 		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OrthoCameraController::OnWindowResize));
 	}
 
+	void OrthoCameraController::ResizeBounds(float width, float height)
+	{
+		mAspectRatio = width / height;
+		CalculateView();
+	}
+
 	void OrthoCameraController::CalculateView()
 	{
 		mBounds = { -mAspectRatio * mZoom, mAspectRatio * mZoom, -mZoom, mZoom };
@@ -107,6 +113,7 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		mZoom -= e.GetYOffset() * 0.25f;
 		mZoom = std::max(mZoom, 0.25f);
+		RB_CORE_TRACE("Scroll! Zoom {}", mZoom);
 		CalculateView();
 		return false;
 	}
@@ -114,8 +121,7 @@ namespace rebirth
 	bool OrthoCameraController::OnWindowResize(WindowResizeEvent& e)
 	{
 		RB_PROFILE_FUNC();
-		mAspectRatio = static_cast<float>(e.GetWidth()) / static_cast<float>(e.GetHeight());
-		CalculateView();
+		ResizeBounds((float)e.GetWidth(), (float)e.GetHeight());
 		return false;
 	}
 

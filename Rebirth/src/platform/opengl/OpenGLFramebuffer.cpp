@@ -38,11 +38,20 @@ namespace rebirth
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &mId);
+		glDeleteTextures(1, &mColorAttachment);
+		glDeleteTextures(1, &mDepthAttachment);
 	}
 
 	void OpenGLFramebuffer::Invalidate()
 	{
 		RB_PROFILE_FUNC();
+
+		if(mId)
+		{
+			glDeleteFramebuffers(1, &mId);
+			glDeleteTextures(1, &mColorAttachment);
+			glDeleteTextures(1, &mDepthAttachment);
+		}
 
 		glCreateFramebuffers(1, &mId);
 		glBindFramebuffer(GL_FRAMEBUFFER, mId);
@@ -71,6 +80,7 @@ namespace rebirth
 	void OpenGLFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, mId);
+		glViewport(0, 0, mSpecification.width, mSpecification.height);
 	}
 
 	void OpenGLFramebuffer::Unbind()
@@ -78,5 +88,12 @@ namespace rebirth
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+
+	void OpenGLFramebuffer::Resize(uint32 width, uint32 height)
+	{
+		mSpecification.width = width;
+		mSpecification.height = height;
+		Invalidate();
+	}
 
 }
