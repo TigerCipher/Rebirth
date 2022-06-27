@@ -42,7 +42,7 @@
 #include "rebirth/debug/Log.h"
 #include "rebirth/debug/Profiler.h"
 
-#ifdef RB_WINDOWS
+#ifdef RB_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif
 

@@ -107,10 +107,8 @@ namespace rebirth
 
 		for (auto it = mLayerStack.rbegin(); it != mLayerStack.rend(); ++it)
 		{
-			if (e.WasHandled())
-			{
+			if (e.mHandled)
 				break;
-			}
 			(*it)->OnEvent(e);
 		}
 	}

@@ -38,7 +38,8 @@ namespace rebirth
 		void OnImguiRender() override;
 	private:
 		OrthoCameraController mCameraController;
-
+		bool mViewportFocused = false;
+		bool mViewportHovered = false;
 		// abstract to renderer
 		Ref<Shader> mShader;
 		Ref<VertexArray> mSquareVtxArray;

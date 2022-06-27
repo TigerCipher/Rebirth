@@ -87,9 +87,12 @@ namespace rebirth
 
 	void ImguiLayer::OnEvent(Event& e)
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		e.mHandled |= e.IsInCategory(EVENT_CATEGORY_MOUSE) & io.WantCaptureMouse;
-		e.mHandled |= e.IsInCategory(EVENT_CATEGORY_KEYBOARD) & io.WantCaptureKeyboard;
+		if (mBlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.mHandled |= e.IsInCategory(EVENT_CATEGORY_MOUSE) & io.WantCaptureMouse;
+			e.mHandled |= e.IsInCategory(EVENT_CATEGORY_KEYBOARD) & io.WantCaptureKeyboard;
+		}
 	}
 
 	void ImguiLayer::Begin()
@@ -106,7 +109,7 @@ namespace rebirth
 		Application& app = Application::Instance();
 
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2(static_cast<float>(app.GetWindow().GetWidth()), static_cast<float>(app.GetWindow().GetHeight()));
+		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

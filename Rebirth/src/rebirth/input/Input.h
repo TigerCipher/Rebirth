@@ -31,42 +31,10 @@ namespace rebirth
 	class Input
 	{
 	public:
-
-		static bool IsKeyPressed(const int keycode)
-		{
-			return sInstance->IsKeyPressedImpl(keycode);
-		}
-
-		static bool IsMouseButtonPressed(const int button)
-		{
-			return sInstance->IsMouseButtonPressedImpl(button);
-		}
-
-		static float GetMouseX()
-		{
-			return sInstance->GetMouseXImpl();
-		}
-
-		static float GetMouseY()
-		{
-			return sInstance->GetMouseYImpl();
-		}
-
-		static std::pair<float, float> GetMousePos()
-		{
-			return sInstance->GetMousePosImpl();
-		}
-
-	protected:
-		virtual bool IsKeyPressedImpl(int keycode) = 0;
-		virtual bool IsMouseButtonPressedImpl(int button) = 0;
-		virtual float GetMouseXImpl() = 0;
-		virtual float GetMouseYImpl() = 0;
-		virtual std::pair<float, float> GetMousePosImpl() = 0;
-
-	private:
-
-		static Scope<Input> sInstance;
-
+		static bool IsKeyPressed(const int keycode);
+		static bool IsMouseButtonPressed(const int button);
+		static float GetMouseX();
+		static float GetMouseY();
+		static std::pair<float, float> GetMousePos();
 	};
 }

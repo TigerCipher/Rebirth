@@ -40,9 +40,11 @@ namespace rebirth
 
 		void Begin();
 		void End();
+
+		void SetBlockEvents(bool block) { mBlockEvents = block; }
 	
 	private:
-
+		bool mBlockEvents = true;
 		float mTime = 0.0f;
 		
 	};

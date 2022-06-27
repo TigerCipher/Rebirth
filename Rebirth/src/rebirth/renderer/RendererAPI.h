@@ -37,6 +37,8 @@ namespace rebirth
 			OPENGL
 		};
 
+		virtual ~RendererAPI() = default;
+
 		virtual void Init() = 0;
 
 		virtual void SetViewport(uint32 x, uint32 y, uint32 width, uint32 height) = 0;

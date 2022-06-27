@@ -31,7 +31,7 @@
 // Platform detection
 #ifdef _WIN32
 	#ifdef _WIN64
-		#define RB_WINDOWS
+		#define RB_PLATFORM_WINDOWS
 	#else
 		#error "x86 (32 bit) Builds are not supported!"
 	#endif
@@ -60,7 +60,7 @@
 
 
 // DLL build check (might remove entirely)
-#ifdef RB_WINDOWS
+#ifdef RB_PLATFORM_WINDOWS
 	#ifdef RB_DYNAMIC_LINK
 		#ifdef RB_BUILD_DLL
 			#define  __declspec(dllexport)

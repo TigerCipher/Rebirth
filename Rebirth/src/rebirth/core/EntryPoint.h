@@ -24,22 +24,26 @@
 #pragma once
 
 
-#ifdef RB_WINDOWS
+#ifdef RB_PLATFORM_WINDOWS
 	extern rebirth::Application* rebirth::CreateApplication();
 
 	int main(int argc, char** argv)
 	{
 		rebirth::Log::Init();
 		RB_CORE_TRACE("Initializing engine");
+
 		RB_PROFILE_BEGIN_SESSION("Startup", "Rebirth-Startup.json");
 		auto app = rebirth::CreateApplication();
 		RB_PROFILE_END_SESSION();
+
 		RB_PROFILE_BEGIN_SESSION("Runtime", "Rebirth-Runtime.json");
 		app->Run();
 		RB_PROFILE_END_SESSION();
+
 		RB_PROFILE_BEGIN_SESSION("Shutdown", "Rebirth-Shutdown.json");
 		delete app;
 		RB_PROFILE_END_SESSION();
+
 		return 0;
 	}
 #endif

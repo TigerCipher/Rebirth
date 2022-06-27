@@ -55,6 +55,7 @@ namespace rebirth
 		void PushOverlay(Layer* overlay);
 
 		Window& GetWindow() const { return *mWindow; }
+		ImguiLayer* GetImguiLayer() { return mImguiLayer; }
 
 		static Application& Instance() { return *sInstance; }
 

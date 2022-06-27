@@ -11,11 +11,11 @@
 // 
 //    Unless required by applicable law or agreed to in writing, software
 //    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or ied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Win64Input.h
+// File Name: Input.h
 // Date File Created: 06/18/2022 at 4:09 PM
 // Author: Matt
 // 
@@ -25,7 +25,7 @@
 #include "rbpch.h"
 
 
-#include "Win64Input.h"
+#include "rebirth/input/Input.h"
 #include "rebirth/core/Application.h"
 
 #include <GLFW/glfw3.h>
@@ -33,9 +33,8 @@
 namespace rebirth
 {
 
-	Scope<Input> Input::sInstance = createScope<Win64Input>();
 
-	bool Win64Input::IsKeyPressedImpl(int keycode)
+	bool Input::IsKeyPressed(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
 
@@ -43,7 +42,7 @@ namespace rebirth
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Win64Input::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
 
@@ -52,24 +51,24 @@ namespace rebirth
 		return state == GLFW_PRESS;
 	}
 
-	float Win64Input::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
-		auto [x, y] = GetMousePosImpl();
+		auto [x, y] = GetMousePos();
 		return x;
 	}
 
-	float Win64Input::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
-		auto [x, y] = GetMousePosImpl();
+		auto [x, y] = GetMousePos();
 		return y;
 	}
 
-	std::pair<float, float> Win64Input::GetMousePosImpl()
+	std::pair<float, float> Input::GetMousePos()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Instance().GetWindow().GetNativeWindow());
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
-		return { static_cast<float>(x), static_cast<float>(y) };
+		return { (float)x, (float)y };
 	}
 
 }

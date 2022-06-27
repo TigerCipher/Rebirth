@@ -46,7 +46,7 @@ namespace rebirth
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		RB_PROFILE_FUNC();
-		
+
 		if (rebirth::FramebufferSpecification spec = mFramebuffer->GetSpecification();
 			mViewportSize.x > 0.0f && mViewportSize.y > 0.0f &&
 			(spec.width != mViewportSize.x || spec.height != mViewportSize.y))
@@ -55,7 +55,10 @@ namespace rebirth
 			mCameraController.ResizeBounds(mViewportSize.x, mViewportSize.y);
 		}
 
-		mCameraController.OnUpdate(ts);
+		if (mViewportFocused)
+		{
+			mCameraController.OnUpdate(ts);
+		}
 
 		Renderer2D::ResetStats();
 
@@ -173,9 +176,14 @@ namespace rebirth
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+
+		mViewportFocused = ImGui::IsWindowFocused();
+		mViewportHovered = ImGui::IsWindowHovered();
+		Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
+
 		ImVec2 viewPanelSize = ImGui::GetContentRegionAvail();
 
-			mViewportSize = { viewPanelSize.x, viewPanelSize.y };
+		mViewportSize = { viewPanelSize.x, viewPanelSize.y };
 
 		uint32_t textureID = mFramebuffer->GetColorAttachmentID();
 		ImGui::Image((void*)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
