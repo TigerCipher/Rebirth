@@ -15,35 +15,39 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: rbpch.h
-// Date File Created: 06/15/2022 at 2:16 PM
+// File Name: PlatformDetection.h
+// Date File Created: 6/27/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <memory>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include "rebirth/core/Common.h"
-#include "rebirth/debug/Log.h"
-#include "rebirth/debug/Profiler.h"
-
-#ifdef RB_PLATFORM_WINDOWS
-	#include <Windows.h>
+#ifdef _WIN32
+#	ifdef _WIN64
+#		define RB_PLATFORM_WINDOWS
+#	else
+#		error "x86 (32 bit) Builds are not supported!"
+#	endif
+#elif defined(__APPLE__) || defined(__MACH__)
+#	include <TargetConditionals.h>
+#	if TARGET_IPHONE_SIMULATOR == 1
+#		error "IOS simulator is not supported!"
+#	elif TARGET_OS_IPHONE == 1
+#		define RB_IOS
+#		error "IOS is not supported!"
+#	elif TARGET_OS_MAC == 1
+#		define RB_MACOS
+#		error "MacOS is not supported!"
+#	else
+#		error "Unknown Apple platform!"
+#	endif
+#elif defined(__ANDROID__)
+#	define RB_PLATFORM_ANDROID
+#	error "Android is not supported!"
+#elif defined(__linux__)
+#	define RB_PLATFORM_LINUX
+#	error "Linux is not supported!"
+#else
+#	error "Unknown platform!"
 #endif
-
