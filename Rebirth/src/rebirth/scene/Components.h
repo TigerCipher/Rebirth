@@ -24,6 +24,9 @@
 
 #include <glm/glm.hpp>
 
+#include "rebirth/renderer/OrthoCamera.h"
+#include "rebirth/renderer/Camera.h"
+
 namespace rebirth
 {
 
@@ -54,6 +57,17 @@ namespace rebirth
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;
 		SpriteComponent(const glm::vec4& col) : color(col) {}
+	};
+
+
+	struct CameraComponent
+	{
+		Camera camera;
+		bool primary = true;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4& projection) : camera(projection) {}
 	};
 }
 

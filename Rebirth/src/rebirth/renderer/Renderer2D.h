@@ -23,6 +23,7 @@
 #pragma once
 
 #include "OrthoCamera.h"
+#include "Camera.h"
 
 #include "Texture.h"
 #include "SubTexture.h"
@@ -32,9 +33,11 @@ namespace rebirth
 	class Renderer2D
 	{
 	public:
+
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void BeginScene(const OrthoCamera& camera);
 		static void EndScene();
 

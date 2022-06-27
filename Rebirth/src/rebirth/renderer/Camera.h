@@ -15,45 +15,28 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EditorLayer.h
-// Date File Created: 6/26/2022
+// File Name: Camera.h
+// Date File Created: 6/27/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include <Rebirth.h>
+#include <glm/glm.hpp>
 
 namespace rebirth
 {
-	class EditorLayer : public Layer
+	class Camera
 	{
 	public:
-		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-		virtual ~EditorLayer() = default;
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate(Timestep ts) override;
-		void OnEvent(Event& e) override;
-		void OnImguiRender() override;
+		Camera(const glm::mat4& projection) : mProjection(projection) {}
+		virtual ~Camera() = default;
+
+		const glm::mat4& GetProjection() const { return mProjection; }
+
+
 	private:
-		OrthoCameraController mCameraController;
-		bool mViewportFocused = false;
-		bool mViewportHovered = false;
-		// abstract to renderer
-		Ref<Shader> mShader;
-		Ref<VertexArray> mSquareVtxArray;
-
-		Ref<Scene> mActiveScene;
-		Entity mSquareEntity;
-		Entity mCameraEntity;
-		Entity mSecondCamera;
-		bool primCam = true;
-
-		glm::vec2 mViewportSize{0.0f};
-
-		Ref<Texture2D> mTexture;
-
-		Ref<Framebuffer> mFramebuffer;
+		glm::mat4 mProjection;
 	};
 }
+

@@ -51,12 +51,37 @@ namespace rebirth
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
-		for (auto entity : group)
+		Camera* camera = nullptr;
+		glm::mat4* transform = nullptr;
 		{
-			auto& [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-			Renderer2D::DrawQuad(trans, sprite.color);
+			auto group = mRegistry.view<TransformComponent, CameraComponent>();
+
+			for (auto entity : group)
+			{
+				auto& [trans, cam] = group.get<TransformComponent, CameraComponent>(entity);
+				if (cam.primary)
+				{
+					camera = &cam.camera;
+					transform = &trans.transform;
+					break;
+				}
+
+			}
 		}
+
+		if (camera)
+		{
+			Renderer2D::BeginScene(camera->GetProjection(), *transform);
+			auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
+			for (auto entity : group)
+			{
+				auto& [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+				Renderer2D::DrawQuad(trans, sprite.color);
+			}
+
+			Renderer2D::EndScene();
+		}
+
 	}
 
 }

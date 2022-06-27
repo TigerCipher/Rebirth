@@ -43,6 +43,13 @@ namespace rebirth
 		ent.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 8.5f, 0.4f, 1.0f });
 
 		mSquareEntity = ent;
+
+		mCameraEntity = mActiveScene->CreateEntity("Camera");
+		mCameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+
+		mSecondCamera = mActiveScene->CreateEntity("Camera 2");
+		auto& c = mSecondCamera.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+		c.primary = false;
 	}
 
 	void EditorLayer::OnDetach()
@@ -76,10 +83,10 @@ namespace rebirth
 		RenderCommand::Clear();
 
 
-		Renderer2D::BeginScene(mCameraController.GetCamera());
+		//Renderer2D::BeginScene(mCameraController.GetCamera());
 		mActiveScene->OnUpdate(ts);
 
-		Renderer2D::EndScene();
+		//Renderer2D::EndScene();
 
 		mFramebuffer->Unbind();
 
@@ -168,6 +175,13 @@ namespace rebirth
 			auto& squareColor = mSquareEntity.GetComponent<SpriteComponent>().color;
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 			ImGui::Separator();
+		}
+
+		ImGui::DragFloat3("Camera One Transform", glm::value_ptr(mCameraEntity.GetComponent<TransformComponent>().transform));
+		if (ImGui::Checkbox("Camera 1", &primCam))
+		{
+			mCameraEntity.GetComponent<CameraComponent>().primary = primCam;
+			mSecondCamera.GetComponent<CameraComponent>().primary = !primCam;
 		}
 
 		ImGui::End();

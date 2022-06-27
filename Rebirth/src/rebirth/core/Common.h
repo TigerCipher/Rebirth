@@ -33,7 +33,8 @@
 #define RB_EXPAND_MACRO(x) x
 #define RB_STRINGIFY_MACRO(x) #x
 #define BIT(x) (1 << (x))
-#define BIND_EVENT_FUNC(func) std::bind(&func, this, std::placeholders::_1)
+//#define BIND_EVENT_FUNC(func) std::bind(&func, this, std::placeholders::_1)
+#define BIND_EVENT_FUNC(func) [this](auto&&... args)-> decltype(auto) { return this->func(std::forward<decltype(args)>(args)...); }
 
 
 // Types and shortcuts

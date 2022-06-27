@@ -132,6 +132,18 @@ namespace rebirth
 		//RB_PROFILE_FUNC();
 	}
 
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
+	{
+		RB_PROFILE_FUNC();
+		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+		sData.textureShader->Bind();
+		sData.textureShader->SetMat4("uViewProj", viewProj);
+
+		sData.quadIndexCount = 0;
+		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+		sData.textureSlotIndex = 1;
+	}
+
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
 	{
 		RB_PROFILE_FUNC();
