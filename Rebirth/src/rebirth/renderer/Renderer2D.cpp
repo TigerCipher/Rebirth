@@ -213,12 +213,9 @@ namespace rebirth
 		return textureIndex;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2& size)
-	{
-		DrawQuad({ pos.x, pos.y, 0.0f }, color, size);
-	}
+	// COLOR DRAWQUAD
 
-	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2& size)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
 	{
 		RB_PROFILE_FUNC();
 
@@ -229,10 +226,67 @@ namespace rebirth
 
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
+		CreateQuad(transform, color, textureCoords, 0, 1.0f);
+	}
+
+	// TEXTURE DRAWQUAD
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor /*= 1.0f*/, const glm::vec4& tintColor /*= {1.0f, 1.0f, 1.0f, 1.0f}*/)
+	{
+		RB_PROFILE_FUNC();
+
+		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
+		{
+			ResetBatch();
+		}
+
+		float textureIndex = GetTextureIndex(texture);
+
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+
+		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor);
+	}
+
+	// SUBTEXTURE DRAWQUAD
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tilingFactor /*= 1.0f*/, const glm::vec4& tintColor /*= {1.0f, 1.0f, 1.0f, 1.0f}*/)
+	{
+		RB_PROFILE_FUNC();
+
+		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
+		{
+			ResetBatch();
+		}
+
+		float textureIndex = GetTextureIndex(subtexture->GetTexture());
+
+		const glm::vec2* textureCoords = subtexture->GetTexCoords();
+
+		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor);
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	///////////////// DrawQuads below call ones above //////////////////////////
+	////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2& size)
+	{
+		DrawQuad({ pos.x, pos.y, 0.0f }, color, size);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2& size)
+	{
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		CreateQuad(transform, color, textureCoords, 0, 1.0f);
+		DrawQuad(transform, color);
 
 	}
 
@@ -243,23 +297,10 @@ namespace rebirth
 
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const Ref<Texture2D>& texture, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
 	{
-		RB_PROFILE_FUNC();
-
-		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
-		{
-			ResetBatch();
-		}
-
-
-		float textureIndex = GetTextureIndex(texture);
-
-		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
-
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor);
-
+		DrawQuad(transform, texture, tilingFactor, tintColor);
 	}
 
 
@@ -270,22 +311,10 @@ namespace rebirth
 
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const Ref<SubTexture2D>& subtexture, const glm::vec2& size, float tilingFactor, const glm::vec4& tintColor)
 	{
-		RB_PROFILE_FUNC();
-
-		if (sData.quadIndexCount >= RenderData::MAX_INDICES)
-		{
-			ResetBatch();
-		}
-
-
-		float textureIndex = GetTextureIndex(subtexture->GetTexture());
-
-		const glm::vec2* textureCoords = subtexture->GetTexCoords();
-
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos)
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor);
+		DrawQuad(transform, subtexture, tilingFactor, tintColor);
 
 	}
 

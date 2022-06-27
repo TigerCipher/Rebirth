@@ -15,42 +15,49 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EditorLayer.h
-// Date File Created: 6/26/2022
+// File Name: Scene.cpp
+// Date File Created: 6/27/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-#pragma once
+#include "rbpch.h"
+#include "Scene.h"
 
-#include <Rebirth.h>
+#include "Components.h"
+#include "rebirth/renderer/Renderer2D.h"
+#include "Entity.h"
 
 namespace rebirth
 {
-	class EditorLayer : public Layer
+	Scene::Scene()
 	{
-	public:
-		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-		virtual ~EditorLayer() = default;
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate(Timestep ts) override;
-		void OnEvent(Event& e) override;
-		void OnImguiRender() override;
-	private:
-		OrthoCameraController mCameraController;
-		bool mViewportFocused = false;
-		bool mViewportHovered = false;
-		// abstract to renderer
-		Ref<Shader> mShader;
-		Ref<VertexArray> mSquareVtxArray;
 
-		Ref<Scene> mActiveScene;
-		Entity mSquareEntity;
+	}
 
-		glm::vec2 mViewportSize{0.0f};
+	Scene::~Scene()
+	{
 
-		Ref<Texture2D> mTexture;
+	}
 
-		Ref<Framebuffer> mFramebuffer;
-	};
+	Entity Scene::CreateEntity(const std::string& tag)
+	{
+		Entity entity = { mRegistry.create(), this };
+		auto& t = entity.AddComponent<TagComponent>();
+		t.tag = tag.empty() ? "Entity" : tag;
+
+		entity.AddComponent<TransformComponent>();
+		return entity;
+	}
+
+	void Scene::OnUpdate(Timestep ts)
+	{
+		auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
+		for (auto entity : group)
+		{
+			auto& [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+			Renderer2D::DrawQuad(trans, sprite.color);
+		}
+	}
+
 }
+

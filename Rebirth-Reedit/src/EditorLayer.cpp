@@ -36,6 +36,13 @@ namespace rebirth
 		spec.width = 1920;
 		spec.height = 1080;
 		mFramebuffer = Framebuffer::Create(spec);
+
+		mActiveScene = createRef<Scene>();
+
+		auto ent = mActiveScene->CreateEntity("Square");
+		ent.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 8.5f, 0.4f, 1.0f });
+
+		mSquareEntity = ent;
 	}
 
 	void EditorLayer::OnDetach()
@@ -60,6 +67,7 @@ namespace rebirth
 			mCameraController.OnUpdate(ts);
 		}
 
+
 		Renderer2D::ResetStats();
 
 		mFramebuffer->Bind();
@@ -68,25 +76,8 @@ namespace rebirth
 		RenderCommand::Clear();
 
 
-		static float rot = 0.0f;
-		rot += ts * 40.0f;
-
 		Renderer2D::BeginScene(mCameraController.GetCamera());
-
-		Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.6f, 0.3f, 0.15f, 1.0f }, { 0.8f, 0.8f });
-		Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.2f, 0.5f, 0.7f, 1.0f }, { 0.8f, 0.8f });
-		Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, mTexture, { 20.0f, 20.0f }, 5.0f);
-		Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, 0.0f }, mTexture, glm::radians(rot), { 1.0f, 1.0f }, 25.0f);
-		Renderer2D::DrawRotatedQuad({ -1.5f, 0.75f }, mSquareColor, glm::radians(25.0f), { 0.4f, 0.65f });
-
-		for (float y = -5.0f; y < 5.0f; y += 0.5f)
-		{
-			for (float x = -5.0f; x < 5.0f; x += 0.5f)
-			{
-				glm::vec4 rgb = { (x + 5.0f) / 10.0f, (y + 5.0f) / 10.0f, 0.2f, 0.75f };
-				Renderer2D::DrawQuad({ x, y }, rgb, { 0.45f, 0.45f });
-			}
-		}
+		mActiveScene->OnUpdate(ts);
 
 		Renderer2D::EndScene();
 
@@ -170,7 +161,14 @@ namespace rebirth
 		ImGui::Text("Vertex Count: %d", stats.GetVertCount());
 		ImGui::Text("Index Count: %d", stats.GetIndicesCount());
 
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(mSquareColor));
+		if(mSquareEntity)
+		{
+			ImGui::Separator();
+			ImGui::Text("Entity: %s", mSquareEntity.GetComponent<TagComponent>().tag.c_str());
+			auto& squareColor = mSquareEntity.GetComponent<SpriteComponent>().color;
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+			ImGui::Separator();
+		}
 
 		ImGui::End();
 

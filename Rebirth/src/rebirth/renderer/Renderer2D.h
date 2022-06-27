@@ -40,6 +40,10 @@ namespace rebirth
 
 		static void Flush();
 
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = {1.0f, 1.0f, 1.0f, 1.0f});
+		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = {1.0f, 1.0f, 1.0f, 1.0f});
+
 		static void DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2 & size = {1.0f, 1.0f});
 		static void DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2 & size = {1.0f, 1.0f});
 

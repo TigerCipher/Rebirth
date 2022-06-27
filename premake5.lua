@@ -9,14 +9,21 @@ workspace "Rebirth"
 		"Dist"
 	}
 
+	flags
+	{
+		"MultiProcessorCompile"
+	}
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
+IncludeDir["spdlog"] = "Rebirth/libs/spdlog/include"
 IncludeDir["GLFW"] = "Rebirth/libs/glfw/include"
 IncludeDir["Glad"] = "Rebirth/libs/Glad/include"
 IncludeDir["ImGui"] = "Rebirth/libs/imgui"
 IncludeDir["glm"] = "Rebirth/libs/glm"
 IncludeDir["stb_image"] = "Rebirth/libs/stb_image"
+IncludeDir["entt"] = "Rebirth/libs/entt/include"
 
 -- Includes the premake file added to the glfw fork/submodule
 group "Dependencies"
@@ -49,12 +56,13 @@ project "Rebirth"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/libs/spdlog/include",
+		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}",
 	}
 
 	links
@@ -66,17 +74,17 @@ project "Rebirth"
 	}
 
 	defines {
-		"_CRT_SECURE_NO_WARNINGS"
+		"_CRT_SECURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE"
 	}
 
 	filter "system:windows"
 		systemversion "latest"
 
-		defines
-		{
-			"RB_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
-		}
+--		defines
+--		{
+--			"RB_PLATFORM_WINDOWS"
+--		}
 
 --		postbuildcommands
 --		{
@@ -123,10 +131,11 @@ project "Sandbox"
 
 	includedirs
 	{
-		"Rebirth/libs/spdlog/include",
 		"Rebirth/src",
+		"Rebirth/libs",
+		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
-		"Rebirth/libs"
+		"%{IncludeDir.entt}",
 	}
 
 	links
@@ -177,10 +186,11 @@ project "Rebirth-Reedit"
 
 	includedirs
 	{
-		"Rebirth/libs/spdlog/include",
 		"Rebirth/src",
+		"Rebirth/libs",
+		"%{IncludeDir.spdlog}",
 		"%{IncludeDir.glm}",
-		"Rebirth/libs"
+		"%{IncludeDir.entt}",
 	}
 
 	links

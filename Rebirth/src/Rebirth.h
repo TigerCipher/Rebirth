@@ -55,6 +55,12 @@
 #include "rebirth/renderer/OrthoCamera.h"
 #include "rebirth/renderer/Framebuffer.h"
 
+
+// Scene
+#include "rebirth/scene/Scene.h"
+#include "rebirth/scene/Components.h"
+#include "rebirth/scene/Entity.h"
+
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"
 

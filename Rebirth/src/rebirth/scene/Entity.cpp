@@ -15,42 +15,22 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EditorLayer.h
-// Date File Created: 6/26/2022
+// File Name: Entity.cpp
+// Date File Created: 6/27/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-#pragma once
 
-#include <Rebirth.h>
+#include "rbpch.h"
+#include "Entity.h"
 
 namespace rebirth
 {
-	class EditorLayer : public Layer
+
+	Entity::Entity(entt::entity id, Scene* scene) : mId(id), mScene(scene)
 	{
-	public:
-		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-		virtual ~EditorLayer() = default;
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate(Timestep ts) override;
-		void OnEvent(Event& e) override;
-		void OnImguiRender() override;
-	private:
-		OrthoCameraController mCameraController;
-		bool mViewportFocused = false;
-		bool mViewportHovered = false;
-		// abstract to renderer
-		Ref<Shader> mShader;
-		Ref<VertexArray> mSquareVtxArray;
 
-		Ref<Scene> mActiveScene;
-		Entity mSquareEntity;
+	}
 
-		glm::vec2 mViewportSize{0.0f};
-
-		Ref<Texture2D> mTexture;
-
-		Ref<Framebuffer> mFramebuffer;
-	};
 }
+

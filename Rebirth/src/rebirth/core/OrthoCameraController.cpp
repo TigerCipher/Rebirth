@@ -113,7 +113,6 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		mZoom -= e.GetYOffset() * 0.25f;
 		mZoom = std::max(mZoom, 0.25f);
-		RB_CORE_TRACE("Scroll! Zoom {}", mZoom);
 		CalculateView();
 		return false;
 	}

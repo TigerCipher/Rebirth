@@ -15,42 +15,34 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EditorLayer.h
-// Date File Created: 6/26/2022
+// File Name: Scene.h
+// Date File Created: 6/27/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include <Rebirth.h>
+#include <entt.hpp>
+
+#include "rebirth/core/Timestep.h"
 
 namespace rebirth
 {
-	class EditorLayer : public Layer
+	class Entity;
+
+	class Scene
 	{
 	public:
-		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-		virtual ~EditorLayer() = default;
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate(Timestep ts) override;
-		void OnEvent(Event& e) override;
-		void OnImguiRender() override;
+		Scene();
+		virtual ~Scene();
+
+		Entity CreateEntity(const std::string& tag = std::string());
+
+		void OnUpdate(Timestep ts);
+
 	private:
-		OrthoCameraController mCameraController;
-		bool mViewportFocused = false;
-		bool mViewportHovered = false;
-		// abstract to renderer
-		Ref<Shader> mShader;
-		Ref<VertexArray> mSquareVtxArray;
+		entt::registry mRegistry;
 
-		Ref<Scene> mActiveScene;
-		Entity mSquareEntity;
-
-		glm::vec2 mViewportSize{0.0f};
-
-		Ref<Texture2D> mTexture;
-
-		Ref<Framebuffer> mFramebuffer;
+		friend class Entity;
 	};
 }

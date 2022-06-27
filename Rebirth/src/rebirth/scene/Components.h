@@ -15,42 +15,45 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EditorLayer.h
-// Date File Created: 6/26/2022
+// File Name: Components.h
+// Date File Created: 6/27/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include <Rebirth.h>
+#include <glm/glm.hpp>
 
 namespace rebirth
 {
-	class EditorLayer : public Layer
+
+	struct TagComponent
 	{
-	public:
-		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-		virtual ~EditorLayer() = default;
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate(Timestep ts) override;
-		void OnEvent(Event& e) override;
-		void OnImguiRender() override;
-	private:
-		OrthoCameraController mCameraController;
-		bool mViewportFocused = false;
-		bool mViewportHovered = false;
-		// abstract to renderer
-		Ref<Shader> mShader;
-		Ref<VertexArray> mSquareVtxArray;
+		std::string tag;
+		TagComponent() = default;
+		TagComponent(const TagComponent&) = default;
+		TagComponent(const std::string& pTag) : tag(pTag) {}
+	};
 
-		Ref<Scene> mActiveScene;
-		Entity mSquareEntity;
+	struct TransformComponent
+	{
+		glm::mat4 transform{ 1.0f };
 
-		glm::vec2 mViewportSize{0.0f};
+		TransformComponent() = default;
+		TransformComponent(const TransformComponent&) = default;
+		TransformComponent(const glm::mat4& trans) : transform(trans) {}
 
-		Ref<Texture2D> mTexture;
+		operator glm::mat4& () { return transform; }
+		operator const glm::mat4& () const { return transform; }
+	};
 
-		Ref<Framebuffer> mFramebuffer;
+	struct SpriteComponent
+	{
+		glm::vec4 color{ 1.0f };
+
+		SpriteComponent() = default;
+		SpriteComponent(const SpriteComponent&) = default;
+		SpriteComponent(const glm::vec4& col) : color(col) {}
 	};
 }
+
