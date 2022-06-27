@@ -176,7 +176,6 @@ namespace rebirth
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
-
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
 		Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);

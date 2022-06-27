@@ -29,10 +29,11 @@
 #include "rebirth/events/MouseEvent.h"
 
 #include "platform/opengl/OpenGLContext.h"
+#include "../../rebirth/renderer/Renderer.h"
 
 namespace rebirth
 {
-	static bool gGlfwInitialized = false;
+	static uint8 gGlfwWindowCount = 0;
 
 	Scope<Window> Window::Create(const WindowProperties& props)
 	{
@@ -95,7 +96,7 @@ namespace rebirth
 		RB_CORE_INFO("Creating window {0} ({1}, {2})", props.title, props.width, props.height);
 
 
-		if (!gGlfwInitialized)
+		if (!gGlfwWindowCount)
 		{
 			RB_CORE_TRACE("Initializing GLFW");
 			const int success = glfwInit();
@@ -103,16 +104,18 @@ namespace rebirth
 				RB_CORE_TRACE("GLFW Initialized");
 
 			glfwSetErrorCallback(GlfwErrorCallback);
-
-			gGlfwInitialized = true;
 		}
 
-		RB_CORE_TRACE("Creating glfw window");
+#ifdef RB_DEBUG
+		if (Renderer::GetAPI() == RendererAPI::API::OPENGL)
 		{
-			RB_PROFILE_SCOPE("glfwCreateWindow in Win64Window::Init(const WindowProps&)");
-			mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
-				nullptr, nullptr);
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		}
+#endif
+		RB_CORE_TRACE("Creating glfw window");
+		mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
+			nullptr, nullptr);
+		gGlfwWindowCount++;
 
 		const int maxWidth = GetSystemMetrics(SM_CXSCREEN);
 		const int maxHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -150,24 +153,24 @@ namespace rebirth
 
 				switch (action)
 				{
-				case GLFW_PRESS:
-				{
-					KeyPressedEvent event(key, 0);
-					data.eventCallback(event);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					KeyReleasedEvent event(key);
-					data.eventCallback(event);
-					break;
-				}
-				case GLFW_REPEAT:
-				{
-					KeyPressedEvent event(key, 1);
-					data.eventCallback(event);
-					break;
-				}
+					case GLFW_PRESS:
+					{
+						KeyPressedEvent event(key, 0);
+						data.eventCallback(event);
+						break;
+					}
+					case GLFW_RELEASE:
+					{
+						KeyReleasedEvent event(key);
+						data.eventCallback(event);
+						break;
+					}
+					case GLFW_REPEAT:
+					{
+						KeyPressedEvent event(key, 1);
+						data.eventCallback(event);
+						break;
+					}
 				}
 
 			});
@@ -178,18 +181,18 @@ namespace rebirth
 
 				switch (action)
 				{
-				case GLFW_PRESS:
-				{
-					MouseButtonPressedEvent event(button);
-					data.eventCallback(event);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					MouseButtonReleasedEvent event(button);
-					data.eventCallback(event);
-					break;
-				}
+					case GLFW_PRESS:
+					{
+						MouseButtonPressedEvent event(button);
+						data.eventCallback(event);
+						break;
+					}
+					case GLFW_RELEASE:
+					{
+						MouseButtonReleasedEvent event(button);
+						data.eventCallback(event);
+						break;
+					}
 				}
 			});
 

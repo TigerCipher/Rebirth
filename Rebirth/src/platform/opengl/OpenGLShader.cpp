@@ -229,7 +229,7 @@ namespace rebirth
 		for (auto id : shaderIds)
 		{
 			glDetachShader(prog, id);
-			glDeleteShader(prog);
+			glDeleteShader(id);
 		}
 
 

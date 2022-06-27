@@ -29,6 +29,8 @@
 namespace rebirth
 {
 
+	static constexpr uint32 sMaxFramebufferSize = 8192;
+
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec) :
 		mSpecification(spec)
 	{
@@ -91,6 +93,11 @@ namespace rebirth
 
 	void OpenGLFramebuffer::Resize(uint32 width, uint32 height)
 	{
+		if (width == 0 || height == 0 || width > sMaxFramebufferSize || height > sMaxFramebufferSize)
+		{
+			RB_CORE_WARN("Attempted an invalid framebuffer resize to ({}, {})", width, height);
+			return;
+		}
 		mSpecification.width = width;
 		mSpecification.height = height;
 		Invalidate();

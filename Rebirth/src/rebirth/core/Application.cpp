@@ -75,24 +75,24 @@ namespace rebirth
 			Timestep timestep = time - mLastFrameTime;
 			mLastFrameTime = time;
 
-			if(!mMinimized)
+			if (!mMinimized)
 			{
 				RB_PROFILE_SCOPE("Update LayerStack");
 				for (Layer* layer : mLayerStack)
 				{
 					layer->OnUpdate(timestep);
 				}
+				mImguiLayer->Begin();
+				{
+					RB_PROFILE_SCOPE("LayerStack render imgui");
+					for (Layer* layer : mLayerStack)
+					{
+						layer->OnImguiRender();
+					}
+				}
+				mImguiLayer->End();
 			}
 
-			mImguiLayer->Begin();
-			{
-				RB_PROFILE_SCOPE("LayerStack render imgui");
-				for (Layer* layer : mLayerStack)
-				{
-					layer->OnImguiRender();
-				}
-			}
-			mImguiLayer->End();
 
 			mWindow->OnUpdate();
 		}
