@@ -15,8 +15,8 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EditorLayer.h
-// Date File Created: 6/26/2022
+// File Name: SceneHierarchyPanel.h
+// Date File Created: 6/28/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
@@ -24,41 +24,23 @@
 
 #include <Rebirth.h>
 
-#include "ui/SceneHierarchyPanel.h"
-
 namespace rebirth
 {
-	class EditorLayer : public Layer
+	class SceneHierarchyPanel
 	{
 	public:
-		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
-		virtual ~EditorLayer() = default;
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate(Timestep ts) override;
-		void OnEvent(Event& e) override;
-		void OnImguiRender() override;
+		SceneHierarchyPanel() = default;
+		SceneHierarchyPanel(const Ref<Scene>& scene);
+
+		void SetContext(const Ref<Scene>& scene);
+
+		void OnImguiRender();
+
 	private:
-		OrthoCameraController mCameraController;
-		bool mViewportFocused = false;
-		bool mViewportHovered = false;
-		// abstract to renderer
-		Ref<Shader> mShader;
-		Ref<VertexArray> mSquareVtxArray;
 
-		Ref<Scene> mActiveScene;
-		Entity mSquareEntity;
-		Entity mCameraEntity;
-		Entity mSecondCamera;
-		bool primCam = true;
+		void DrawEntityNode(Entity entity);
 
-		glm::vec2 mViewportSize{0.0f};
-
-		Ref<Texture2D> mTexture;
-
-		Ref<Framebuffer> mFramebuffer;
-
-
-		SceneHierarchyPanel mSceneHierarchyPanel;
+		Ref<Scene> mContext;
+		Entity mSelectionContext;
 	};
 }

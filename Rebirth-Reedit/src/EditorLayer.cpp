@@ -93,6 +93,8 @@ namespace rebirth
 
 		mCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -202,6 +204,9 @@ namespace rebirth
 
 			ImGui::EndMenuBar();
 		}
+
+
+		mSceneHierarchyPanel.OnImguiRender();
 
 		ImGui::Begin("Settings");
 

@@ -61,9 +61,19 @@ namespace rebirth
 			mScene->mRegistry.remove<T>(mId);
 		}
 
-		operator entt::entity() { return mId; }
-		operator const entt::entity() const { return mId; }
+		operator uint32() { return (uint32)mId; }
+		operator const uint32() const { return (uint32)mId; }
 		operator bool() const { return mId != entt::null; }
+
+		bool operator==(const Entity& other)
+		{
+			return mId == other.mId && mScene == other.mScene;
+		}
+
+		bool operator!=(const Entity& other)
+		{
+			return !(*this == other);
+		}
 	private:
 		entt::entity mId = entt::null;
 		Scene* mScene = nullptr;
