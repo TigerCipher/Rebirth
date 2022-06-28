@@ -56,7 +56,8 @@ namespace rebirth
 		public:
 			void OnCreate()
 			{
-				
+				auto& transform = GetComponent<TransformComponent>().transform;
+				transform[3][0] = rand() % 10 - 5.0f;
 			}
 
 			void OnDestroy()
@@ -90,6 +91,7 @@ namespace rebirth
 			}
 		};
 
+		mCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 

@@ -73,11 +73,11 @@ namespace rebirth
 		Camera* camera = nullptr;
 		glm::mat4* transform = nullptr;
 		{
-			auto group = mRegistry.view<TransformComponent, CameraComponent>();
+			auto view = mRegistry.view<TransformComponent, CameraComponent>();
 
-			for (auto entity : group)
+			for (auto entity : view)
 			{
-				auto& [trans, cam] = group.get<TransformComponent, CameraComponent>(entity);
+				auto [trans, cam] = view.get<TransformComponent, CameraComponent>(entity);
 				if (cam.primary)
 				{
 					camera = &cam.camera;
@@ -94,7 +94,7 @@ namespace rebirth
 			auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
 			for (auto entity : group)
 			{
-				auto& [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+				auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
 				Renderer2D::DrawQuad(trans, sprite.color);
 			}
 
