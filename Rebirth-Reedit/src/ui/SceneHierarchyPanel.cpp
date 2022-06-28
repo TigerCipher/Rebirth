@@ -23,6 +23,8 @@
 
 #include "SceneHierarchyPanel.h"
 
+#include "../util/UIHelper.h"
+
 #include <imgui/imgui.h>
 
 namespace rebirth
@@ -106,9 +108,12 @@ namespace rebirth
 		{
 			if(ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
 			{
-				auto& trans = entity.GetComponent<TransformComponent>().transform;
-				ImGui::DragFloat3("Position", glm::value_ptr(trans[3]), 0.1f);
-
+				auto& trans = entity.GetComponent<TransformComponent>();
+				UIHelper::DrawFloat3Control("Translation", trans.translation);
+				glm::vec3 rot = glm::degrees(trans.rotation);
+				UIHelper::DrawFloat3Control("Rotation", rot);
+				trans.rotation = glm::radians(rot);
+				UIHelper::DrawFloat3Control("Scale", trans.scale, 1.0f);
 				ImGui::TreePop();
 			}
 		}
@@ -172,6 +177,16 @@ namespace rebirth
 					ImGui::Checkbox("Fixed Aspect Ratio", &camComp.fixedAspectRatio);
 				}
 
+				ImGui::TreePop();
+			}
+		}
+
+		if (entity.HasComponent<SpriteComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite"))
+			{
+				auto& spriteComp = entity.GetComponent<SpriteComponent>();
+				ImGui::ColorEdit4("Color", glm::value_ptr(spriteComp.color));
 				ImGui::TreePop();
 			}
 		}

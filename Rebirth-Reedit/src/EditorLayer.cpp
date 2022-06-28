@@ -58,8 +58,8 @@ namespace rebirth
 		public:
 			void OnCreate()
 			{
-				auto& transform = GetComponent<TransformComponent>().transform;
-				transform[3][0] = rand() % 10 - 5.0f;
+				auto& transform = GetComponent<TransformComponent>();
+				transform.translation.x = rand() % 10 - 5.0f;
 			}
 
 			void OnDestroy()
@@ -69,26 +69,26 @@ namespace rebirth
 
 			void OnUpdate(Timestep ts)
 			{
-				auto& transform = GetComponent<TransformComponent>().transform;
+				auto& translation = GetComponent<TransformComponent>().translation;
 				static float speed = 5.0f;
 				if (Input::IsKeyPressed(RB_KEY_A))
 				{
-					transform[3][0] -= speed * ts;
+					translation.x -= speed * ts;
 				}
 
 				if (Input::IsKeyPressed(RB_KEY_D))
 				{
-					transform[3][0] += speed * ts;
+					translation.x += speed * ts;
 				}
 
 				if (Input::IsKeyPressed(RB_KEY_W))
 				{
-					transform[3][1] += speed * ts;
+					translation.y += speed * ts;
 				}
 
 				if (Input::IsKeyPressed(RB_KEY_S))
 				{
-					transform[3][1] -= speed * ts;
+					translation.y -= speed * ts;
 				}
 			}
 		};
@@ -210,40 +210,14 @@ namespace rebirth
 
 		mSceneHierarchyPanel.OnImguiRender();
 
-		ImGui::Begin("Settings");
 
+		ImGui::Begin("Statistics");
 		auto stats = Renderer2D::GetStats();
-		//ImGui::Begin("Statistics");
 		ImGui::Text("Render Batch Stats:");
 		ImGui::Text("Draw Calls: %d", stats.drawCalls);
 		ImGui::Text("Quads: %d", stats.quads);
 		ImGui::Text("Vertex Count: %d", stats.GetVertCount());
 		ImGui::Text("Index Count: %d", stats.GetIndicesCount());
-
-		if(mSquareEntity)
-		{
-			ImGui::Separator();
-			ImGui::Text("Entity: %s", mSquareEntity.GetComponent<TagComponent>().tag.c_str());
-			auto& squareColor = mSquareEntity.GetComponent<SpriteComponent>().color;
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-			ImGui::Separator();
-		}
-
-		ImGui::DragFloat3("Camera One Transform", glm::value_ptr(mCameraEntity.GetComponent<TransformComponent>().transform[3]));
-		if (ImGui::Checkbox("Camera 1", &primCam))
-		{
-			mCameraEntity.GetComponent<CameraComponent>().primary = primCam;
-			mSecondCamera.GetComponent<CameraComponent>().primary = !primCam;
-		}
-
-		{
-			auto& cam = mSecondCamera.GetComponent<CameraComponent>().camera;
-			float orthoSize = cam.GetOrthographicSize();
-			if (ImGui::DragFloat("2nd Camera Ortho Size", &orthoSize))
-			{
-				cam.SetOrthographicSize(orthoSize);
-			}
-		}
 
 		ImGui::End();
 
@@ -257,8 +231,8 @@ namespace rebirth
 
 		mViewportSize = { viewPanelSize.x, viewPanelSize.y };
 
-		uint32_t textureID = mFramebuffer->GetColorAttachmentID();
-		ImGui::Image((void*)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		uint32 textureID = mFramebuffer->GetColorAttachmentID();
+		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 		ImGui::End();
 		ImGui::PopStyleVar();
 
