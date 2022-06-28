@@ -31,12 +31,10 @@ namespace rebirth
 {
 	Scene::Scene()
 	{
-
 	}
 
 	Scene::~Scene()
 	{
-
 	}
 
 	Entity Scene::CreateEntity(const std::string& tag)
@@ -47,6 +45,11 @@ namespace rebirth
 
 		entity.AddComponent<TransformComponent>();
 		return entity;
+	}
+
+	void Scene::DestroyEntity(Entity entity)
+	{
+		mRegistry.destroy(entity);
 	}
 
 	void Scene::OnUpdate(Timestep ts)
@@ -117,6 +120,43 @@ namespace rebirth
 				cameraComp.camera.SetViewportSize(width, height);
 			}
 		}
+	}
+
+
+	template<typename T>
+	void Scene::OnComponentAdded(Entity entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TagComponent>(Entity entity, TagComponent& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<SpriteComponent>(Entity entity, SpriteComponent& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.camera.SetViewportSize(mViewportWidth, mViewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
+
 	}
 
 }

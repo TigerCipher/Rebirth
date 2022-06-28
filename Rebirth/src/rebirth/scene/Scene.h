@@ -37,12 +37,17 @@ namespace rebirth
 		virtual ~Scene();
 
 		Entity CreateEntity(const std::string& tag = std::string());
+		void DestroyEntity(Entity entity);
 
 		void OnUpdate(Timestep ts);
 
 		void OnViewportResize(uint32 width, uint32 height);
 
 	private:
+
+		template<typename T>
+		void OnComponentAdded(Entity entity, T& component);
+
 		entt::registry mRegistry;
 		uint32 mViewportWidth = 0;
 		uint32 mViewportHeight = 0;

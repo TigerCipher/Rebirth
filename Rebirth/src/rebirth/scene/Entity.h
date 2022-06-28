@@ -38,7 +38,9 @@ namespace rebirth
 		T& AddComponent(Args&&... args)
 		{
 			RB_CORE_ASSERT(!HasComponent<T>(), "Component already added to this entity");
-			return mScene->mRegistry.emplace<T>(mId, std::forward<Args>(args)...);
+			T& comp = mScene->mRegistry.emplace<T>(mId, std::forward<Args>(args)...);
+			mScene->OnComponentAdded<T>(*this, comp);
+			return comp;
 		}
 
 		template<typename T>
@@ -64,6 +66,7 @@ namespace rebirth
 
 		operator bool() const { return mId != entt::null; }
 		operator uint32() const { return (uint32)mId; }
+		operator entt::entity() const { return mId; }
 
 		bool operator==(const Entity& other)
 		{
