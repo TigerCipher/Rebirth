@@ -50,6 +50,11 @@ namespace rebirth
 
 		ImGui::End();
 
+		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
+		{
+			mSelectionContext = {};
+		}
+
 
 		ImGui::Begin("Properties");
 
@@ -99,8 +104,13 @@ namespace rebirth
 
 		if (entity.HasComponent<TransformComponent>())
 		{
-			auto& trans = entity.GetComponent<TransformComponent>().transform;
-			ImGui::DragFloat3("Position", glm::value_ptr(trans[3]), 0.1f);
+			if(ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+			{
+				auto& trans = entity.GetComponent<TransformComponent>().transform;
+				ImGui::DragFloat3("Position", glm::value_ptr(trans[3]), 0.1f);
+
+				ImGui::TreePop();
+			}
 		}
 	}
 
