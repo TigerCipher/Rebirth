@@ -26,6 +26,7 @@
 
 #include "rebirth/renderer/OrthoCamera.h"
 #include "SceneCamera.h"
+#include "ScriptableEntity.h"
 
 namespace rebirth
 {
@@ -68,6 +69,21 @@ namespace rebirth
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
+	};
+
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* instance = nullptr;
+
+		ScriptableEntity* (*InstantiateScript)();
+		void (*DestroyScript)(NativeScriptComponent*);
+
+		template<typename T>
+		void Bind()
+		{
+			InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
+			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->instance; nsc->instance = nullptr; };
+		}
 	};
 }
 

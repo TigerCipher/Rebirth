@@ -51,6 +51,25 @@ namespace rebirth
 
 	void Scene::OnUpdate(Timestep ts)
 	{
+		RB_PROFILE_FUNC();
+
+		// Scripting
+		{
+			mRegistry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+				{
+					if (!nsc.instance)
+					{
+						nsc.instance = nsc.InstantiateScript();
+						nsc.instance->mEntity = Entity{ entity, this };
+						nsc.instance->OnCreate();
+					}
+
+					nsc.instance->OnUpdate(ts);
+				});
+		}
+
+
+		// Render
 		Camera* camera = nullptr;
 		glm::mat4* transform = nullptr;
 		{

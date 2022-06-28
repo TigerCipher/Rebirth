@@ -60,6 +60,7 @@
 #include "rebirth/scene/Scene.h"
 #include "rebirth/scene/Components.h"
 #include "rebirth/scene/Entity.h"
+#include "rebirth/scene/ScriptableEntity.h"
 
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"

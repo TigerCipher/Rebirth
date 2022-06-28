@@ -50,6 +50,47 @@ namespace rebirth
 		mSecondCamera = mActiveScene->CreateEntity("Camera 2");
 		auto& c = mSecondCamera.AddComponent<CameraComponent>();
 		c.primary = false;
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{
+				
+			}
+
+			void OnDestroy()
+			{
+
+			}
+
+			void OnUpdate(Timestep ts)
+			{
+				auto& transform = GetComponent<TransformComponent>().transform;
+				static float speed = 5.0f;
+				if (Input::IsKeyPressed(RB_KEY_A))
+				{
+					transform[3][0] -= speed * ts;
+				}
+
+				if (Input::IsKeyPressed(RB_KEY_D))
+				{
+					transform[3][0] += speed * ts;
+				}
+
+				if (Input::IsKeyPressed(RB_KEY_W))
+				{
+					transform[3][1] += speed * ts;
+				}
+
+				if (Input::IsKeyPressed(RB_KEY_S))
+				{
+					transform[3][1] -= speed * ts;
+				}
+			}
+		};
+
+		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()
