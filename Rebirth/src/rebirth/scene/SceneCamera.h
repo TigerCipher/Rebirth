@@ -15,38 +15,38 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Scene.h
+// File Name: SceneCamera.h
 // Date File Created: 6/27/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include <entt.hpp>
-
-#include "rebirth/core/Timestep.h"
+#include "rebirth/renderer/Camera.h"
 
 namespace rebirth
 {
-	class Entity;
-
-	class Scene
+	class SceneCamera : public Camera
 	{
 	public:
-		Scene();
-		virtual ~Scene();
+		SceneCamera();
+		virtual ~SceneCamera() = default;
 
-		Entity CreateEntity(const std::string& tag = std::string());
+		void SetOrthographic(float size, float nearClip, float farClip);
 
-		void OnUpdate(Timestep ts);
+		void SetViewportSize(uint32 width, uint32 height);
 
-		void OnViewportResize(uint32 width, uint32 height);
-
+		float GetOrthographicSize() const { return mOrthographicSize; }
+		void SetOrthographicSize(const float size) { mOrthographicSize = size; RecalculateProjection(); }
 	private:
-		entt::registry mRegistry;
-		uint32 mViewportWidth = 0;
-		uint32 mViewportHeight = 0;
 
-		friend class Entity;
+		void RecalculateProjection();
+
+		float mAspectRatio = 0.0f;
+		float mOrthographicSize = 10.0f;
+		float mOrthographicNear = -1.0f;
+		float mOrthographicFar = 1.0f;
+
 	};
 }
+

@@ -25,7 +25,7 @@
 #include <glm/glm.hpp>
 
 #include "rebirth/renderer/OrthoCamera.h"
-#include "rebirth/renderer/Camera.h"
+#include "SceneCamera.h"
 
 namespace rebirth
 {
@@ -62,12 +62,12 @@ namespace rebirth
 
 	struct CameraComponent
 	{
-		Camera camera;
+		SceneCamera camera;
 		bool primary = true;
+		bool fixedAspectRatio = false;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
-		CameraComponent(const glm::mat4& projection) : camera(projection) {}
 	};
 }
 

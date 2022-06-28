@@ -45,10 +45,10 @@ namespace rebirth
 		mSquareEntity = ent;
 
 		mCameraEntity = mActiveScene->CreateEntity("Camera");
-		mCameraEntity.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
+		mCameraEntity.AddComponent<CameraComponent>();
 
 		mSecondCamera = mActiveScene->CreateEntity("Camera 2");
-		auto& c = mSecondCamera.AddComponent<CameraComponent>(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f));
+		auto& c = mSecondCamera.AddComponent<CameraComponent>();
 		c.primary = false;
 	}
 
@@ -61,12 +61,14 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 
-		if (rebirth::FramebufferSpecification spec = mFramebuffer->GetSpecification();
+		if (FramebufferSpecification spec = mFramebuffer->GetSpecification();
 			mViewportSize.x > 0.0f && mViewportSize.y > 0.0f &&
 			(spec.width != mViewportSize.x || spec.height != mViewportSize.y))
 		{
 			mFramebuffer->Resize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 			mCameraController.ResizeBounds(mViewportSize.x, mViewportSize.y);
+
+			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 		}
 
 		if (mViewportFocused)
@@ -177,11 +179,20 @@ namespace rebirth
 			ImGui::Separator();
 		}
 
-		ImGui::DragFloat3("Camera One Transform", glm::value_ptr(mCameraEntity.GetComponent<TransformComponent>().transform));
+		ImGui::DragFloat3("Camera One Transform", glm::value_ptr(mCameraEntity.GetComponent<TransformComponent>().transform[3]));
 		if (ImGui::Checkbox("Camera 1", &primCam))
 		{
 			mCameraEntity.GetComponent<CameraComponent>().primary = primCam;
 			mSecondCamera.GetComponent<CameraComponent>().primary = !primCam;
+		}
+
+		{
+			auto& cam = mSecondCamera.GetComponent<CameraComponent>().camera;
+			float orthoSize = cam.GetOrthographicSize();
+			if (ImGui::DragFloat("2nd Camera Ortho Size", &orthoSize))
+			{
+				cam.SetOrthographicSize(orthoSize);
+			}
 		}
 
 		ImGui::End();

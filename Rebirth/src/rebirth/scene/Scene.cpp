@@ -84,5 +84,21 @@ namespace rebirth
 
 	}
 
+	void Scene::OnViewportResize(uint32 width, uint32 height)
+	{
+		mViewportWidth = width;
+		mViewportHeight = height;
+
+		auto view = mRegistry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraComp = view.get<CameraComponent>(entity);
+			if (!cameraComp.fixedAspectRatio)
+			{
+				cameraComp.camera.SetViewportSize(width, height);
+			}
+		}
+	}
+
 }
 
