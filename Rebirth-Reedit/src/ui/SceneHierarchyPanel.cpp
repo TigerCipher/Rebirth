@@ -112,6 +112,69 @@ namespace rebirth
 				ImGui::TreePop();
 			}
 		}
+
+		if (entity.HasComponent<CameraComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+			{
+				auto& camComp = entity.GetComponent<CameraComponent>();
+				auto& cam = camComp.camera;
+
+				ImGui::Checkbox("Primary", &camComp.primary);
+
+				const char* projStr[] = { "Perspective", "Orthographic" };
+				const char* currentProjStr = projStr[(int)cam.GetProjectionType()];
+				if (ImGui::BeginCombo("Projection", currentProjStr))
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						bool isSelected = currentProjStr == projStr[i];
+						if (ImGui::Selectable(projStr[i], isSelected))
+						{
+							currentProjStr = projStr[i];
+							cam.SetProjectionType((SceneCamera::ProjectionType)i);
+						}
+
+						if (isSelected) ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+
+				if (cam.GetProjectionType() == SceneCamera::ProjectionType::PERSPECTIVE)
+				{
+					float fov = glm::degrees(cam.GetPerspectiveFoV());
+					if (ImGui::DragFloat("FOV", &fov))
+						cam.SetPerspectiveFoV(glm::radians(fov));
+
+					float nearClip = cam.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("Near Clip", &nearClip))
+						cam.SetPerspectiveNearClip(nearClip);
+
+					float farClip = cam.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("Far Clip", &farClip))
+						cam.SetPerspectiveFarClip(farClip);
+				}
+
+				if (cam.GetProjectionType() == SceneCamera::ProjectionType::ORTHOGRAPHIC)
+				{
+					float size = cam.GetOrthographicSize();
+					if (ImGui::DragFloat("Size", &size))
+						cam.SetOrthographicSize(size);
+
+					float nearClip = cam.GetOrthographicNearClip();
+					if (ImGui::DragFloat("Near Clip", &nearClip))
+						cam.SetOrthographicNearClip(nearClip);
+
+					float farClip = cam.GetOrthographicFarClip();
+					if (ImGui::DragFloat("Far Clip", &farClip))
+						cam.SetOrthographicFarClip(farClip);
+
+					ImGui::Checkbox("Fixed Aspect Ratio", &camComp.fixedAspectRatio);
+				}
+
+				ImGui::TreePop();
+			}
+		}
 	}
 
 }

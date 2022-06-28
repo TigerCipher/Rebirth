@@ -29,23 +29,49 @@ namespace rebirth
 	class SceneCamera : public Camera
 	{
 	public:
+		enum class ProjectionType
+		{
+			PERSPECTIVE = 0, ORTHOGRAPHIC = 1
+		};
 		SceneCamera();
 		virtual ~SceneCamera() = default;
 
 		void SetOrthographic(float size, float nearClip, float farClip);
+		void SetPerspective(float fov, float nearClip, float farClip);
 
 		void SetViewportSize(uint32 width, uint32 height);
 
-		float GetOrthographicSize() const { return mOrthographicSize; }
 		void SetOrthographicSize(const float size) { mOrthographicSize = size; RecalculateProjection(); }
+		void SetOrthographicNearClip(float nearClip) { mOrthographicNear = nearClip; RecalculateProjection(); }
+		void SetOrthographicFarClip(float farClip) { mOrthographicFar = farClip; RecalculateProjection(); }
+		float GetOrthographicSize() const { return mOrthographicSize; }
+		float GetOrthographicNearClip() const { return mOrthographicNear; }
+		float GetOrthographicFarClip() const { return mOrthographicFar; }
+
+		void SetPerspectiveFoV(const float fov) { mPerspectiveFoV = fov; RecalculateProjection(); }
+		void SetPerspectiveNearClip(float nearClip) { mPerspectiveNear = nearClip; RecalculateProjection(); }
+		void SetPerspectiveFarClip(float farClip) { mPerspectiveFar = farClip; RecalculateProjection(); }
+		float GetPerspectiveFoV() const { return mPerspectiveFoV; }
+		float GetPerspectiveNearClip() const { return mPerspectiveNear; }
+		float GetPerspectiveFarClip() const { return mPerspectiveFar; }
+
+		void SetProjectionType(ProjectionType type) { mProjectionType = type; RecalculateProjection(); }
+		ProjectionType GetProjectionType() const { return mProjectionType; }
 	private:
 
 		void RecalculateProjection();
 
+		ProjectionType mProjectionType = ProjectionType::ORTHOGRAPHIC; // #FUTURE switch to perspective when I implement 3D
 		float mAspectRatio = 0.0f;
+
 		float mOrthographicSize = 10.0f;
 		float mOrthographicNear = -1.0f;
 		float mOrthographicFar = 1.0f;
+
+
+		float mPerspectiveFoV = glm::radians(45.0f);
+		float mPerspectiveNear = 0.01f;
+		float mPerspectiveFar = 1000.0f;
 
 	};
 }

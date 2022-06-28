@@ -33,11 +33,24 @@ namespace rebirth
 
 	void SceneCamera::SetOrthographic(float size, float nearClip, float farClip)
 	{
-		if (mOrthographicSize != size || mOrthographicNear != nearClip || mOrthographicFar != farClip)
+		if (mProjectionType != ProjectionType::ORTHOGRAPHIC || mOrthographicSize != size || mOrthographicNear != nearClip || mOrthographicFar != farClip)
 		{
+			mProjectionType = ProjectionType::ORTHOGRAPHIC;
 			mOrthographicSize = size;
 			mOrthographicNear = nearClip;
 			mOrthographicFar = farClip;
+			RecalculateProjection();
+		}
+	}
+
+	void SceneCamera::SetPerspective(float fov, float nearClip, float farClip)
+	{
+		if (mProjectionType != ProjectionType::PERSPECTIVE || mPerspectiveFoV != fov || mPerspectiveNear != nearClip || mPerspectiveFar != farClip)
+		{
+			mProjectionType = ProjectionType::PERSPECTIVE;
+			mPerspectiveFoV = fov;
+			mPerspectiveNear = nearClip;
+			mPerspectiveFar = farClip;
 			RecalculateProjection();
 		}
 	}
@@ -55,12 +68,20 @@ namespace rebirth
 
 	void SceneCamera::RecalculateProjection()
 	{
-		float orthoLeft = -mOrthographicSize * mAspectRatio * 0.5f;
-		float orthoRight = mOrthographicSize * mAspectRatio * 0.5f;
-		float orthoBottom = -mOrthographicSize * 0.5f;
-		float orthoTop = mOrthographicSize * 0.5f;
+		if (mProjectionType == ProjectionType::PERSPECTIVE)
+		{
+			mProjection = glm::perspective(mPerspectiveFoV, mAspectRatio, mPerspectiveNear, mPerspectiveFar);
+		}
+		else
+		{
+			float orthoLeft = -mOrthographicSize * mAspectRatio * 0.5f;
+			float orthoRight = mOrthographicSize * mAspectRatio * 0.5f;
+			float orthoBottom = -mOrthographicSize * 0.5f;
+			float orthoTop = mOrthographicSize * 0.5f;
 
-		mProjection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, mOrthographicNear, mOrthographicFar);
+			mProjection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, mOrthographicNear, mOrthographicFar);
+		}
+		
 	}
 
 }
