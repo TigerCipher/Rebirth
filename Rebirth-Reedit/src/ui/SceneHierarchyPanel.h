@@ -39,6 +39,7 @@ namespace rebirth
 	private:
 
 		void DrawEntityNode(Entity entity);
+		void DrawComponents(Entity entity);
 
 		Ref<Scene> mContext;
 		Entity mSelectionContext;

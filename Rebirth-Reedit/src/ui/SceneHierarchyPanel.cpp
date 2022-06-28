@@ -49,13 +49,23 @@ namespace rebirth
 			});
 
 		ImGui::End();
+
+
+		ImGui::Begin("Properties");
+
+		if (mSelectionContext)
+		{
+			DrawComponents(mSelectionContext);
+		}
+
+		ImGui::End();
 	}
 
 	void SceneHierarchyPanel::DrawEntityNode(Entity entity)
 	{
 		auto& tag = entity.GetComponent<TagComponent>().tag;
 
-		ImGuiTreeNodeFlags flags = ((mSelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0 ) |ImGuiTreeNodeFlags_OpenOnArrow;
+		ImGuiTreeNodeFlags flags = ((mSelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 		bool expanded = ImGui::TreeNodeEx((void*)(uint64)(uint32)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked())
 		{
@@ -64,12 +74,34 @@ namespace rebirth
 
 		if (expanded)
 		{
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
-			bool expanded = ImGui::TreeNodeEx((void*)(3456), flags, tag.c_str());
-			if (expanded) ImGui::TreePop();
+			//ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+			//bool expanded = ImGui::TreeNodeEx((void*)(3456), flags, tag.c_str());
+			//if (expanded) ImGui::TreePop();
 			ImGui::TreePop();
 		}
 
+	}
+
+	void SceneHierarchyPanel::DrawComponents(Entity entity)
+	{
+		if (entity.HasComponent<TagComponent>())
+		{
+			auto& tag = entity.GetComponent<TagComponent>().tag;
+
+			char buffer[256];
+			memset(buffer, 0, sizeof(buffer));
+			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+			if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+			{
+				tag = std::string(buffer);
+			}
+		}
+
+		if (entity.HasComponent<TransformComponent>())
+		{
+			auto& trans = entity.GetComponent<TransformComponent>().transform;
+			ImGui::DragFloat3("Position", glm::value_ptr(trans[3]), 0.1f);
+		}
 	}
 
 }

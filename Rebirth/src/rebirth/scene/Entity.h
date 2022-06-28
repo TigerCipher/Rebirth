@@ -51,7 +51,8 @@ namespace rebirth
 		template<typename T>
 		bool HasComponent()
 		{
-			return mScene->mRegistry.any_of<T>(mId);
+			if(mId != entt::null) return mScene->mRegistry.any_of<T>(mId);
+			return false;
 		}
 
 		template<typename T>
@@ -61,9 +62,8 @@ namespace rebirth
 			mScene->mRegistry.remove<T>(mId);
 		}
 
-		operator uint32() { return (uint32)mId; }
-		operator const uint32() const { return (uint32)mId; }
 		operator bool() const { return mId != entt::null; }
+		operator uint32() const { return (uint32)mId; }
 
 		bool operator==(const Entity& other)
 		{
