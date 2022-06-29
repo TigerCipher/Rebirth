@@ -31,7 +31,7 @@
 class Sandbox final : public rebirth::Application
 {
 public:
-	Sandbox()
+	Sandbox() : Application("Sandbox", 1920, 1080)
 	{
 		//PushLayer(new SampleLayer());
 		PushLayer(new Sandbox2D());

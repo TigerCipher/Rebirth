@@ -32,7 +32,7 @@ namespace rebirth
 	class ReeditApp final : public Application
 	{
 	public:
-		ReeditApp() : Application("Rebirth Reedit")
+		ReeditApp() : Application("Rebirth Reedit", 2560, 1440)
 		{
 			PushLayer(new EditorLayer());
 		}

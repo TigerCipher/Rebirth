@@ -108,7 +108,7 @@ namespace rebirth
 		style.PopupRounding = 3;
 
 		style.WindowPadding = ImVec2(4, 4);
-		style.FramePadding = ImVec2(6, 4);
+		style.FramePadding = ImVec2(4, 4);
 		style.ItemSpacing = ImVec2(6, 2);
 
 		style.ScrollbarSize = 18;
@@ -142,6 +142,8 @@ namespace rebirth
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
 
+		style.ScaleAllSizes(Application::Instance().GetWindow().GetHighDPIScaleFactor());
+
 	}
 
 	ImguiLayer::ImguiLayer() : Layer("ImguiLayer") {}
@@ -168,15 +170,8 @@ namespace rebirth
 		//ImGui::StyleColorsDark();
 		Style();
 
-		ImGuiStyle& style = ImGui::GetStyle();
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			style.WindowRounding = 0.0f;
-			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-		}
-
 		Application& app = Application::Instance();
-		style.ScaleAllSizes(app.GetWindow().GetHighDPIScaleFactor());
+		
 		auto window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);

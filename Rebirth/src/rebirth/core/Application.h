@@ -43,7 +43,7 @@ namespace rebirth
 	{
 	public:
 
-		Application(const std::string& name = "Rebirth Game");
+		Application(const std::string& title, uint32 windowWidth, uint32 windowHeight);
 		virtual ~Application();
 
 		void Run();
