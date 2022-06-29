@@ -40,10 +40,10 @@ namespace rebirth
 		mActiveScene = createRef<Scene>();
 
 		mSquareEntity = mActiveScene->CreateEntity("Square");
-		mSquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 8.5f, 0.4f, 1.0f });
+		mSquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 0.85f, 0.4f, 1.0f });
 
 		auto sq2 = mActiveScene->CreateEntity("Red Square");
-		sq2.AddComponent<SpriteComponent>(glm::vec4{ 8.8f, 2.5f, 0.2f, 1.0f });
+		sq2.AddComponent<SpriteComponent>(glm::vec4{ 0.85f, 0.25f, 0.2f, 1.0f });
 
 
 		mCameraEntity = mActiveScene->CreateEntity("Camera");
