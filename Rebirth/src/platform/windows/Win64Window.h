@@ -46,12 +46,11 @@ namespace rebirth
 		void SetEventCallback(const EventCallbackFn& callback) override { mData.eventCallback = callback; }
 
 		void SetVSync(bool enabled) override;
-
 		bool IsVSync() const override;
 
-		void* GetNativeWindow() const override { return mWindow; }
+		float GetHighDPIScaleFactor() const override { return mHighDpiScaleFactor; }
 
-	
+		void* GetNativeWindow() const override { return mWindow; }
 	private:
 		GLFWwindow* mWindow;
 		Scope<GraphicsContext> mContext;
@@ -65,6 +64,7 @@ namespace rebirth
 		};
 
 		WindowData mData;
+		float mHighDpiScaleFactor = 1.0f;
 
 		virtual void Init(const WindowProperties& props);
 		virtual void Shutdown();

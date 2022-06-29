@@ -106,6 +106,17 @@ namespace rebirth
 			glfwSetErrorCallback(GlfwErrorCallback);
 		}
 
+		// Set up high dpi factor scale
+		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+		float xScale, yScale;
+		glfwGetMonitorContentScale(monitor, &xScale, &yScale);
+
+		if (xScale > 1.0f || yScale > 1.0f)
+		{
+			mHighDpiScaleFactor = xScale;
+			glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+		}
+
 #ifdef RB_DEBUG
 		if (Renderer::GetAPI() == RendererAPI::API::OPENGL)
 		{
