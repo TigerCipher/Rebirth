@@ -13,3 +13,6 @@
 [submodule "Rebirth/libs/glm"]
 	path = Rebirth/libs/glm
 	url = https://github.com/g-truc/glm
+[submodule "Rebirth/libs/yaml-cpp"]
+	path = Rebirth/libs/yaml-cpp
+	url = https://github.com/TigerCipher/yaml-cpp
