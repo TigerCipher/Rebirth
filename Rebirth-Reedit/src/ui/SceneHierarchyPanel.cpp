@@ -23,7 +23,7 @@
 
 #include "SceneHierarchyPanel.h"
 
-#include "../util/UIHelper.h"
+#include "util/UIHelper.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>

@@ -12,4 +12,4 @@ obj/
 *.json
 
 # Exceptions
-!/vendor/bin/
+!/vendor/premake/bin/
