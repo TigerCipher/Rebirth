@@ -246,7 +246,6 @@ namespace rebirth
 		ImGui::Text("Quads: %d", stats.quads);
 		ImGui::Text("Vertex Count: %d", stats.GetVertCount());
 		ImGui::Text("Index Count: %d", stats.GetIndicesCount());
-
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });

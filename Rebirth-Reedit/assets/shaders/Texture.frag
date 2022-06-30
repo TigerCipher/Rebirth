@@ -1,10 +1,10 @@
-#version 330 core
+#version 450 core
 
 layout(location=0) out vec4 color;
 
 in vec2 vTexCoord;
 in vec4 vColor;
-in float vTexIndex;
+in flat float vTexIndex;
 
 uniform sampler2D uTextures[32];
 
