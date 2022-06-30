@@ -15,35 +15,29 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Framebuffer.cpp
-// Date File Created: 6/26/2022
+// File Name: SceneSerializer.h
+// Date File Created: 6/29/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-#include "rbpch.h"
-#include "Framebuffer.h"
+#pragma once
 
-#include "Renderer.h"
-#include "platform/opengl/OpenGLFramebuffer.h"
+#include "Scene.h"
 
 namespace rebirth
 {
-
-	Ref<Framebuffer> Framebuffer::Create(const FramebufferDesc& spec)
+	class SceneSerializer
 	{
-		switch (Renderer::GetAPI())
-		{
-			case RendererAPI::API::NONE:
-			{
-				RB_CORE_ASSERT(false, "Must use a graphics API");
-				return nullptr;
-			}
+	public:
+		SceneSerializer(const Ref<Scene>& scene);
 
-			case RendererAPI::API::OPENGL: return createRef<OpenGLFramebuffer>(spec);
-		}
+		void SerializeToYaml(const std::string& filepath);
+		void SerializeToBinary(const std::string& filepath);
 
-		RB_CORE_ASSERT(false, "Unknown graphics API");
-		return nullptr;
-	}
-
+		bool DeserializeFromYaml(const std::string& filepath);
+		bool DeserializeFromBinary(const std::string& filepath);
+	private:
+		Ref<Scene> mScene;
+	};
 }
+

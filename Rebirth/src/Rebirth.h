@@ -61,6 +61,8 @@
 #include "rebirth/scene/Components.h"
 #include "rebirth/scene/Entity.h"
 #include "rebirth/scene/ScriptableEntity.h"
+#include "rebirth/scene/SceneSerializer.h"
+
 
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"

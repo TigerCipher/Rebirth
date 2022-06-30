@@ -117,6 +117,8 @@ namespace rebirth
 			glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 		}
 
+		glfwWindowHint(GLFW_DECORATED, props.decorated);
+
 #ifdef RB_DEBUG
 		if (Renderer::GetAPI() == RendererAPI::API::OPENGL)
 		{
@@ -127,6 +129,7 @@ namespace rebirth
 		mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
 			nullptr, nullptr);
 		gGlfwWindowCount++;
+
 
 		const int maxWidth = GetSystemMetrics(SM_CXSCREEN);
 		const int maxHeight = GetSystemMetrics(SM_CYSCREEN);

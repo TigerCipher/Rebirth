@@ -31,7 +31,7 @@ namespace rebirth
 
 	static constexpr uint32 sMaxFramebufferSize = 8192;
 
-	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec) :
+	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferDesc& spec) :
 		mSpecification(spec)
 	{
 		Invalidate();

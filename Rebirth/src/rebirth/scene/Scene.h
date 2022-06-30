@@ -53,6 +53,7 @@ namespace rebirth
 		uint32 mViewportHeight = 0;
 
 		friend class Entity;
+		friend class SceneSerializer;
 		friend class SceneHierarchyPanel; // In Rebirth-Reedit
 	};
 }

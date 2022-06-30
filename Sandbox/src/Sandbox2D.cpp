@@ -31,7 +31,7 @@ void Sandbox2D::OnAttach()
 	RB_PROFILE_FUNC();
 	mTexture = rebirth::Texture2D::Create("assets/textures/default.png");
 
-	rebirth::FramebufferSpecification spec;
+	rebirth::FramebufferDesc spec;
 	spec.width = 1920;
 	spec.height = 1080;
 	//mFramebuffer = rebirth::Framebuffer::Create(spec);

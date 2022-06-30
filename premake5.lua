@@ -1,5 +1,5 @@
 workspace "Rebirth"
-	architecture "x64"
+	architecture "x86_64"
 	startproject "Rebirth-Reedit"
 
 	configurations
@@ -24,12 +24,14 @@ IncludeDir["ImGui"] = "Rebirth/libs/imgui"
 IncludeDir["glm"] = "Rebirth/libs/glm"
 IncludeDir["stb_image"] = "Rebirth/libs/stb_image"
 IncludeDir["entt"] = "Rebirth/libs/entt/include"
+IncludeDir["yaml_cpp"] = "Rebirth/libs/yaml-cpp/include"
 
 -- Includes the premake file added to the glfw fork/submodule
 group "Dependencies"
 	include "Rebirth/libs/glfw"
 	include "Rebirth/libs/Glad"
 	include "Rebirth/libs/imgui"
+	include "Rebirth/libs/yaml-cpp"
 group ""
 
 project "Rebirth"
@@ -40,7 +42,7 @@ project "Rebirth"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
+	objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "rbpch.h"
 	pchsource "Rebirth/src/rbpch.cpp"
@@ -63,6 +65,7 @@ project "Rebirth"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}",
 	}
 
 	links
@@ -70,6 +73,7 @@ project "Rebirth"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 
@@ -121,7 +125,7 @@ project "Sandbox"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
+	objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
@@ -176,7 +180,7 @@ project "Rebirth-Reedit"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
+	objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{

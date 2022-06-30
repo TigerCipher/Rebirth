@@ -35,6 +35,7 @@ namespace rebirth
 		std::string title;
 		uint32 width;
 		uint32 height;
+		bool decorated = true;
 
 		WindowProperties(const std::string& pTitle = "Rebirth Engine", uint32 pWidth = 1920, uint32 pHeight = 1080) : title(pTitle), width(pWidth), height(pHeight) {}
 	};

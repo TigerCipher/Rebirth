@@ -26,7 +26,7 @@
 namespace rebirth
 {
 
-	struct FramebufferSpecification
+	struct FramebufferDesc
 	{
 		uint32 width, height;
 		uint32 samples = 1;
@@ -47,8 +47,8 @@ namespace rebirth
 		virtual void Resize(uint32 width, uint32 height) = 0;
 
 		virtual uint32 GetColorAttachmentID() const = 0;
-		virtual const FramebufferSpecification& GetSpecification() const = 0;
+		virtual const FramebufferDesc& GetSpecification() const = 0;
 
-		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);
+		static Ref<Framebuffer> Create(const FramebufferDesc& spec);
 	};
 }

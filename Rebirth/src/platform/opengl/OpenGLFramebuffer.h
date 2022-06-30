@@ -29,7 +29,7 @@ namespace rebirth
 	class OpenGLFramebuffer : public Framebuffer
 	{
 	public:
-		OpenGLFramebuffer(const FramebufferSpecification& spec);
+		OpenGLFramebuffer(const FramebufferDesc& spec);
 		virtual ~OpenGLFramebuffer();
 
 		void Invalidate();
@@ -38,7 +38,7 @@ namespace rebirth
 
 
 		uint32 GetColorAttachmentID() const override { return mColorAttachment; }
-		const FramebufferSpecification& GetSpecification() const override
+		const FramebufferDesc& GetSpecification() const override
 		{
 			return mSpecification;
 		}
@@ -47,7 +47,7 @@ namespace rebirth
 		void Resize(uint32 width, uint32 height) override;
 
 	private:
-		FramebufferSpecification mSpecification;
+		FramebufferDesc mSpecification;
 		uint32 mId = 0;
 
 		uint32 mColorAttachment = 0;

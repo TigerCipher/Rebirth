@@ -42,8 +42,8 @@ namespace rebirth
 	class Application
 	{
 	public:
-
 		Application(const std::string& title, uint32 windowWidth, uint32 windowHeight);
+		//Application(const WindowProperties& props) : Application(props.title, props.width, props.height) {}
 		virtual ~Application();
 
 		void Run();

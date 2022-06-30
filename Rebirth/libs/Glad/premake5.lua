@@ -4,7 +4,7 @@ language "C"
 staticruntime "on"
 
 targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-objdir ("bin_int/" .. outputdir .. "/%{prj.name}")
+objdir ("obj/" .. outputdir .. "/%{prj.name}")
 
 files
 {

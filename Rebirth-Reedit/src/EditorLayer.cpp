@@ -32,13 +32,13 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		mTexture = Texture2D::Create("assets/textures/default.png");
 
-		FramebufferSpecification spec;
-		spec.width = 1920;
-		spec.height = 1080;
+		FramebufferDesc spec;
+		spec.width = Application::Instance().GetWindow().GetWidth();
+		spec.height = Application::Instance().GetWindow().GetHeight();
 		mFramebuffer = Framebuffer::Create(spec);
 
 		mActiveScene = createRef<Scene>();
-
+#if 0
 		mSquareEntity = mActiveScene->CreateEntity("Square");
 		mSquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 0.85f, 0.4f, 1.0f });
 
@@ -95,8 +95,10 @@ namespace rebirth
 
 		mCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+#endif
 
 		mSceneHierarchyPanel.SetContext(mActiveScene);
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -108,7 +110,7 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 
-		if (FramebufferSpecification spec = mFramebuffer->GetSpecification();
+		if (FramebufferDesc spec = mFramebuffer->GetSpecification();
 			mViewportSize.x > 0.0f && mViewportSize.y > 0.0f &&
 			(spec.width != mViewportSize.x || spec.height != mViewportSize.y))
 		{
@@ -203,6 +205,18 @@ namespace rebirth
 				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
+
+				if (ImGui::MenuItem("Serialize"))
+				{
+					SceneSerializer serializer(mActiveScene);
+					serializer.SerializeToYaml("assets/scenes/test.rebirth");
+				}
+
+				if (ImGui::MenuItem("Deserialize"))
+				{
+					SceneSerializer serializer(mActiveScene);
+					serializer.DeserializeFromYaml("assets/scenes/test.rebirth");
+				}
 
 				if (ImGui::MenuItem("Exit")) Application::Instance().Close();
 				ImGui::EndMenu();
