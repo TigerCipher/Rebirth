@@ -15,47 +15,22 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Scene.h
-// Date File Created: 6/27/2022
+// File Name: PlatformUtil.h
+// Date File Created: 6/30/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+
 #pragma once
 
-#include <entt.hpp>
-
-#include "rebirth/core/Timestep.h"
+#include <string>
 
 namespace rebirth
 {
-	class Entity;
-
-	class Scene
+	class FileDialog
 	{
 	public:
-		Scene();
-		virtual ~Scene();
-
-		Entity CreateEntity(const std::string& tag = std::string());
-		void DestroyEntity(Entity entity);
-
-		void OnUpdate(Timestep ts);
-
-		void OnViewportResize(uint32 width, uint32 height);
-
-		void DestroyAll();
-
-	private:
-
-		template<typename T>
-		void OnComponentAdded(Entity entity, T& component);
-
-		entt::registry mRegistry;
-		uint32 mViewportWidth = 0;
-		uint32 mViewportHeight = 0;
-
-		friend class Entity;
-		friend class SceneSerializer;
-		friend class SceneHierarchyPanel; // In Rebirth-Reedit
+		static std::string OpenFile(const char* filters);
+		static std::string SaveFile(const char* filters);
 	};
 }

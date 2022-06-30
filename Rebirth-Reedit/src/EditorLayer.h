@@ -31,7 +31,7 @@ namespace rebirth
 	class EditorLayer : public Layer
 	{
 	public:
-		EditorLayer() : Layer("Sandbox2D"), mCameraController(1920.0f / 1080.0f, true) {}
+		EditorLayer() : Layer("EditorLayer"), mCameraController(1920.0f / 1080.0f, true) {}
 		virtual ~EditorLayer() = default;
 		void OnAttach() override;
 		void OnDetach() override;
@@ -39,9 +39,17 @@ namespace rebirth
 		void OnEvent(Event& e) override;
 		void OnImguiRender() override;
 	private:
+		bool OnKeyPressed(KeyPressedEvent& e);
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+
+
 		OrthoCameraController mCameraController;
 		bool mViewportFocused = false;
 		bool mViewportHovered = false;
+
+
 		// abstract to renderer
 		Ref<Shader> mShader;
 		Ref<VertexArray> mSquareVtxArray;

@@ -29,6 +29,9 @@ namespace rebirth
 {
 	void EditorLayer::OnAttach()
 	{
+
+
+
 		RB_PROFILE_FUNC();
 		mTexture = Texture2D::Create("assets/textures/default.png");
 
@@ -146,6 +149,9 @@ namespace rebirth
 	void EditorLayer::OnEvent(Event& e)
 	{
 		mCameraController.OnEvent(e);
+
+		EventDispatcher disp(e);
+		disp.Dispatch<KeyPressedEvent>(BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
 	}
 
 	void EditorLayer::OnImguiRender()
@@ -206,16 +212,20 @@ namespace rebirth
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
-				if (ImGui::MenuItem("Serialize"))
+				if (ImGui::MenuItem("New", "Ctrl+N"))
 				{
-					SceneSerializer serializer(mActiveScene);
-					serializer.SerializeToYaml("assets/scenes/test.rebirth");
+					NewScene();
 				}
 
-				if (ImGui::MenuItem("Deserialize"))
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 				{
-					SceneSerializer serializer(mActiveScene);
-					serializer.DeserializeFromYaml("assets/scenes/test.rebirth");
+					OpenScene();
+
+				}
+
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+				{
+					SaveSceneAs();
 				}
 
 				if (ImGui::MenuItem("Exit")) Application::Instance().Close();
@@ -256,5 +266,73 @@ namespace rebirth
 
 		ImGui::End();
 
+	}
+
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	{
+		// Non-shortcut keybinds
+
+		// Shortcuts
+		if (e.GetRepeatCount() > 0) return false;
+
+		// modifiers
+		bool control = Input::IsKeyPressed(RB_KEY_LEFT_CONTROL) || Input::IsKeyPressed(RB_KEY_RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(RB_KEY_LEFT_SHIFT) || Input::IsKeyPressed(RB_KEY_RIGHT_SHIFT);
+
+		switch (e.GetKeyCode())
+		{
+			case RB_KEY_N:
+				if (control)
+				{
+					NewScene();
+				}
+				break;
+			case RB_KEY_O:
+				if (control)
+				{
+					OpenScene();
+				}
+				break;
+			case RB_KEY_S:
+				if (control && shift)
+				{
+					SaveSceneAs();
+				}
+				break;
+			default: break;
+		}
+	}
+
+	void EditorLayer::NewScene()
+	{
+		mActiveScene = createRef<Scene>();
+		mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialog::OpenFile("Rebirth Scene (*.rebirth)\0*.rebirth\0");
+		if (!filepath.empty())
+		{
+			//mActiveScene->DestroyAll();
+			mActiveScene = createRef<Scene>();
+			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+			mSceneHierarchyPanel.SetContext(mActiveScene);
+
+			SceneSerializer serializer(mActiveScene);
+			serializer.DeserializeFromYaml(filepath);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialog::SaveFile("Rebirth Scene (*.rebirth)\0*.rebirth\0");
+		if (!filepath.empty())
+		{
+			SceneSerializer serializer(mActiveScene);
+			serializer.SerializeToYaml(filepath);
+		}
 	}
 }

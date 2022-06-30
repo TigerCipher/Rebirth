@@ -29,6 +29,9 @@
 #include "rebirth/core/Timestep.h"
 #include "rebirth/core/OrthoCameraController.h"
 
+// Util
+#include "rebirth/util/PlatformUtil.h"
+
 // Debug
 #include "rebirth/debug/Log.h"
 #include "rebirth/debug/Profiler.h"

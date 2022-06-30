@@ -123,6 +123,11 @@ namespace rebirth
 	}
 
 
+	void Scene::DestroyAll()
+	{
+		mRegistry.clear();
+	}
+
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{

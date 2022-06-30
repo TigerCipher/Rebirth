@@ -31,6 +31,8 @@
 namespace rebirth
 {
 
+	//static bool sDirtyCameraFlag = false;
+
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
 	{
 		SetContext(scene);
@@ -39,6 +41,7 @@ namespace rebirth
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& scene)
 	{
 		mContext = scene;
+		mSelectionContext = {};
 	}
 
 	void SceneHierarchyPanel::OnImguiRender()
@@ -50,6 +53,19 @@ namespace rebirth
 				Entity e{ entity, mContext.get() };
 				DrawEntityNode(e);
 			});
+
+		//if (sDirtyCameraFlag)
+		//{
+		//	mContext->mRegistry.each([&](auto ent)
+		//		{
+		//			Entity e{ ent, mContext.get() };
+		//			if (e.HasComponent<CameraComponent>())
+		//			{
+		//				auto& cc = e.GetComponent<CameraComponent>();
+		//				cc.primary = false;
+		//			}
+		//		});
+		//}
 
 		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
 		{
@@ -232,7 +248,10 @@ namespace rebirth
 				auto& cam = camComp.camera;
 
 				// #TODO If checked, make other cameras go to not primary
-				ImGui::Checkbox("Primary", &camComp.primary);
+				if (ImGui::Checkbox("Primary", &camComp.primary))
+				{
+					//sDirtyCameraFlag = camComp.primary;
+				}
 
 				const char* projStr[] = { "Perspective", "Orthographic" };
 				const char* currentProjStr = projStr[(int)cam.GetProjectionType()];
