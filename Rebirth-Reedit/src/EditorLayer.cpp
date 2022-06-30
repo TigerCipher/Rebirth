@@ -47,11 +47,11 @@ namespace rebirth
 
 
 		mCameraEntity = mActiveScene->CreateEntity("Camera");
-		mCameraEntity.AddComponent<CameraComponent>();
+		auto& c = mCameraEntity.AddComponent<CameraComponent>();
+		c.primary = true;
 
 		mSecondCamera = mActiveScene->CreateEntity("Camera 2");
-		auto& c = mSecondCamera.AddComponent<CameraComponent>();
-		c.primary = false;
+		mSecondCamera.AddComponent<CameraComponent>();
 
 		class CameraController : public ScriptableEntity
 		{

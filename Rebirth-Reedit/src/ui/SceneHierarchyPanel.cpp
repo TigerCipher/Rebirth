@@ -163,6 +163,22 @@ namespace rebirth
 
 	}
 
+
+	template<typename T>
+	static int AddComponent(Entity& entity, const std::string& label)
+	{
+		if (!entity.HasComponent<T>())
+		{
+			if (ImGui::MenuItem(label.c_str()))
+			{
+				entity.AddComponent<T>();
+				ImGui::CloseCurrentPopup();
+			}
+			return 1;
+		}
+		return 0;
+	}
+
 	void SceneHierarchyPanel::DrawComponents(Entity entity)
 	{
 		if (entity.HasComponent<TagComponent>())
@@ -184,26 +200,16 @@ namespace rebirth
 			ImGui::OpenPopup("AddComponent");
 		if (ImGui::BeginPopup("AddComponent"))
 		{
-			if (ImGui::MenuItem("Camera"))
-			{
-				if(!mSelectionContext.HasComponent<CameraComponent>())
-					mSelectionContext.AddComponent<CameraComponent>();
-				else
-				{
-					RB_CORE_WARN("Entity [{}] already contains this type of component", (uint32)entity);
-				}
-				ImGui::CloseCurrentPopup();
-			}
+			int numComponentsAvailable = 0;
+			numComponentsAvailable += AddComponent<CameraComponent>(mSelectionContext, "Camera");
+			numComponentsAvailable += AddComponent<SpriteComponent>(mSelectionContext, "Sprite");
 
-			if (ImGui::MenuItem("Sprite"))
+			if (numComponentsAvailable == 0)
 			{
-				if(!mSelectionContext.HasComponent<SpriteComponent>())
-					mSelectionContext.AddComponent<SpriteComponent>();
-				else
+				if (ImGui::MenuItem("No Available Components"))
 				{
-					RB_CORE_WARN("Entity [{}] already contains this type of component", (uint32)entity);
+					ImGui::CloseCurrentPopup();
 				}
-				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::EndPopup();
@@ -225,6 +231,7 @@ namespace rebirth
 			{
 				auto& cam = camComp.camera;
 
+				// #TODO If checked, make other cameras go to not primary
 				ImGui::Checkbox("Primary", &camComp.primary);
 
 				const char* projStr[] = { "Perspective", "Orthographic" };

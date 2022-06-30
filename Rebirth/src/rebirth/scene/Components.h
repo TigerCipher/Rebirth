@@ -72,7 +72,7 @@ namespace rebirth
 	struct CameraComponent
 	{
 		SceneCamera camera;
-		bool primary = true;
+		bool primary = false;
 		bool fixedAspectRatio = false;
 
 		CameraComponent() = default;
