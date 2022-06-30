@@ -1,5 +1,5 @@
 project "Rebirth"
-	location "Rebirth"
+	--location "Rebirth"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"

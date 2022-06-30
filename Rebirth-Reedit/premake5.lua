@@ -1,6 +1,6 @@
 
 project "Rebirth-Reedit"
-	location "Rebirth-Reedit"
+	--location "Rebirth-Reedit"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"

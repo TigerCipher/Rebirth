@@ -186,13 +186,23 @@ namespace rebirth
 		{
 			if (ImGui::MenuItem("Camera"))
 			{
-				mSelectionContext.AddComponent<CameraComponent>();
+				if(!mSelectionContext.HasComponent<CameraComponent>())
+					mSelectionContext.AddComponent<CameraComponent>();
+				else
+				{
+					RB_CORE_WARN("Entity [{}] already contains this type of component", (uint32)entity);
+				}
 				ImGui::CloseCurrentPopup();
 			}
 
 			if (ImGui::MenuItem("Sprite"))
 			{
-				mSelectionContext.AddComponent<SpriteComponent>();
+				if(!mSelectionContext.HasComponent<SpriteComponent>())
+					mSelectionContext.AddComponent<SpriteComponent>();
+				else
+				{
+					RB_CORE_WARN("Entity [{}] already contains this type of component", (uint32)entity);
+				}
 				ImGui::CloseCurrentPopup();
 			}
 
