@@ -4,19 +4,16 @@
 [submodule "Rebirth/libs/glfw"]
 	path = vendor/deps/glfw
 	url = https://github.com/TigerCipher/glfw
-	ignore = dirty
 [submodule "Rebirth/libs/imgui"]
 	path = vendor/deps/imgui
 	url = https://github.com/TigerCipher/imgui
 	branch = docking
-	ignore = dirty
 [submodule "Rebirth/libs/glm"]
 	path = vendor/deps/glm
 	url = https://github.com/g-truc/glm
 [submodule "Rebirth/libs/yaml-cpp"]
 	path = vendor/deps/yaml-cpp
 	url = https://github.com/TigerCipher/yaml-cpp
-	ignore = dirty
 [submodule "vendor/deps/ImGuizmo"]
 	path = vendor/deps/ImGuizmo
 	url = https://github.com/TigerCipher/ImGuizmo.git
