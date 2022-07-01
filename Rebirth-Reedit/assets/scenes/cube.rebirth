@@ -2,42 +2,33 @@ Scene: Untitled
 Entities:
   - Entity: 3425435435435
     TagComponent:
-      Tag: Top
+      Tag: Left
     TransformComponent:
-      Translation: [-0.25, 0.600000024, -3.9000001]
-      Rotation: [2.09439516, 0, 0.785398185]
+      Translation: [-0.354999989, 0, 0.349999994]
+      Rotation: [0, -0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteComponent:
-      Color: [1, 0.33096087, 0.33096087, 1]
+      Color: [0, 1, 0.917646885, 1]
   - Entity: 3425435435435
     TagComponent:
       Tag: Right
     TransformComponent:
-      Translation: [0.104999997, 0, -3.79999995]
-      Rotation: [0.436332315, 0.785398185, 0]
+      Translation: [0.351999998, 0, 0.349999994]
+      Rotation: [0, 0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteComponent:
-      Color: [0.665480435, 0, 0, 1]
-  - Entity: 3425435435435
-    TagComponent:
-      Tag: Left
-    TransformComponent:
-      Translation: [-0.600000024, 0, -3.79999995]
-      Rotation: [0.436332315, -0.785398185, 0]
-      Scale: [1, 1, 1]
-    SpriteComponent:
-      Color: [1, 0, 0, 1]
+      Color: [0, 0.588235319, 0.539792299, 1]
   - Entity: 3425435435435
     TagComponent:
       Tag: Camera
     TransformComponent:
-      Translation: [0, 0, 0]
-      Rotation: [0, 0, 0]
+      Translation: [0, 1.70000005, 4]
+      Rotation: [-0.404916406, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
       Camera:
         ProjectionType: 0
-        PerspectiveFoV: 0.785398185
+        PerspectiveFoV: 0.52359879
         PerspectiveNear: 0.00999999978
         PerspectiveFar: 1000
         OrthographicSize: 10
@@ -45,3 +36,12 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
+  - Entity: 3425435435435
+    TagComponent:
+      Tag: Top
+    TransformComponent:
+      Translation: [0, 0.5, 0]
+      Rotation: [1.57079637, 0.785398185, 0]
+      Scale: [1, 1, 1]
+    SpriteComponent:
+      Color: [0, 0.874509811, 0.802491188, 1]

@@ -128,6 +128,19 @@ namespace rebirth
 		mRegistry.clear();
 	}
 
+	Entity Scene::GetPrimaryCameraEntity()
+	{
+		auto view = mRegistry.view<CameraComponent>();
+		for (auto e : view)
+		{
+			const auto& cam = view.get<CameraComponent>(e);
+			if (cam.primary)
+				return Entity{ e, this };
+		}
+
+		return {};
+	}
+
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{
@@ -163,6 +176,8 @@ namespace rebirth
 	{
 
 	}
+
+
 
 }
 

@@ -24,6 +24,7 @@
 #include "EditorLayer.h"
 
 #include <imgui/imgui.h>
+#include <ImGuizmo/ImGuizmo.h>
 
 namespace rebirth
 {
@@ -252,7 +253,11 @@ namespace rebirth
 		ImGui::Begin("Viewport");
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
-		Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
+
+		if(!ImGui::IsAnyItemActive())
+			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused && !mViewportHovered);
+		else
+			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
 
 		ImVec2 viewPanelSize = ImGui::GetContentRegionAvail();
 
@@ -260,6 +265,46 @@ namespace rebirth
 
 		uint32 textureID = mFramebuffer->GetColorAttachmentID();
 		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity && mGizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			float winWidth = (float)ImGui::GetWindowWidth();
+			float winHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, winWidth, winHeight);
+
+			auto camEntity = mActiveScene->GetPrimaryCameraEntity();
+			const auto& cam = camEntity.GetComponent<CameraComponent>().camera;
+			const glm::mat4& camProj = cam.GetProjection();
+			glm::mat4 camView = glm::inverse(camEntity.GetComponent<TransformComponent>().GetTransform());
+
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			bool snap = Input::IsKeyPressed(RB_KEY_LEFT_ALT);
+			float snapValue = mGizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : mGizmoType == ImGuizmo::OPERATION::SCALE ? 0.25f : 0.5f; // 45 for rotation, 0.25 for scale, 0.5 for translation
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj), (ImGuizmo::OPERATION)mGizmoType,
+				ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::Decompose(transform, translation, rotation, scale);
+				glm::vec3 deltaRot = rotation - tc.rotation;
+				tc.translation = translation;
+				tc.rotation += deltaRot;
+				tc.scale = scale;
+			}
+
+		}
+
+
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 
@@ -299,6 +344,20 @@ namespace rebirth
 					SaveSceneAs();
 				}
 				break;
+
+			case RB_KEY_Q:
+				mGizmoType = -1;
+				break;
+			case RB_KEY_W:
+				mGizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case RB_KEY_E:
+				mGizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case RB_KEY_R:
+				mGizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+
 			default: break;
 		}
 	}

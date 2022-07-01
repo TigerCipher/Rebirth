@@ -15,7 +15,8 @@ project "Rebirth"
 	{
 		"src/**.h",
 		"src/**.cpp",
-		"%{wks.location}/vendor/deps/stb_image/stb_image.cpp"
+		"%{wks.location}/vendor/deps/stb_image/stb_image.cpp",
+		"%{wks.location}/vendor/deps/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	includedirs
@@ -29,6 +30,7 @@ project "Rebirth"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}",
 	}
 
 	links
@@ -40,10 +42,13 @@ project "Rebirth"
 		"opengl32.lib"
 	}
 
+
 	defines {
 		"_CRT_SECURE_NO_WARNINGS",
 		"GLFW_INCLUDE_NONE"
 	}
+	filter "files:../vendor/deps/ImGuizmo/**.cpp"
+		flags {"NoPCH"}
 
 	filter "system:windows"
 		systemversion "latest"

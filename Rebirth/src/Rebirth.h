@@ -31,6 +31,7 @@
 
 // Util
 #include "rebirth/util/PlatformUtil.h"
+#include "rebirth/util/MathUtil.h"
 
 // Debug
 #include "rebirth/debug/Log.h"

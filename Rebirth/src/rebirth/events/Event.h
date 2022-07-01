@@ -100,7 +100,7 @@ namespace rebirth
 		{
 			if(mEvent.GetEventType() == T::GetStaticType())
 			{
-				mEvent.mHandled = func(static_cast<T&>(mEvent));
+				mEvent.mHandled |= func(static_cast<T&>(mEvent));
 				return true;
 			}
 

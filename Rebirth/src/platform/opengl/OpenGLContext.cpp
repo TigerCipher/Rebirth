@@ -26,9 +26,9 @@
 
 #include "OpenGLContext.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <glad/glad.h>
 
 void GLAPIENTRY GLErrorCallback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
