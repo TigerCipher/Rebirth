@@ -37,6 +37,15 @@ namespace rebirth
 			OPENGL
 		};
 
+		struct RenderCapabilities
+		{
+			std::string version;
+			std::string renderer;
+			std::string vendor;
+			int maxSamples;
+			float maxAniostropy;
+		};
+
 		virtual ~RendererAPI() = default;
 
 		virtual void Init() = 0;
@@ -48,6 +57,12 @@ namespace rebirth
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count = 0) = 0;
 
 		static API GetAPI() { return sApi;  }
+
+		static RenderCapabilities& GetCapabilities()
+		{
+			static RenderCapabilities capabilities;
+			return capabilities;
+		}
 
 	private:
 		static API sApi;

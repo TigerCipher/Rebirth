@@ -43,7 +43,7 @@ namespace rebirth
 		static const uint32 MAX_QUADS = 10000;
 		static const uint32 MAX_VERTS = MAX_QUADS * 4;
 		static const uint32 MAX_INDICES = MAX_QUADS * 6;
-		static const uint32 MAX_TEXTURE_SLOTS = 32; // #TODO: Detect max texture slots from gpu?
+		static const uint32 MAX_TEXTURE_SLOTS = 32; // #TODO We have RendererAPI::GetCapabilities().maxSamples
 
 		Ref<VertexArray> vertexArray;
 		Ref<VertexBuffer> vertexBuffer;

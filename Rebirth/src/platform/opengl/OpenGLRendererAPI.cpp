@@ -36,6 +36,14 @@ namespace rebirth
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
+
+		auto& capabilities = RendererAPI::GetCapabilities();
+		capabilities.version = (const char*)glGetString(GL_VERSION);
+		capabilities.renderer = (const char*)glGetString(GL_RENDERER);
+		capabilities.vendor = (const char*)glGetString(GL_VENDOR);
+
+		glGetIntegerv(GL_MAX_SAMPLES, &capabilities.maxSamples);
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &capabilities.maxAniostropy);
 	}
 
 	void OpenGLRendererAPI::SetViewport(const uint32 x, const uint32 y, const uint32 width, const uint32 height)

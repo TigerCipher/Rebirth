@@ -248,20 +248,34 @@ namespace rebirth
 		ImGui::Text("Vertex Count: %d", stats.GetVertCount());
 		ImGui::Text("Index Count: %d", stats.GetIndicesCount());
 
-		ImGui::Separator();
-		ImGui::Separator();
-		ImGui::Separator();
+		for (int i = 0; i < 6; i++)
+		{
+			ImGui::Separator();
+		}
 		ImGui::Text("Performance Stats:");
 		ImGui::Text("Frametime (seconds): %f", Statistics::GetRenderStats().frameTime);
 		ImGui::Text("Frametime (milliseconds): %f", Statistics::GetRenderStats().frameTime * 1000.0f);
 		ImGui::Text("FPS: %d", Statistics::GetRenderStats().fps);
 		bool isVsyncOn = Application::Instance().GetWindow().IsVSync();
-		const char* vsyncStatus =  isVsyncOn ? "ENABLED" : "DISABLED";
+		const char* vsyncStatus = isVsyncOn ? "ENABLED" : "DISABLED";
 		ImGui::Text("VSync Status: %s", vsyncStatus);
 		if (ImGui::Button("Toggle VSync"))
 		{
 			Application::Instance().GetWindow().SetVSync(!isVsyncOn);
 		}
+
+		for (int i = 0; i < 6; i++)
+		{
+			ImGui::Separator();
+		}
+
+		ImGui::Text("Renderer Information:");
+		ImGui::Text("Vendor: %s", RendererAPI::GetCapabilities().vendor.c_str());
+		ImGui::Text("Renderer: %s", RendererAPI::GetCapabilities().renderer.c_str());
+		ImGui::Text("Version: %s", RendererAPI::GetCapabilities().version.c_str());
+		ImGui::Text("Max Samples: %d", RendererAPI::GetCapabilities().maxSamples);
+		ImGui::Text("Max Aniostropy: %f", RendererAPI::GetCapabilities().maxAniostropy);
+
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -269,7 +283,7 @@ namespace rebirth
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
 
-		if(!ImGui::IsAnyItemActive())
+		if (!ImGui::IsAnyItemActive())
 			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused && !mViewportHovered);
 		else
 			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
