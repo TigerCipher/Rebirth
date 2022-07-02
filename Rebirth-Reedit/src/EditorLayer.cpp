@@ -247,6 +247,21 @@ namespace rebirth
 		ImGui::Text("Quads: %d", stats.quads);
 		ImGui::Text("Vertex Count: %d", stats.GetVertCount());
 		ImGui::Text("Index Count: %d", stats.GetIndicesCount());
+
+		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::Separator();
+		ImGui::Text("Performance Stats:");
+		ImGui::Text("Frametime (seconds): %f", Statistics::GetRenderStats().frameTime);
+		ImGui::Text("Frametime (milliseconds): %f", Statistics::GetRenderStats().frameTime * 1000.0f);
+		ImGui::Text("FPS: %d", Statistics::GetRenderStats().fps);
+		bool isVsyncOn = Application::Instance().GetWindow().IsVSync();
+		const char* vsyncStatus =  isVsyncOn ? "ENABLED" : "DISABLED";
+		ImGui::Text("VSync Status: %s", vsyncStatus);
+		if (ImGui::Button("Toggle VSync"))
+		{
+			Application::Instance().GetWindow().SetVSync(!isVsyncOn);
+		}
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });

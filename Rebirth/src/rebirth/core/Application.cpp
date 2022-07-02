@@ -27,6 +27,7 @@
 
 #include "rebirth/renderer/Renderer.h"
 #include "rebirth/util/PlatformUtil.h"
+#include "rebirth/debug/Statistics.h"
 
 // temp
 #include <glfw/glfw3.h>
@@ -44,6 +45,7 @@ namespace rebirth
 		Time::Init();
 		mWindow = Window::Create({title, windowWidth, windowHeight});
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		//mWindow->SetVSync(false);
 
 
 		Renderer::Init();
@@ -69,11 +71,15 @@ namespace rebirth
 	void Application::Run()
 	{
 		RB_PROFILE_FUNC();
+		float accumulator = 0;
+		int fps = 0;
 		while (mRunning)
 		{
 			RB_PROFILE_SCOPE("Run Loop");
 			float time = (float)Time::GetTime();
 			Timestep timestep = time - mLastFrameTime;
+			Statistics::SetFrameTime(timestep);
+			accumulator += timestep;
 			mLastFrameTime = time;
 
 			if (!mMinimized)
@@ -94,8 +100,15 @@ namespace rebirth
 				mImguiLayer->End();
 			}
 
-
+			++fps;
 			mWindow->OnUpdate();
+
+			if (accumulator >= 1.0f)
+			{
+				Statistics::SetFPS(fps);
+				accumulator = 0;
+				fps = 0;
+			}
 		}
 	}
 
