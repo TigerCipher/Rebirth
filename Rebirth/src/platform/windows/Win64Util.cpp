@@ -86,4 +86,35 @@ namespace rebirth
 
 		return std::string();
 	}
+
+	struct TimerData
+	{
+		uint64 frequency = 0;
+		uint64 offset = 0;
+	};
+
+	static TimerData sData;
+
+	void Time::Init()
+	{
+		QueryPerformanceFrequency((LARGE_INTEGER*) &sData.frequency);
+		sData.offset = GetTimerValue();
+	}
+
+	uint64 Time::GetTimerValue()
+	{
+		uint64 ret;
+		QueryPerformanceCounter((LARGE_INTEGER*)&ret);
+		return ret;
+	}
+
+	uint64 Time::GetTimerFrequency()
+	{
+		return sData.frequency;
+	}
+
+	double Time::GetTime()
+	{
+		return (double)(GetTimerValue() - sData.offset) / GetTimerFrequency();
+	}
 }

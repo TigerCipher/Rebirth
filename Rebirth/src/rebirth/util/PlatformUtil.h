@@ -33,4 +33,14 @@ namespace rebirth
 		static std::string OpenFile(const char* filters);
 		static std::string SaveFile(const char* filters);
 	};
+
+	class Time
+	{
+	public:
+		static void Init();
+		static uint64 GetTimerValue();
+		static uint64 GetTimerFrequency();
+		static double GetTime();
+	};
+
 }

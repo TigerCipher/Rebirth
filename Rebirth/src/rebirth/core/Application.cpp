@@ -26,6 +26,7 @@
 #include "Application.h"
 
 #include "rebirth/renderer/Renderer.h"
+#include "rebirth/util/PlatformUtil.h"
 
 // temp
 #include <glfw/glfw3.h>
@@ -40,6 +41,7 @@ namespace rebirth
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
 		RB_CORE_TRACE("Creating core application");
 		sInstance = this;
+		Time::Init();
 		mWindow = Window::Create({title, windowWidth, windowHeight});
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
@@ -70,8 +72,7 @@ namespace rebirth
 		while (mRunning)
 		{
 			RB_PROFILE_SCOPE("Run Loop");
-			// #TODO: Abstract getTime to platform/opengl
-			float time = static_cast<float>(glfwGetTime());
+			float time = (float)Time::GetTime();
 			Timestep timestep = time - mLastFrameTime;
 			mLastFrameTime = time;
 
