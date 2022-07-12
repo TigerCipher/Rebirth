@@ -101,6 +101,7 @@ namespace rebirth
 		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
 
+		mEditorCamera = EditorCamera(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 
 	}
@@ -120,14 +121,16 @@ namespace rebirth
 		{
 			mFramebuffer->Resize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 			mCameraController.ResizeBounds(mViewportSize.x, mViewportSize.y);
-
+			mEditorCamera.SetViewportSize(mViewportSize.x, mViewportSize.y);
 			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 		}
 
 		if (mViewportFocused)
 		{
 			mCameraController.OnUpdate(ts);
+			mEditorCamera.OnUpdate(ts);
 		}
+
 
 
 		Renderer2D::ResetStats();
@@ -139,7 +142,7 @@ namespace rebirth
 
 
 		//Renderer2D::BeginScene(mCameraController.GetCamera());
-		mActiveScene->OnUpdate(ts);
+		mActiveScene->OnUpdateEditor(ts, mEditorCamera);
 
 		//Renderer2D::EndScene();
 
@@ -150,6 +153,7 @@ namespace rebirth
 	void EditorLayer::OnEvent(Event& e)
 	{
 		mCameraController.OnEvent(e);
+		mEditorCamera.OnEvent(e);
 
 		EventDispatcher disp(e);
 		disp.Dispatch<KeyPressedEvent>(BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
@@ -304,15 +308,21 @@ namespace rebirth
 			float winHeight = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, winWidth, winHeight);
 
-			auto camEntity = mActiveScene->GetPrimaryCameraEntity();
+
+			// runtime
+			/*auto camEntity = mActiveScene->GetPrimaryCameraEntity();
 			const auto& cam = camEntity.GetComponent<CameraComponent>().camera;
 			const glm::mat4& camProj = cam.GetProjection();
-			glm::mat4 camView = glm::inverse(camEntity.GetComponent<TransformComponent>().GetTransform());
+			glm::mat4 camView = glm::inverse(camEntity.GetComponent<TransformComponent>().GetTransform());*/
+
+			//editor
+			const glm::mat4& camProj = mEditorCamera.GetProjection();
+			glm::mat4 camView = mEditorCamera.GetViewMatrix();
 
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
 
-			bool snap = Input::IsKeyPressed(RB_KEY_LEFT_ALT);
+			bool snap = Input::IsKeyPressed(RB_KEY_LEFT_CONTROL);
 			float snapValue = mGizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : mGizmoType == ImGuizmo::OPERATION::SCALE ? 0.25f : 0.5f; // 45 for rotation, 0.25 for scale, 0.5 for translation
 
 			float snapValues[3] = { snapValue, snapValue, snapValue };

@@ -60,6 +60,7 @@
 #include "rebirth/renderer/VertexArray.h"
 #include "rebirth/renderer/OrthoCamera.h"
 #include "rebirth/renderer/Framebuffer.h"
+#include "rebirth/renderer/EditorCamera.h"
 
 
 // Scene

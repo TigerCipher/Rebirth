@@ -154,6 +154,16 @@ namespace rebirth
 		sData.textureSlotIndex = 1;
 	}
 
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
+		RB_PROFILE_FUNC();
+		sData.textureShader->Bind();
+		sData.textureShader->SetMat4("uViewProj", camera.GetViewProjection());
+		sData.quadIndexCount = 0;
+		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+		sData.textureSlotIndex = 1;
+	}
+
 	void Renderer2D::EndScene()
 	{
 		RB_PROFILE_FUNC();

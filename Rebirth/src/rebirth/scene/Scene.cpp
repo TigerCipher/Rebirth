@@ -52,7 +52,7 @@ namespace rebirth
 		mRegistry.destroy(entity);
 	}
 
-	void Scene::OnUpdate(Timestep ts)
+	void Scene::OnUpdateRuntime(Timestep ts)
 	{
 		RB_PROFILE_FUNC();
 
@@ -104,6 +104,19 @@ namespace rebirth
 			Renderer2D::EndScene();
 		}
 
+	}
+
+	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
+	{
+		Renderer2D::BeginScene(camera);
+		auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
+		for (auto entity : group)
+		{
+			auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+			Renderer2D::DrawQuad(trans.GetTransform(), sprite.color);
+		}
+
+		Renderer2D::EndScene();
 	}
 
 	void Scene::OnViewportResize(uint32 width, uint32 height)

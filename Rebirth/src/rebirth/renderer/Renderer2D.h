@@ -27,6 +27,7 @@
 
 #include "Texture.h"
 #include "SubTexture.h"
+#include "EditorCamera.h"
 
 namespace rebirth
 {
@@ -39,6 +40,7 @@ namespace rebirth
 
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void BeginScene(const OrthoCamera& camera);
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 
 		static void Flush();

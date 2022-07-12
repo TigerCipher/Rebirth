@@ -25,6 +25,7 @@
 #include <entt.hpp>
 
 #include "rebirth/core/Timestep.h"
+#include "rebirth/renderer/EditorCamera.h"
 
 namespace rebirth
 {
@@ -39,7 +40,8 @@ namespace rebirth
 		Entity CreateEntity(const std::string& tag = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnUpdate(Timestep ts);
+		void OnUpdateRuntime(Timestep ts);
+		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
 
 		void OnViewportResize(uint32 width, uint32 height);
 

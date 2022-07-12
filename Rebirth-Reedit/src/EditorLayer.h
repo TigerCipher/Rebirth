@@ -66,8 +66,9 @@ namespace rebirth
 
 		Ref<Framebuffer> mFramebuffer;
 
-		int mGizmoType = -1;
+		EditorCamera mEditorCamera;
 
+		int mGizmoType = -1;
 		SceneHierarchyPanel mSceneHierarchyPanel;
 	};
 }
