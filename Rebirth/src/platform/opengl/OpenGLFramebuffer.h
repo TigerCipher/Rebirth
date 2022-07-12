@@ -37,7 +37,7 @@ namespace rebirth
 		void Unbind() override;
 
 
-		uint32 GetColorAttachmentID() const override { return mColorAttachment; }
+		uint32 GetColorAttachmentID(uint32 index = 0) const override { RB_CORE_ASSERT(index < mColorAttachments.size()); return mColorAttachments[index]; }
 		const FramebufferDesc& GetSpecification() const override
 		{
 			return mSpecification;
@@ -50,7 +50,10 @@ namespace rebirth
 		FramebufferDesc mSpecification;
 		uint32 mId = 0;
 
-		uint32 mColorAttachment = 0;
+		std::vector<FramebufferTextureDesc> mColorAttachmentDesc;
+		FramebufferTextureDesc mDepthAttachmentDesc;
+
+		std::vector<uint32> mColorAttachments;
 		uint32 mDepthAttachment = 0;
 	};
 }

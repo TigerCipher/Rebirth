@@ -26,10 +26,37 @@
 namespace rebirth
 {
 
+	enum class FramebufferTextureFormat
+	{
+		NONE = 0,
+		RGBA8,
+		DEPTH24_STENCIL8,
+
+
+		DEPTH = DEPTH24_STENCIL8
+	};
+
+	struct FramebufferTextureDesc
+	{
+		FramebufferTextureDesc() = default;
+		FramebufferTextureDesc(FramebufferTextureFormat format) : textureFormat(format) {}
+
+		FramebufferTextureFormat textureFormat = FramebufferTextureFormat::NONE;
+	};
+
+	struct FramebufferAttachmentDesc
+	{
+		FramebufferAttachmentDesc() = default;
+		FramebufferAttachmentDesc(std::initializer_list<FramebufferTextureDesc> pAttachments) : attachments(pAttachments) {}
+		std::vector<FramebufferTextureDesc> attachments;
+	};
+
 	struct FramebufferDesc
 	{
 		uint32 width, height;
 		uint32 samples = 1;
+
+		FramebufferAttachmentDesc attachements;
 
 		// #FUTURE: Will likely want this for Vulkan, maybe directx - not opengl though I don't think
 		//bool swapChainTarget = false;
@@ -46,7 +73,7 @@ namespace rebirth
 
 		virtual void Resize(uint32 width, uint32 height) = 0;
 
-		virtual uint32 GetColorAttachmentID() const = 0;
+		virtual uint32 GetColorAttachmentID(uint32 index = 0) const = 0;
 		virtual const FramebufferDesc& GetSpecification() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferDesc& spec);

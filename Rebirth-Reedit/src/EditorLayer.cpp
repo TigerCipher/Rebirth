@@ -37,6 +37,7 @@ namespace rebirth
 		mTexture = Texture2D::Create("assets/textures/default.png");
 
 		FramebufferDesc spec;
+		spec.attachements = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::DEPTH };
 		spec.width = Application::Instance().GetWindow().GetWidth();
 		spec.height = Application::Instance().GetWindow().GetHeight();
 		mFramebuffer = Framebuffer::Create(spec);
