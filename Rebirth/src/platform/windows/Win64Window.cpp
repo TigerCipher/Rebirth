@@ -120,7 +120,7 @@ namespace rebirth
 		glfwWindowHint(GLFW_DECORATED, props.decorated);
 
 #ifdef RB_DEBUG
-		if (Renderer::GetAPI() == RendererAPI::API::OPENGL)
+		if (Renderer::GetAPI() == GraphicsAPI::API::OPENGL)
 		{
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		}

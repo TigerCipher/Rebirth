@@ -22,7 +22,7 @@
 // ------------------------------------------------------------------------------
 #include "rbpch.h"
 
-#include "OpenGLRendererAPI.h"
+#include "OpenGLGraphicsAPI.h"
 
 #include <glad/glad.h>
 
@@ -30,14 +30,14 @@ namespace rebirth
 {
 
 
-	void OpenGLRendererAPI::Init()
+	void OpenGLGraphicsAPI::Init()
 	{
 		RB_PROFILE_FUNC();
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
 
-		auto& capabilities = RendererAPI::GetCapabilities();
+		auto& capabilities = GraphicsAPI::GetCapabilities();
 		capabilities.version = (const char*)glGetString(GL_VERSION);
 		capabilities.renderer = (const char*)glGetString(GL_RENDERER);
 		capabilities.vendor = (const char*)glGetString(GL_VENDOR);
@@ -46,22 +46,22 @@ namespace rebirth
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &capabilities.maxAniostropy);
 	}
 
-	void OpenGLRendererAPI::SetViewport(const uint32 x, const uint32 y, const uint32 width, const uint32 height)
+	void OpenGLGraphicsAPI::SetViewport(const uint32 x, const uint32 y, const uint32 width, const uint32 height)
 	{
 		glViewport(x, y, width, height);
 	}
 
-	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
+	void OpenGLGraphicsAPI::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
-	void OpenGLRendererAPI::Clear()
+	void OpenGLGraphicsAPI::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count)
+	void OpenGLGraphicsAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count)
 	{
 		uint32 indexCount = count ? vertexArray->GetIndexBuffer()->GetCount() : count;
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);

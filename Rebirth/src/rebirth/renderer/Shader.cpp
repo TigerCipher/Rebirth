@@ -35,11 +35,11 @@ namespace rebirth
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::NONE:
+			case GraphicsAPI::API::NONE:
 				RB_CORE_ASSERT(false, "Must use a graphics API");
 				return nullptr;
 
-			case RendererAPI::API::OPENGL: return createRef<OpenGLShader>(name, vertexSrc, fragSrc);
+			case GraphicsAPI::API::OPENGL: return createRef<OpenGLShader>(name, vertexSrc, fragSrc);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
@@ -50,11 +50,11 @@ namespace rebirth
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::NONE:
+			case GraphicsAPI::API::NONE:
 				RB_CORE_ASSERT(false, "Must use a graphics API");
 				return nullptr;
 
-			case RendererAPI::API::OPENGL: return createRef<OpenGLShader>(filepath);
+			case GraphicsAPI::API::OPENGL: return createRef<OpenGLShader>(filepath);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
@@ -65,11 +65,11 @@ namespace rebirth
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::NONE:
+			case GraphicsAPI::API::NONE:
 				RB_CORE_ASSERT(false, "Must use a graphics API");
 				return nullptr;
 
-			case RendererAPI::API::OPENGL: return createRef<OpenGLShader>(vertexPath, pixelPath);
+			case GraphicsAPI::API::OPENGL: return createRef<OpenGLShader>(vertexPath, pixelPath);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");

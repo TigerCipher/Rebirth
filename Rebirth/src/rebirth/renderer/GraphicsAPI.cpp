@@ -23,10 +23,10 @@
 
 #include "rbpch.h"
 
-#include "RendererAPI.h"
+#include "GraphicsAPI.h"
 
 namespace rebirth
 {
-	RendererAPI::API RendererAPI::sApi = RendererAPI::API::OPENGL;
+	GraphicsAPI::API GraphicsAPI::sApi = GraphicsAPI::API::OPENGL;
 }
 

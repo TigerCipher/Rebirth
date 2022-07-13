@@ -15,57 +15,24 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: RendererAPI.h
+// File Name: OpenGLRendererAPI.h
 // Date File Created: 6/21/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
-
-
-
-#include "VertexArray.h"
+#include "rebirth/renderer/GraphicsAPI.h"
 
 namespace rebirth
 {
-	class RendererAPI
+	class OpenGLGraphicsAPI : public GraphicsAPI
 	{
 	public:
-		enum class API
-		{
-			NONE = 0,
-			OPENGL
-		};
 
-		struct RenderCapabilities
-		{
-			std::string version;
-			std::string renderer;
-			std::string vendor;
-			int maxSamples;
-			float maxAniostropy;
-		};
-
-		virtual ~RendererAPI() = default;
-
-		virtual void Init() = 0;
-
-		virtual void SetViewport(uint32 x, uint32 y, uint32 width, uint32 height) = 0;
-		virtual void SetClearColor(const glm::vec4& color) = 0;
-		virtual void Clear() = 0;
-
-		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count = 0) = 0;
-
-		static API GetAPI() { return sApi;  }
-
-		static RenderCapabilities& GetCapabilities()
-		{
-			static RenderCapabilities capabilities;
-			return capabilities;
-		}
-
-	private:
-		static API sApi;
+		void Init() override;
+		void SetViewport(uint32 x, uint32 y, uint32 width, uint32 height) override;
+		void SetClearColor(const glm::vec4& color) override;
+		void Clear() override;
+		void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count = 0) override;
 	};
 }
-

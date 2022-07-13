@@ -25,11 +25,11 @@
 
 #include "RenderCommand.h"
 
-#include "platform/opengl/OpenGLRendererAPI.h"
+#include "platform/opengl/OpenGLGraphicsAPI.h"
 
 namespace rebirth
 {
 	// Temp
-	Scope<RendererAPI> RenderCommand::sRendererApi = createScope<OpenGLRendererAPI>();
+	Scope<GraphicsAPI> RenderCommand::sRendererApi = createScope<OpenGLGraphicsAPI>();
 
 }

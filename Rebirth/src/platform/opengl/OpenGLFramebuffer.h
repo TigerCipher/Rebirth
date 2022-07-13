@@ -49,6 +49,9 @@ namespace rebirth
 
 		int ReadPixel(uint32 attachmentIndex, int x, int y) override;
 
+
+		void ClearAttachment(uint32 attachmentIndex, int value) override;
+
 	private:
 		FramebufferDesc mDesc;
 		uint32 mId = 0;

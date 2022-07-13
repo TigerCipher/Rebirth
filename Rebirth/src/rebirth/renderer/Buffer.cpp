@@ -34,13 +34,13 @@ namespace rebirth
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::NONE:
+			case GraphicsAPI::API::NONE:
 			{
 				RB_CORE_ASSERT(false, "Must use a graphics API");
 				return nullptr;
 			}
 
-			case RendererAPI::API::OPENGL: return createRef<OpenGLVertexBuffer>(size);
+			case GraphicsAPI::API::OPENGL: return createRef<OpenGLVertexBuffer>(size);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
@@ -51,13 +51,13 @@ namespace rebirth
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::NONE:
+		case GraphicsAPI::API::NONE:
 		{
 			RB_CORE_ASSERT(false, "Must use a graphics API");
 			return nullptr;
 		}
 
-		case RendererAPI::API::OPENGL: return createRef<OpenGLVertexBuffer>(size, vertices);
+		case GraphicsAPI::API::OPENGL: return createRef<OpenGLVertexBuffer>(size, vertices);
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
@@ -70,13 +70,13 @@ namespace rebirth
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::NONE:
+		case GraphicsAPI::API::NONE:
 		{
 			RB_CORE_ASSERT(false, "Must use a graphics API");
 			return nullptr;
 		}
 
-		case RendererAPI::API::OPENGL:
+		case GraphicsAPI::API::OPENGL:
 		{
 			return createRef<OpenGLIndexBuffer>(count, indices);
 		}

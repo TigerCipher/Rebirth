@@ -141,6 +141,7 @@ namespace rebirth
 		RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
 		RenderCommand::Clear();
 
+		mFramebuffer->ClearAttachment(1, -1);
 
 		mActiveScene->OnUpdateEditor(ts, mEditorCamera);
 
@@ -157,7 +158,6 @@ namespace rebirth
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
-			// testing mousepicking branch
 			RB_CORE_WARN("Pixel Data: {}", pixelData);
 		}
 
@@ -290,11 +290,11 @@ namespace rebirth
 		}
 
 		ImGui::Text("Renderer Information:");
-		ImGui::Text("Vendor: %s", RendererAPI::GetCapabilities().vendor.c_str());
-		ImGui::Text("Renderer: %s", RendererAPI::GetCapabilities().renderer.c_str());
-		ImGui::Text("Version: %s", RendererAPI::GetCapabilities().version.c_str());
-		ImGui::Text("Max Samples: %d", RendererAPI::GetCapabilities().maxSamples);
-		ImGui::Text("Max Aniostropy: %f", RendererAPI::GetCapabilities().maxAniostropy);
+		ImGui::Text("Vendor: %s", GraphicsAPI::GetCapabilities().vendor.c_str());
+		ImGui::Text("Renderer: %s", GraphicsAPI::GetCapabilities().renderer.c_str());
+		ImGui::Text("Version: %s", GraphicsAPI::GetCapabilities().version.c_str());
+		ImGui::Text("Max Samples: %d", GraphicsAPI::GetCapabilities().maxSamples);
+		ImGui::Text("Max Aniostropy: %f", GraphicsAPI::GetCapabilities().maxAniostropy);
 
 		ImGui::End();
 

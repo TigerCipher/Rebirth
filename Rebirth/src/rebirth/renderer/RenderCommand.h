@@ -22,7 +22,7 @@
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include "RendererAPI.h"
+#include "GraphicsAPI.h"
 
 namespace rebirth
 {
@@ -56,7 +56,7 @@ namespace rebirth
 		}
 
 	private:
-		static Scope<RendererAPI> sRendererApi;
+		static Scope<GraphicsAPI> sRendererApi;
 	};
 
 }

@@ -35,13 +35,13 @@ namespace rebirth
 	{
 		switch (Renderer::GetAPI())
 		{
-			case RendererAPI::API::NONE:
+			case GraphicsAPI::API::NONE:
 			{
 				RB_CORE_ASSERT(false, "Must use a graphics API");
 				return nullptr;
 			}
 
-			case RendererAPI::API::OPENGL: return createRef<OpenGLVertexArray>();
+			case GraphicsAPI::API::OPENGL: return createRef<OpenGLVertexArray>();
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");

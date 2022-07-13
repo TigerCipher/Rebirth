@@ -99,6 +99,30 @@ namespace rebirth
 		glFramebufferTexture2D(GL_FRAMEBUFFER, type, TextureTarget(multisamples), id, 0);
 	}
 
+	static GLenum GetGlFormat(FramebufferTextureFormat format)
+	{
+		switch (format)
+		{
+			case FramebufferTextureFormat::RGBA8: return GL_RGBA8;
+			case FramebufferTextureFormat::RED_INT: return GL_RED_INTEGER;
+		}
+
+		RB_CORE_ASSERT(false);
+		return 0;
+	}
+
+	//static GLenum GetGlTypeFromFormat(FramebufferTextureFormat format)
+	//{
+	//	switch (format)
+	//	{
+	//		case FramebufferTextureFormat::RGBA8: return GL_UNSIGNED_BYTE;
+	//		case FramebufferTextureFormat::RED_INT: return GL_INT;
+	//	}
+
+	//	RB_CORE_ASSERT(false);
+	//	return 0;
+	//}
+
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferDesc& spec) :
 		mDesc(spec)
 	{
@@ -218,6 +242,8 @@ namespace rebirth
 
 	int OpenGLFramebuffer::ReadPixel(uint32 attachmentIndex, int x, int y)
 	{
+		RB_PROFILE_FUNC();
+
 		RB_CORE_ASSERT(attachmentIndex < mColorAttachments.size());
 
 		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
@@ -225,6 +251,14 @@ namespace rebirth
 		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 
 		return pixelData;
+	}
+
+	void OpenGLFramebuffer::ClearAttachment(uint32 attachmentIndex, int value)
+	{
+		RB_CORE_ASSERT(attachmentIndex < mColorAttachments.size());
+		auto& desc = mColorAttachmentDesc[attachmentIndex];
+
+		glClearTexImage(mColorAttachments[attachmentIndex], 0, GetGlFormat(desc.textureFormat), GL_INT, &value);
 	}
 
 }
