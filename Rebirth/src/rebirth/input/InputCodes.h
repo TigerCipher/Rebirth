@@ -170,6 +170,19 @@ namespace rebirth
 		RIGHT  = B2,
 		MIDDLE = B3
 	};
+
+
+	inline std::ostream& operator<<(std::ostream& os, KeyCode keycode)
+	{
+		os << (uint32)keycode;
+		return os;
+	}
+
+	inline std::ostream& operator<<(std::ostream& os, MouseButton button)
+	{
+		os << (uint32)button;
+		return os;
+	}
 }
 
 // modified from glfw3.h

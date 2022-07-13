@@ -385,7 +385,7 @@ namespace rebirth
 
 	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
-		if (e.GetMouseButton() == RB_MOUSE_BUTTON_LEFT)
+		if (e.GetMouseButton() == MouseButton::LEFT)
 		{
 			if(mViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
 				mSceneHierarchyPanel.SetSelectedEntity(mHoveredEntity);
@@ -408,35 +408,35 @@ namespace rebirth
 
 		switch (e.GetKeyCode())
 		{
-			case RB_KEY_N:
+			case KeyCode::N:
 				if (control)
 				{
 					NewScene();
 				}
 				break;
-			case RB_KEY_O:
+			case KeyCode::O:
 				if (control)
 				{
 					OpenScene();
 				}
 				break;
-			case RB_KEY_S:
+			case KeyCode::S:
 				if (control && shift)
 				{
 					SaveSceneAs();
 				}
 				break;
 
-			case RB_KEY_Q:
+			case KeyCode::Q:
 				mGizmoType = -1;
 				break;
-			case RB_KEY_W:
+			case KeyCode::W:
 				mGizmoType = ImGuizmo::OPERATION::TRANSLATE;
 				break;
-			case RB_KEY_E:
+			case KeyCode::E:
 				mGizmoType = ImGuizmo::OPERATION::ROTATE;
 				break;
-			case RB_KEY_R:
+			case KeyCode::R:
 				mGizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 
