@@ -55,16 +55,16 @@ namespace rebirth
 		glBindTexture(TextureTarget(multisamples), id);
 	}
 
-	static void AttachColorTexture(uint32 id, int samples, GLenum format, uint32 width, uint32 height, int index)
+	static void AttachColorTexture(uint32 id, int samples, GLenum internalFormat, GLenum format, uint32 width, uint32 height, int index)
 	{
 		bool multisamples = samples > 1;
 		if (multisamples)
 		{
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
+			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
 		}
 		else
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -100,9 +100,9 @@ namespace rebirth
 	}
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferDesc& spec) :
-		mSpecification(spec)
+		mDesc(spec)
 	{
-		for (auto format : mSpecification.attachements.attachments)
+		for (auto format : mDesc.attachements.attachments)
 		{
 			if (!IsDepthFormat(format.textureFormat))
 				mColorAttachmentDesc.emplace_back(format);
@@ -115,7 +115,7 @@ namespace rebirth
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &mId);
-		glDeleteTextures(mColorAttachments.size(), mColorAttachments.data());
+		glDeleteTextures((GLsizei)mColorAttachments.size(), mColorAttachments.data());
 		glDeleteTextures(1, &mDepthAttachment);
 	}
 
@@ -126,7 +126,7 @@ namespace rebirth
 		if(mId)
 		{
 			glDeleteFramebuffers(1, &mId);
-			glDeleteTextures(mColorAttachments.size(), mColorAttachments.data());
+			glDeleteTextures((GLsizei)mColorAttachments.size(), mColorAttachments.data());
 			glDeleteTextures(1, &mDepthAttachment);
 			mColorAttachments.clear();
 			mDepthAttachment = 0;
@@ -138,18 +138,21 @@ namespace rebirth
 
 		// Attachments
 
-		bool multisamples = mSpecification.samples > 1;
+		bool multisamples = mDesc.samples > 1;
 		if (mColorAttachmentDesc.size())
 		{
 			mColorAttachments.resize(mColorAttachmentDesc.size());
-			CreateTextures(multisamples, mColorAttachments.data(), mColorAttachments.size());
-			for (size_t i = 0; i < mColorAttachments.size(); i++)
+			CreateTextures(multisamples, mColorAttachments.data(), (uint32)mColorAttachments.size());
+			for (uint32 i = 0; i < mColorAttachments.size(); i++)
 			{
 				BindTexture(multisamples, mColorAttachments[i]);
 				switch (mColorAttachmentDesc[i].textureFormat)
 				{
 					case FramebufferTextureFormat::RGBA8:
-						AttachColorTexture(mColorAttachments[i], mSpecification.samples, GL_RGBA8, mSpecification.width, mSpecification.height, i);
+						AttachColorTexture(mColorAttachments[i], mDesc.samples, GL_RGBA8, GL_RGBA, mDesc.width, mDesc.height, i);
+						break;
+					case FramebufferTextureFormat::RED_INT:
+						AttachColorTexture(mColorAttachments[i], mDesc.samples, GL_R32I, GL_RED_INTEGER, mDesc.width, mDesc.height, i);
 						break;
 				}
 			}
@@ -163,7 +166,7 @@ namespace rebirth
 			switch (mDepthAttachmentDesc.textureFormat)
 			{
 				case FramebufferTextureFormat::DEPTH24_STENCIL8:
-					AttachDepthTexture(mDepthAttachment, mSpecification.samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, mSpecification.width, mSpecification.height);
+					AttachDepthTexture(mDepthAttachment, mDesc.samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, mDesc.width, mDesc.height);
 					break;
 			}
 		}
@@ -178,7 +181,7 @@ namespace rebirth
 				GL_COLOR_ATTACHMENT3
 			};
 
-			glDrawBuffers(mColorAttachments.size(), buffers);
+			glDrawBuffers((GLsizei)mColorAttachments.size(), buffers);
 		}
 		else if (mColorAttachments.empty())
 		{
@@ -192,7 +195,7 @@ namespace rebirth
 	void OpenGLFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, mId);
-		glViewport(0, 0, mSpecification.width, mSpecification.height);
+		glViewport(0, 0, mDesc.width, mDesc.height);
 	}
 
 	void OpenGLFramebuffer::Unbind()
@@ -208,9 +211,20 @@ namespace rebirth
 			RB_CORE_WARN("Attempted an invalid framebuffer resize to ({}, {})", width, height);
 			return;
 		}
-		mSpecification.width = width;
-		mSpecification.height = height;
+		mDesc.width = width;
+		mDesc.height = height;
 		Invalidate();
+	}
+
+	int OpenGLFramebuffer::ReadPixel(uint32 attachmentIndex, int x, int y)
+	{
+		RB_CORE_ASSERT(attachmentIndex < mColorAttachments.size());
+
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+		int pixelData;
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+
+		return pixelData;
 	}
 
 }

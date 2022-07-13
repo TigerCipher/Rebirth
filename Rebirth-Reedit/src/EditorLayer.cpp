@@ -37,7 +37,7 @@ namespace rebirth
 		mTexture = Texture2D::Create("assets/textures/default.png");
 
 		FramebufferDesc spec;
-		spec.attachements = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::DEPTH };
+		spec.attachements = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INT, FramebufferTextureFormat::DEPTH };
 		spec.width = Application::Instance().GetWindow().GetWidth();
 		spec.height = Application::Instance().GetWindow().GetHeight();
 		mFramebuffer = Framebuffer::Create(spec);
@@ -116,7 +116,7 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 
-		if (FramebufferDesc spec = mFramebuffer->GetSpecification();
+		if (FramebufferDesc spec = mFramebuffer->GetDesc();
 			mViewportSize.x > 0.0f && mViewportSize.y > 0.0f &&
 			(spec.width != mViewportSize.x || spec.height != mViewportSize.y))
 		{
@@ -142,10 +142,24 @@ namespace rebirth
 		RenderCommand::Clear();
 
 
-		//Renderer2D::BeginScene(mCameraController.GetCamera());
 		mActiveScene->OnUpdateEditor(ts, mEditorCamera);
 
-		//Renderer2D::EndScene();
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= mViewportBounds[0].x;
+		my -= mViewportBounds[0].y;
+
+		glm::vec2 viewportSize = mViewportBounds[1] - mViewportBounds[0];
+		my = viewportSize.y - my;
+
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
+			RB_CORE_WARN("Pixel Data: {}", pixelData);
+		}
+
 
 		mFramebuffer->Unbind();
 
@@ -285,6 +299,9 @@ namespace rebirth
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+
+		auto viewportOffset = ImGui::GetCursorPos();
+
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
 
@@ -300,6 +317,16 @@ namespace rebirth
 		uint32 textureID = mFramebuffer->GetColorAttachmentID();
 		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
+		auto winSize = ImGui::GetWindowSize();
+		auto minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+
+		ImVec2 maxBound = { minBound.x + winSize.x, minBound.y + winSize.y };
+		mViewportBounds[0] = { minBound.x, minBound.y };
+		mViewportBounds[1] = { maxBound.x, maxBound.y };
+
+		// Gizmo smizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && mGizmoType != -1)
 		{

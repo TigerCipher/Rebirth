@@ -29,9 +29,11 @@ namespace rebirth
 	enum class FramebufferTextureFormat
 	{
 		NONE = 0,
-		RGBA8,
-		DEPTH24_STENCIL8,
 
+		RGBA8,
+		RED_INT,
+
+		DEPTH24_STENCIL8,
 
 		DEPTH = DEPTH24_STENCIL8
 	};
@@ -72,9 +74,10 @@ namespace rebirth
 		virtual void Unbind() = 0;
 
 		virtual void Resize(uint32 width, uint32 height) = 0;
+		virtual int ReadPixel(uint32 attachmentIndex, int x, int y) = 0;
 
 		virtual uint32 GetColorAttachmentID(uint32 index = 0) const = 0;
-		virtual const FramebufferDesc& GetSpecification() const = 0;
+		virtual const FramebufferDesc& GetDesc() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferDesc& spec);
 	};

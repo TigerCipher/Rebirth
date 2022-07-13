@@ -61,6 +61,7 @@ namespace rebirth
 		bool primCam = true;
 
 		glm::vec2 mViewportSize{0.0f};
+		glm::vec2 mViewportBounds[2];
 
 		Ref<Texture2D> mTexture;
 

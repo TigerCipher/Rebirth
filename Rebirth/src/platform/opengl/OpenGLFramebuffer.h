@@ -38,16 +38,19 @@ namespace rebirth
 
 
 		uint32 GetColorAttachmentID(uint32 index = 0) const override { RB_CORE_ASSERT(index < mColorAttachments.size()); return mColorAttachments[index]; }
-		const FramebufferDesc& GetSpecification() const override
+		const FramebufferDesc& GetDesc() const override
 		{
-			return mSpecification;
+			return mDesc;
 		}
 
 
 		void Resize(uint32 width, uint32 height) override;
 
+
+		int ReadPixel(uint32 attachmentIndex, int x, int y) override;
+
 	private:
-		FramebufferDesc mSpecification;
+		FramebufferDesc mDesc;
 		uint32 mId = 0;
 
 		std::vector<FramebufferTextureDesc> mColorAttachmentDesc;
