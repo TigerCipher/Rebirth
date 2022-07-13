@@ -331,7 +331,7 @@ namespace rebirth
 
 		// Gizmo smizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
-		if (selectedEntity && mGizmoType != -1)
+		if (selectedEntity && mGizmoType != -1 && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
