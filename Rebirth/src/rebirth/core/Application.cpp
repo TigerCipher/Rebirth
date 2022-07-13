@@ -36,7 +36,8 @@ namespace rebirth
 {
 	Application* Application::sInstance = nullptr;
 
-	Application::Application(const std::string& title, uint32 windowWidth, uint32 windowHeight)
+	Application::Application(const std::string& title, uint32 windowWidth, uint32 windowHeight, CommandLineArgs cmd) :
+		mCommandLine(cmd)
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(!sInstance, "Application already exists");

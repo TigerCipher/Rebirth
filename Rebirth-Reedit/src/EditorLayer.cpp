@@ -41,6 +41,15 @@ namespace rebirth
 		mFramebuffer = Framebuffer::Create(spec);
 
 		mActiveScene = createRef<Scene>();
+
+		auto cmd = Application::Instance().GetCommandLineArgs();
+		if (cmd.count > 1)
+		{
+			auto scenePath = cmd[1];
+			SceneSerializer serializer(mActiveScene);
+			serializer.DeserializeFromYaml(scenePath);
+		}
+
 #if 0
 		mSquareEntity = mActiveScene->CreateEntity("Square");
 		mSquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 0.85f, 0.4f, 1.0f });

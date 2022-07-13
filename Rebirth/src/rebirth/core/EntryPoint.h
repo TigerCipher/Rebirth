@@ -25,7 +25,7 @@
 
 
 #ifdef RB_PLATFORM_WINDOWS
-	extern rebirth::Application* rebirth::CreateApplication();
+	extern rebirth::Application* rebirth::CreateApplication(CommandLineArgs args);
 
 	int main(int argc, char** argv)
 	{
@@ -33,7 +33,7 @@
 		RB_CORE_TRACE("Initializing engine");
 
 		RB_PROFILE_BEGIN_SESSION("Startup", "Rebirth-Startup.json");
-		auto app = rebirth::CreateApplication();
+		auto app = rebirth::CreateApplication({argc, argv});
 		RB_PROFILE_END_SESSION();
 
 		RB_PROFILE_BEGIN_SESSION("Runtime", "Rebirth-Runtime.json");

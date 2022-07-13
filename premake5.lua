@@ -28,9 +28,12 @@ workspace "Rebirth"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+group "Utilities"
+	include "vendor/premake"
+	include "scripts"
+group ""
 
 group "Dependencies"
-	include "vendor/premake"
 	include "vendor/deps/glfw"
 	include "vendor/deps/Glad"
 	include "vendor/deps/imgui"

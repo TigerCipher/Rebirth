@@ -24,7 +24,6 @@
 #include <Rebirth.h>
 #include <rebirth/core/EntryPoint.h>
 
-//#include "SampleLayer.h"
 #include "EditorLayer.h"
 
 namespace rebirth
@@ -32,7 +31,7 @@ namespace rebirth
 	class ReeditApp final : public Application
 	{
 	public:
-		ReeditApp() : Application("Rebirth Reedit", 2560, 1440)
+		ReeditApp(CommandLineArgs args) : Application("Rebirth Reedit", 2560, 1440, args)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -41,8 +40,8 @@ namespace rebirth
 	};
 
 
-	Application* CreateApplication()
+	Application* CreateApplication(CommandLineArgs args)
 	{
-		return new ReeditApp();
+		return new ReeditApp(args);
 	}
 }

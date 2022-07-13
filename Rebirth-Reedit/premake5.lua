@@ -41,6 +41,11 @@ project "Rebirth-Reedit"
 		symbols "on"
 		runtime "Debug"
 
+		postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+		}
+
 	filter "configurations:Release"
 		defines "RB_RELEASE"
 		optimize "on"
