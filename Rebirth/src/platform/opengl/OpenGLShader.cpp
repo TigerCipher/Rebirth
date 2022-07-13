@@ -30,6 +30,7 @@
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
+#include "rebirth/core/Application.h"
 
 #ifndef GLSL_MAX_SHADERS_PER_FILE
 #	define GLSL_MAX_SHADERS_PER_FILE 2
@@ -101,9 +102,29 @@ namespace rebirth
 
 	static void CreateCacheDirectory()
 	{
+		static int count = 0;
 		std::string cacheDir = GetCacheDirectory();
 		if (!std::filesystem::exists(cacheDir))
 			std::filesystem::create_directories(cacheDir);
+		else if (count == 0)
+		{
+			auto args = Application::Instance().GetCommandLineArgs();
+			if (args.count > 1)
+			{
+				for (int i = 1; i < args.count; i++)
+				{
+					std::string arg = args[i];
+					if (arg == "-f" || arg == "-F" || arg == "--force-shader-compile")
+					{
+						RB_CORE_TRACE("force-shader-compile command line argument detected, deleting cached shaders and recompiling");
+						std::filesystem::remove_all(cacheDir);
+						std::filesystem::create_directories(cacheDir);
+						break;
+					}
+				}
+			}
+			count++;
+		}
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filepath) :
