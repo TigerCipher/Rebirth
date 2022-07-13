@@ -25,6 +25,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "RenderCommand.h"
+#include "UniformBuffer.h"
 
 namespace rebirth
 {
@@ -65,6 +66,14 @@ namespace rebirth
 
 
 		Renderer2D::Stats stats;
+
+		struct CameraData
+		{
+			glm::mat4 viewProjection;
+		};
+
+		CameraData cameraBuffer;
+		Ref<UniformBuffer> cameraUniformBuffer;
 	};
 
 	static RenderData sData;
@@ -120,8 +129,6 @@ namespace rebirth
 		}
 
 		sData.textureShader = Shader::Create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
-		sData.textureShader->Bind();
-		sData.textureShader->SetIntArray("uTextures", samplers, sData.MAX_TEXTURE_SLOTS);
 
 		sData.textureSlots[0] = sData.whiteTexture;
 
@@ -129,6 +136,8 @@ namespace rebirth
 		sData.quadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
 		sData.quadVertexPos[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
 		sData.quadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
+		sData.cameraUniformBuffer = UniformBuffer::Create(sizeof(RenderData::CameraData), 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -139,9 +148,8 @@ namespace rebirth
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
 		RB_PROFILE_FUNC();
-		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
-		sData.textureShader->Bind();
-		sData.textureShader->SetMat4("uViewProj", viewProj);
+		sData.cameraBuffer.viewProjection = camera.GetProjection() * glm::inverse(transform);
+		sData.cameraUniformBuffer->SetData(&sData.cameraBuffer, sizeof(RenderData::CameraData));
 
 		sData.quadIndexCount = 0;
 		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
@@ -151,8 +159,8 @@ namespace rebirth
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
 	{
 		RB_PROFILE_FUNC();
-		sData.textureShader->Bind();
-		sData.textureShader->SetMat4("uViewProj", camera.ViewProjectionMatrix());
+		sData.cameraBuffer.viewProjection = camera.ViewProjectionMatrix();
+		sData.cameraUniformBuffer->SetData(&sData.cameraBuffer, sizeof(RenderData::CameraData));
 		sData.quadIndexCount = 0;
 		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
 		sData.textureSlotIndex = 1;
@@ -185,7 +193,7 @@ namespace rebirth
 		{
 			sData.textureSlots[i]->Bind(i);
 		}
-
+		sData.textureShader->Bind();
 		RenderCommand::DrawIndexed(sData.vertexArray, sData.quadIndexCount);
 		sData.stats.drawCalls++;
 	}

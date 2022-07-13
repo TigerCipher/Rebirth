@@ -181,7 +181,8 @@ namespace rebirth
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		component.camera.SetViewportSize(mViewportWidth, mViewportHeight);
+		if(mViewportWidth > 0 && mViewportHeight > 0)
+			component.camera.SetViewportSize(mViewportWidth, mViewportHeight);
 	}
 
 	template<>
