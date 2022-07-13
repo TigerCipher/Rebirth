@@ -29,6 +29,8 @@
 #include "SubTexture.h"
 #include "EditorCamera.h"
 
+#include "rebirth/scene/Components.h"
+
 namespace rebirth
 {
 	class Renderer2D
@@ -45,9 +47,9 @@ namespace rebirth
 
 		static void Flush();
 
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
-		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = {1.0f, 1.0f, 1.0f, 1.0f});
-		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = {1.0f, 1.0f, 1.0f, 1.0f});
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityId = -1);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f, const glm::vec4& tintColor = {1.0f, 1.0f, 1.0f, 1.0f}, int entityId = -1);
+		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tilingFactor = 1.0f, const glm::vec4& tintColor = {1.0f, 1.0f, 1.0f, 1.0f}, int entityId = -1);
 
 		static void DrawQuad(const glm::vec2& pos, const glm::vec4& color, const glm::vec2 & size = {1.0f, 1.0f});
 		static void DrawQuad(const glm::vec3& pos, const glm::vec4& color, const glm::vec2 & size = {1.0f, 1.0f});
@@ -67,6 +69,9 @@ namespace rebirth
 		static void DrawRotatedQuad(const glm::vec2& pos, const Ref<SubTexture2D>& subtexture, float angle, const glm::vec2& size = { 1.0f, 1.0f }, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 		static void DrawRotatedQuad(const glm::vec3& pos, const Ref<SubTexture2D>& subtexture, float angle, const glm::vec2& size = { 1.0f, 1.0f }, float tilingFactor = 1.0f, const glm::vec4& tintColor = { 1.0f, 1.0f, 1.0f, 1.0f });
 
+
+		static void DrawSprite(const glm::mat4& transform, SpriteComponent& spriteComponent, int entityId);
+
 		struct Stats
 		{
 			uint32 drawCalls = 0;
@@ -80,7 +85,7 @@ namespace rebirth
 
 	private:
 		static void ResetBatch();
-		static void CreateQuad(const glm::mat4& transform, const glm::vec4 color, const glm::vec2* texCoord, float texIndex, float tilingFactor);
+		static void CreateQuad(const glm::mat4& transform, const glm::vec4 color, const glm::vec2* texCoord, float texIndex, float tilingFactor, int entityId = -1);
 		static float GetTextureIndex(const Ref<Texture2D>& texture);
 	};
 }

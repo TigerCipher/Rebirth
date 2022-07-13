@@ -68,6 +68,7 @@ namespace rebirth
 		Ref<Framebuffer> mFramebuffer;
 
 		EditorCamera mEditorCamera;
+		Entity mHoveredEntity;
 
 		int mGizmoType = -1;
 		SceneHierarchyPanel mSceneHierarchyPanel;

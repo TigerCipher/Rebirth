@@ -36,6 +36,9 @@ namespace rebirth
 		glm::vec2 texCoord;
 		float texIndex;
 		float tilingFactor;
+
+		// editor
+		int entityId = -1;
 	};
 
 	struct RenderData
@@ -80,6 +83,7 @@ namespace rebirth
 				{ ShaderDataType::FLOAT2, "aTexCoord" },
 				{ ShaderDataType::FLOAT, "aTexIndex" },
 				{ ShaderDataType::FLOAT, "aTilingFactor" },
+				{ ShaderDataType::INT, "aEntityID" },
 			});
 		sData.vertexArray->AddVertexBuffer(sData.vertexBuffer);
 
@@ -195,7 +199,7 @@ namespace rebirth
 	}
 
 
-	void Renderer2D::CreateQuad(const glm::mat4& transform, const glm::vec4 color, const glm::vec2* texCoord, float texIndex, float tilingFactor)
+	void Renderer2D::CreateQuad(const glm::mat4& transform, const glm::vec4 color, const glm::vec2* texCoord, float texIndex, float tilingFactor, int entityId)
 	{
 		constexpr size_t quadVertexCount = 4;
 		for (size_t i = 0; i < quadVertexCount; i++)
@@ -205,6 +209,7 @@ namespace rebirth
 			sData.quadVertexBufferPtr->texCoord = texCoord[i];
 			sData.quadVertexBufferPtr->texIndex = texIndex;
 			sData.quadVertexBufferPtr->tilingFactor = tilingFactor;
+			sData.quadVertexBufferPtr->entityId = entityId;
 			sData.quadVertexBufferPtr++;
 		}
 
@@ -237,7 +242,7 @@ namespace rebirth
 
 	// COLOR DRAWQUAD
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityId)
 	{
 		RB_PROFILE_FUNC();
 
@@ -248,12 +253,12 @@ namespace rebirth
 
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
-		CreateQuad(transform, color, textureCoords, 0, 1.0f);
+		CreateQuad(transform, color, textureCoords, 0, 1.0f, entityId);
 	}
 
 	// TEXTURE DRAWQUAD
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor /*= 1.0f*/, const glm::vec4& tintColor /*= {1.0f, 1.0f, 1.0f, 1.0f}*/)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor /*= 1.0f*/, const glm::vec4& tintColor, int entityId)
 	{
 		RB_PROFILE_FUNC();
 
@@ -266,12 +271,12 @@ namespace rebirth
 
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
-		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor);
+		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor, entityId);
 	}
 
 	// SUBTEXTURE DRAWQUAD
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tilingFactor /*= 1.0f*/, const glm::vec4& tintColor /*= {1.0f, 1.0f, 1.0f, 1.0f}*/)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tilingFactor /*= 1.0f*/, const glm::vec4& tintColor, int entityId)
 	{
 		RB_PROFILE_FUNC();
 
@@ -284,7 +289,7 @@ namespace rebirth
 
 		const glm::vec2* textureCoords = subtexture->GetTexCoords();
 
-		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor);
+		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor, entityId);
 	}
 
 
@@ -412,6 +417,11 @@ namespace rebirth
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		CreateQuad(transform, tintColor, textureCoords, textureIndex, tilingFactor);
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteComponent& spriteComponent, int entityId)
+	{
+		DrawQuad(transform, spriteComponent.color, entityId);
 	}
 
 	Renderer2D::Stats Renderer2D::GetStats()

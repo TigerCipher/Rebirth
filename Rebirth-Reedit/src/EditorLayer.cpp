@@ -158,7 +158,10 @@ namespace rebirth
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
-			RB_CORE_WARN("Pixel Data: {}", pixelData);
+
+			if (pixelData == -1)
+				mHoveredEntity = {};
+			else mHoveredEntity = Entity((entt::entity)pixelData, mActiveScene.get());
 		}
 
 
@@ -261,6 +264,12 @@ namespace rebirth
 
 
 		ImGui::Begin("Statistics");
+
+		std::string name = "None";
+		if (mHoveredEntity)
+			name = mHoveredEntity.GetComponent<TagComponent>().tag;
+		ImGui::Text("Hovered Entity: %s", name.c_str());
+
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Render Batch Stats:");
 		ImGui::Text("Draw Calls: %d", stats.drawCalls);

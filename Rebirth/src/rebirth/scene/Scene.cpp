@@ -98,7 +98,7 @@ namespace rebirth
 			for (auto entity : group)
 			{
 				auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-				Renderer2D::DrawQuad(trans.GetTransform(), sprite.color);
+				Renderer2D::DrawSprite(trans.GetTransform(), sprite, (int)entity);
 			}
 
 			Renderer2D::EndScene();
@@ -113,7 +113,7 @@ namespace rebirth
 		for (auto entity : group)
 		{
 			auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-			Renderer2D::DrawQuad(trans.GetTransform(), sprite.color);
+			Renderer2D::DrawSprite(trans.GetTransform(), sprite, (int)entity);
 		}
 
 		Renderer2D::EndScene();

@@ -92,6 +92,14 @@ namespace rebirth
 				case rebirth::ShaderDataType::FLOAT2:
 				case rebirth::ShaderDataType::FLOAT3:
 				case rebirth::ShaderDataType::FLOAT4:
+				{
+					glEnableVertexAttribArray(mVertexBufferIndex);
+					glVertexAttribPointer(mVertexBufferIndex, elem.GetComponentCount(), GetGlType(elem.type),
+						elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
+						reinterpret_cast<const void*>(static_cast<uintptr_t>(elem.offset)));
+					mVertexBufferIndex++;
+					break;
+				}
 				case rebirth::ShaderDataType::INT:
 				case rebirth::ShaderDataType::INT2:
 				case rebirth::ShaderDataType::INT3:
@@ -99,8 +107,8 @@ namespace rebirth
 				case rebirth::ShaderDataType::BOOL:
 				{
 					glEnableVertexAttribArray(mVertexBufferIndex);
-					glVertexAttribPointer(mVertexBufferIndex, elem.GetComponentCount(), GetGlType(elem.type),
-						elem.normalized ? GL_TRUE : GL_FALSE, layout.GetStride(),
+					glVertexAttribIPointer(mVertexBufferIndex, elem.GetComponentCount(), GetGlType(elem.type),
+						layout.GetStride(),
 						reinterpret_cast<const void*>(static_cast<uintptr_t>(elem.offset)));
 					mVertexBufferIndex++;
 					break;

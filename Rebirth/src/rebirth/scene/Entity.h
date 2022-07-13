@@ -64,7 +64,7 @@ namespace rebirth
 			mScene->mRegistry.remove<T>(mId);
 		}
 
-		operator bool() const { return mId != entt::null; }
+		operator bool() const { return mId != entt::null && mScene != nullptr; }
 		operator uint32() const { return (uint32)mId; }
 		operator entt::entity() const { return mId; }
 
