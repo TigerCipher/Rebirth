@@ -46,8 +46,7 @@
 
 // Input
 #include "rebirth/input/Input.h"
-#include "rebirth/input/KeyCodes.h"
-#include "rebirth/input/MouseCodes.h"
+#include "rebirth/input/InputCodes.h"
 
 
 // Renderer

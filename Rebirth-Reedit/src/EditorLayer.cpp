@@ -353,7 +353,7 @@ namespace rebirth
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
 
-			bool snap = Input::IsKeyPressed(RB_KEY_LEFT_CONTROL);
+			bool snap = Input::IsKeyPressed(KeyCode::LEFT_CONTROL);
 			float snapValue = mGizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : mGizmoType == ImGuizmo::OPERATION::SCALE ? 0.25f : 0.5f; // 45 for rotation, 0.25 for scale, 0.5 for translation
 
 			float snapValues[3] = { snapValue, snapValue, snapValue };
@@ -387,7 +387,7 @@ namespace rebirth
 	{
 		if (e.GetMouseButton() == RB_MOUSE_BUTTON_LEFT)
 		{
-			if(mViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(RB_KEY_LEFT_ALT))
+			if(mViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
 				mSceneHierarchyPanel.SetSelectedEntity(mHoveredEntity);
 		}
 
@@ -403,8 +403,8 @@ namespace rebirth
 		if (e.GetRepeatCount() > 0) return false;
 
 		// modifiers
-		bool control = Input::IsKeyPressed(RB_KEY_LEFT_CONTROL) || Input::IsKeyPressed(RB_KEY_RIGHT_CONTROL);
-		bool shift = Input::IsKeyPressed(RB_KEY_LEFT_SHIFT) || Input::IsKeyPressed(RB_KEY_RIGHT_SHIFT);
+		bool control = Input::IsKeyPressed(KeyCode::LEFT_CONTROL) || Input::IsKeyPressed(KeyCode::RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(KeyCode::LEFT_SHIFT) || Input::IsKeyPressed(KeyCode::RIGHT_SHIFT);
 
 		switch (e.GetKeyCode())
 		{
@@ -442,6 +442,8 @@ namespace rebirth
 
 			default: break;
 		}
+
+		return false;
 	}
 
 	void EditorLayer::NewScene()

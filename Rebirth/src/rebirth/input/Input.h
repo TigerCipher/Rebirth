@@ -26,13 +26,15 @@
 
 #include "rebirth/core/Common.h"
 
+#include "InputCodes.h"
+
 namespace rebirth
 {
 	class Input
 	{
 	public:
-		static bool IsKeyPressed(const int keycode);
-		static bool IsMouseButtonPressed(const int button);
+		static bool IsKeyPressed(KeyCode keycode);
+		static bool IsMouseButtonPressed(MouseButton button);
 		static float GetMouseX();
 		static float GetMouseY();
 		static std::pair<float, float> GetMousePos();

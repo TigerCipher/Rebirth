@@ -25,8 +25,7 @@
 #include "EditorCamera.h"
 
 #include "rebirth/input/Input.h"
-#include "rebirth/input/KeyCodes.h"
-#include "rebirth/input/MouseCodes.h"
+#include "rebirth/input/InputCodes.h"
 
 // Temp
 #include <glfw/glfw3.h>
@@ -45,17 +44,17 @@ namespace rebirth
 
 	void EditorCamera::OnUpdate(Timestep ts)
 	{
-		if (Input::IsKeyPressed(RB_KEY_LEFT_ALT))
+		if (Input::IsKeyPressed(KeyCode::LEFT_ALT))
 		{
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 delta = (mouse - mInitialMousePos) * 0.003f;
 			mInitialMousePos = mouse;
 
-			if (Input::IsMouseButtonPressed(RB_MOUSE_BUTTON_MIDDLE))
+			if (Input::IsMouseButtonPressed(MouseButton::MIDDLE))
 				MouseRotate(delta);
-			else if (Input::IsMouseButtonPressed(RB_MOUSE_BUTTON_LEFT))
+			else if (Input::IsMouseButtonPressed(MouseButton::LEFT))
 				MousePan(delta);
-			else if (Input::IsMouseButtonPressed(RB_MOUSE_BUTTON_RIGHT))
+			else if (Input::IsMouseButtonPressed(MouseButton::RIGHT))
 				MouseZoom(delta.y);
 		}
 

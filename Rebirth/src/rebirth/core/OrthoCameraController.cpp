@@ -24,7 +24,7 @@
 #include "OrthoCameraController.h"
 
 #include "rebirth/input/Input.h"
-#include "rebirth/input/KeyCodes.h"
+#include "rebirth/input/InputCodes.h"
 
 namespace rebirth
 {
@@ -42,26 +42,26 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		// mul by 2 because 2 is currently default
 		mCamSpeed = 2.0f * mZoom;
-		if (Input::IsKeyPressed(RB_KEY_A))
+		if (Input::IsKeyPressed(KeyCode::A))
 		{
 			mCamPos.x -= cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
 			mCamPos.y -= sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
 			//mCamPos.x -= mCamSpeed * ts;
 		}
 
-		if (Input::IsKeyPressed(RB_KEY_D))
+		if (Input::IsKeyPressed(KeyCode::D))
 		{
 			mCamPos.x += cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
 			mCamPos.y += sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
 		}
 
-		if (Input::IsKeyPressed(RB_KEY_W))
+		if (Input::IsKeyPressed(KeyCode::W))
 		{
 			mCamPos.x += -sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
 			mCamPos.y += cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
 		}
 
-		if (Input::IsKeyPressed(RB_KEY_S))
+		if (Input::IsKeyPressed(KeyCode::S))
 		{
 			mCamPos.x -= -sin(glm::radians(mCamRotation)) * mCamSpeed * ts;
 			mCamPos.y -= cos(glm::radians(mCamRotation)) * mCamSpeed * ts;
@@ -69,12 +69,12 @@ namespace rebirth
 
 		if (mUseRotation)
 		{
-			if (Input::IsKeyPressed(RB_KEY_Q))
+			if (Input::IsKeyPressed(KeyCode::Q))
 			{
 				mCamRotation += mCamRotationSpeed * ts;
 			}
 
-			if (Input::IsKeyPressed(RB_KEY_E))
+			if (Input::IsKeyPressed(KeyCode::E))
 			{
 				mCamRotation -= mCamRotationSpeed * ts;
 			}
