@@ -128,7 +128,7 @@ namespace rebirth
 			samplers[i] = i;
 		}
 
-		sData.textureShader = Shader::Create("assets/shaders/Texture.vert", "assets/shaders/Texture.frag");
+		sData.textureShader = Shader::Create("assets/shaders/Texture.glsl");
 
 		sData.textureSlots[0] = sData.whiteTexture;
 
@@ -169,8 +169,8 @@ namespace rebirth
 	void Renderer2D::BeginScene(const EditorCamera& camera)
 	{
 		RB_PROFILE_FUNC();
-		sData.textureShader->Bind();
-		sData.textureShader->SetMat4("uViewProj", camera.GetViewProjection());
+		sData.cameraBuffer.viewProjection = camera.GetViewProjection();
+		sData.cameraUniformBuffer->SetData(&sData.cameraBuffer, sizeof(RenderData::CameraData));
 		sData.quadIndexCount = 0;
 		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
 		sData.textureSlotIndex = 1;

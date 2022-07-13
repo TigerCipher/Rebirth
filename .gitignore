@@ -13,6 +13,8 @@ obj/
 
 /vendor/deps/VulkanSDK
 /scripts/__pycache__
+/Rebirth-Reedit/assets/cache
+
 
 # Exceptions
 !/vendor/premake/bin/

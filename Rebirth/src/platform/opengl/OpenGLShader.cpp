@@ -106,7 +106,8 @@ namespace rebirth
 			std::filesystem::create_directories(cacheDir);
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& filepath)
+	OpenGLShader::OpenGLShader(const std::string& filepath) :
+		mFilepath(filepath)
 	{
 		RB_PROFILE_FUNC();
 
@@ -153,16 +154,18 @@ namespace rebirth
 		std::unordered_map<uint32, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertSrc;
 		sources[GL_FRAGMENT_SHADER] = fragSrc;
-
-		CompileOrGetVulkanBinaries(sources);
-		CompileOrGetOpenGLBinaries();
-		CreateProgram();
-
 		auto lastSlash = vertexPath.find_last_of("/\\");
 		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
 		auto lastDot = vertexPath.rfind('.');
 		auto count = lastDot == std::string::npos ? vertexPath.size() - lastSlash : lastDot - lastSlash;
 		mName = vertexPath.substr(lastSlash, count);
+
+		mFilepath = mName;
+
+		CompileOrGetVulkanBinaries(sources);
+		CompileOrGetOpenGLBinaries();
+		CreateProgram();
+
 	}
 
 	OpenGLShader::~OpenGLShader()
