@@ -29,8 +29,6 @@
 namespace rebirth
 {
 
-
-
 	OpenGLUniformBuffer::OpenGLUniformBuffer(uint32 size, uint32 binding)
 	{
 		glCreateBuffers(1, &mId);

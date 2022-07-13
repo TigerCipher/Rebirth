@@ -61,11 +61,20 @@ namespace rebirth
 	private:
 		std::string Read(const std::string& filepath);
 		std::unordered_map<uint32, std::string> Preprocess(const std::string& src);
-		void Compile(const std::unordered_map<uint32, std::string>& sources);
+		void CompileOrGetVulkanBinaries(const std::unordered_map<uint32, std::string>& sources);
+		void CompileOrGetOpenGLBinaries();
+
+		void CreateProgram();
+		void Reflect(uint32 stage, const std::vector<uint32>& shaderData);
 
 
 		uint32 mId = 0;
 		std::string mName;
+		std::string mFilepath;
+
+		std::unordered_map<uint32, std::vector<uint32>> mVulkanSPIRV;
+		std::unordered_map<uint32, std::vector<uint32>> mOpenGLSPIRV;
+		std::unordered_map<uint32, std::string> mOpenGLsrc;
 	};
 }
 
