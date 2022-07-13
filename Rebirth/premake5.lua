@@ -3,7 +3,7 @@ project "Rebirth"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/obj/" .. outputdir .. "/%{prj.name}")
@@ -31,6 +31,7 @@ project "Rebirth"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.VulkanSDK}",
 	}
 
 	links
@@ -71,12 +72,33 @@ project "Rebirth"
 		symbols "on"
 		runtime "Debug"
 
+		links
+		{
+			"%{Library.ShaderC_Debug}",
+			"%{Library.SPIRV_Cross_Debug}",
+			"%{Library.SPIRV_Cross_GLSL_Debug}"
+		}
+
 	filter "configurations:Release"
 		defines "RB_RELEASE"
 		optimize "on"
 		runtime "Release"
 
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}
+
 	filter "configurations:Dist"
 		defines "RB_DIST"
 		runtime "Release"
 		optimize "on"
+
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}

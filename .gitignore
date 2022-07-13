@@ -11,5 +11,8 @@ obj/
 
 *.json
 
+/vendor/deps/VulkanSDK
+/scripts/__pycache__
+
 # Exceptions
 !/vendor/premake/bin/
