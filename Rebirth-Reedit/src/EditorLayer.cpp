@@ -31,8 +31,6 @@ namespace rebirth
 	void EditorLayer::OnAttach()
 	{
 
-
-
 		RB_PROFILE_FUNC();
 		mTexture = Texture2D::Create("assets/textures/default.png");
 
@@ -129,9 +127,9 @@ namespace rebirth
 		if (mViewportFocused)
 		{
 			mCameraController.OnUpdate(ts);
-			mEditorCamera.OnUpdate(ts);
 		}
 
+		mEditorCamera.OnUpdate(ts);
 
 
 		Renderer2D::ResetStats();
@@ -158,9 +156,8 @@ namespace rebirth
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
-
 			if (pixelData == -1)
-				mHoveredEntity = {};
+				mHoveredEntity = Entity();
 			else mHoveredEntity = Entity((entt::entity)pixelData, mActiveScene.get());
 		}
 
@@ -176,6 +173,7 @@ namespace rebirth
 
 		EventDispatcher disp(e);
 		disp.Dispatch<KeyPressedEvent>(BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
+		disp.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FUNC(EditorLayer::OnMouseButtonPressed));
 	}
 
 	void EditorLayer::OnImguiRender()
@@ -310,7 +308,11 @@ namespace rebirth
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 
-		auto viewportOffset = ImGui::GetCursorPos();
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+		auto viewportOffset = ImGui::GetWindowPos();
+		mViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		mViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
 		mViewportFocused = ImGui::IsWindowFocused();
 		mViewportHovered = ImGui::IsWindowHovered();
@@ -327,24 +329,15 @@ namespace rebirth
 		uint32 textureID = mFramebuffer->GetColorAttachmentID();
 		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
-		auto winSize = ImGui::GetWindowSize();
-		auto minBound = ImGui::GetWindowPos();
-		minBound.x += viewportOffset.x;
-		minBound.y += viewportOffset.y;
-
-		ImVec2 maxBound = { minBound.x + winSize.x, minBound.y + winSize.y };
-		mViewportBounds[0] = { minBound.x, minBound.y };
-		mViewportBounds[1] = { maxBound.x, maxBound.y };
-
 		// Gizmo smizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && mGizmoType != -1)
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
-			float winWidth = (float)ImGui::GetWindowWidth();
-			float winHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, winWidth, winHeight);
+			ImGuizmo::SetRect(mViewportBounds[0].x, mViewportBounds[0].y,
+				mViewportBounds[1].x - mViewportBounds[0].x,
+				mViewportBounds[1].y - mViewportBounds[0].y);
 
 
 			// runtime
@@ -387,6 +380,18 @@ namespace rebirth
 
 		ImGui::End();
 
+	}
+
+
+	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	{
+		if (e.GetMouseButton() == RB_MOUSE_BUTTON_LEFT)
+		{
+			if(mViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(RB_KEY_LEFT_ALT))
+				mSceneHierarchyPanel.SetSelectedEntity(mHoveredEntity);
+		}
+
+		return false;
 	}
 
 

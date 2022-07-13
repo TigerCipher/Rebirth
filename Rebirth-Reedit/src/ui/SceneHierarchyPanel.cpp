@@ -94,6 +94,11 @@ namespace rebirth
 		ImGui::End();
 	}
 
+	void SceneHierarchyPanel::SetSelectedEntity(Entity entity)
+	{
+		mSelectionContext = entity;
+	}
+
 	template<typename T, typename Fn>
 	static void DrawComponent(const std::string& label, Entity entity, Fn func)
 	{

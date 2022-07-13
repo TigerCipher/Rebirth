@@ -36,6 +36,7 @@ namespace rebirth
 
 		void OnImguiRender();
 
+		void SetSelectedEntity(Entity entity);
 		Entity GetSelectedEntity() const { return mSelectionContext; }
 
 	private:
