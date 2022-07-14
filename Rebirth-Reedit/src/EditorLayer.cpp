@@ -340,8 +340,8 @@ namespace rebirth
 
 		ImGui::End();
 
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		//static bool show = true;
+		//ImGui::ShowDemoWindow(&show);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -520,10 +520,12 @@ namespace rebirth
 			return;
 		}
 
-		SceneSerializer serializer(mActiveScene);
+		Ref<Scene> newScene = createRef<Scene>();
+		SceneSerializer serializer(newScene);
 		if (serializer.DeserializeFromYaml(path.string()))
 		{
-			mActiveScene = createRef<Scene>();
+			mActiveScene->DestroyAll();
+			mActiveScene = newScene;
 			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 			mSceneHierarchyPanel.SetContext(mActiveScene);
 		}

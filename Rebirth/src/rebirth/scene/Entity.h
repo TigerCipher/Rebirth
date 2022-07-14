@@ -46,6 +46,8 @@ namespace rebirth
 		template<typename T>
 		T& GetComponent()
 		{
+			if (!HasComponent<T>())
+				RB_CORE_ERROR("Type name: {}", typeid(T).name());
 			RB_CORE_ASSERT(HasComponent<T>(), "This entity does not have this component");
 			return mScene->mRegistry.get<T>(mId);
 		}
@@ -64,7 +66,7 @@ namespace rebirth
 			mScene->mRegistry.remove<T>(mId);
 		}
 
-		operator bool() const { return mId != entt::null && mScene != nullptr; }
+		operator bool() const { return mId != entt::null && mScene != nullptr && mScene->mRegistry.valid(mId); }
 		operator uint32() const { return (uint32)mId; }
 		operator entt::entity() const { return mId; }
 
