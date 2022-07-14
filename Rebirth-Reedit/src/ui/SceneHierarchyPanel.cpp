@@ -322,7 +322,11 @@ namespace rebirth
 					{
 						const wchar_t* path = (const wchar_t*)payload->Data;
 						std::filesystem::path texturePath = gAssetsPath / path;
-						component.texture = Texture2D::Create(texturePath.string());
+						Ref<Texture2D> texture = Texture2D::Create(texturePath.string());
+						if (texture->IsLoaded())
+							component.texture = texture;
+						else
+							RB_CLIENT_WARN("Unable to load texture {}", texturePath.filename().string());
 					}
 					ImGui::EndDragDropTarget();
 				}

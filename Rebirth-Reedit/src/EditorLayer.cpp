@@ -199,7 +199,11 @@ namespace rebirth
 	void EditorLayer::OnEvent(Event& e)
 	{
 		mCameraController.OnEvent(e);
-		mEditorCamera.OnEvent(e);
+
+		if (mSceneState == SceneState::EDIT)
+		{
+			mEditorCamera.OnEvent(e);
+		}
 
 		EventDispatcher disp(e);
 		disp.Dispatch<KeyPressedEvent>(BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
@@ -510,12 +514,19 @@ namespace rebirth
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
-		mActiveScene = createRef<Scene>();
-		mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
-		mSceneHierarchyPanel.SetContext(mActiveScene);
+		if (path.extension().string() != ".rebirth")
+		{
+			RB_CLIENT_WARN("{} is not a scene file", path.filename().string());
+			return;
+		}
 
 		SceneSerializer serializer(mActiveScene);
-		serializer.DeserializeFromYaml(path.string());
+		if (serializer.DeserializeFromYaml(path.string()))
+		{
+			mActiveScene = createRef<Scene>();
+			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+			mSceneHierarchyPanel.SetContext(mActiveScene);
+		}
 	}
 
 	void EditorLayer::SaveSceneAs()

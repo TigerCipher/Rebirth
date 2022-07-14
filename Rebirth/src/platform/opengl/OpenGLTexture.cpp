@@ -47,36 +47,40 @@ namespace rebirth
 		// #NOTE perhaps default texture ? -Or perhaps better is to make default texture be when creating a quad/sprite/model/etc
 		// If a texture fails to load, it should be an assert so we can catch it easier
 
-		RB_CORE_ASSERT(data, "Failed to load texture file");
-		mWidth = width;
-		mHeight = height;
-
-		if (channels == 4)
+		if (data)
 		{
-			mInternalFormat = GL_RGBA8;
-			mDataFormat = GL_RGBA;
+			mWidth = width;
+			mHeight = height;
+
+			if (channels == 4)
+			{
+				mInternalFormat = GL_RGBA8;
+				mDataFormat = GL_RGBA;
+			}
+			else if (channels == 3)
+			{
+				mInternalFormat = GL_RGB8;
+				mDataFormat = GL_RGB;
+			}
+
+			RB_CORE_ASSERT(mInternalFormat & mDataFormat, "Image format not supported");
+
+			glCreateTextures(GL_TEXTURE_2D, 1, &mId);
+			glTextureStorage2D(mId, 1, mInternalFormat, mWidth, mHeight);
+
+			glTextureParameteri(mId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTextureParameteri(mId, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTextureParameteri(mId, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+			glTextureSubImage2D(mId, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
+
+			stbi_image_free(data);
+
+			mLoaded = true;
+			RB_CORE_TRACE("Texture {} loaded", path);
 		}
-		else if (channels == 3)
-		{
-			mInternalFormat = GL_RGB8;
-			mDataFormat = GL_RGB;
-		}
 
-		RB_CORE_ASSERT(mInternalFormat & mDataFormat, "Image format not supported");
-
-		glCreateTextures(GL_TEXTURE_2D, 1, &mId);
-		glTextureStorage2D(mId, 1, mInternalFormat, mWidth, mHeight);
-
-		glTextureParameteri(mId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTextureParameteri(mId, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameteri(mId, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTextureSubImage2D(mId, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE, data);
-
-		stbi_image_free(data);
-
-		RB_CORE_TRACE("Texture {} loaded", path);
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(uint32 width, uint32 height) :

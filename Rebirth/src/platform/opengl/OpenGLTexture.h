@@ -50,9 +50,11 @@ namespace rebirth
 
 		uint32 GetId() const override { return mId; }
 
+		bool IsLoaded() const override { return mLoaded; }
+
 		bool operator==(const Texture& other) const override
 		{
-			return mId == ((OpenGLTexture2D&)other).mId;
+			return mId == other.GetId();
 		}
 	private:
 		int mWidth;
@@ -60,6 +62,7 @@ namespace rebirth
 		uint32 mId;
 		uint32 mInternalFormat;
 		uint32 mDataFormat;
+		bool mLoaded = false;
 
 		std::string mPath;
 	};
