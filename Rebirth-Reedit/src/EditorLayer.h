@@ -47,7 +47,12 @@ namespace rebirth
 		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
 
+		void OnScenePlay();
+		void OnSceneStop();
 
+		void Toolbar();
+
+	private:
 		OrthoCameraController mCameraController;
 		bool mViewportFocused = false;
 		bool mViewportHovered = false;
@@ -76,5 +81,17 @@ namespace rebirth
 		int mGizmoType = -1;
 		SceneHierarchyPanel mSceneHierarchyPanel;
 		ContentBrowserPanel mContentBrowserPanel;
+
+
+		enum class SceneState
+		{
+			EDIT = 0,
+			PLAY
+		};
+
+		SceneState mSceneState = SceneState::EDIT;
+
+		Ref<Texture2D> mIconPlay;
+		Ref<Texture2D> mIconStop;
 	};
 }
