@@ -17,14 +17,13 @@ struct VertexOutput
 {
 	vec4 color;
 	vec2 texCoord;
-	float texIndex;
-	float padding;
 };
 
 
 
 layout(location = 0) out VertexOutput Output;
-layout(location = 4) out flat int vEntityID;
+layout(location = 2) out flat float vTexIndex;
+layout(location = 3) out flat int vEntityID;
 
 
 
@@ -33,7 +32,7 @@ void main()
 {
 	Output.texCoord = aTexCoord * aTilingFactor;
 	Output.color = aColor;
-	Output.texIndex = aTexIndex;
+	vTexIndex = aTexIndex;
 	vEntityID = aEntityID;
 	gl_Position = uViewProj * vec4(aPos, 1.0);
 }
@@ -48,12 +47,11 @@ struct VertexOutput
 {
 	vec4 color;
 	vec2 texCoord;
-	float texIndex;
-	float padding;
 };
 
 layout(location = 0) in VertexOutput Input;
-layout(location = 4) in flat int vEntityID;
+layout(location = 2) in flat float vTexIndex;
+layout(location = 3) in flat int vEntityID;
 
 layout(binding = 0) uniform sampler2D uTextures[32];
 
@@ -61,7 +59,7 @@ void main()
 {
 	vec4 texColor = Input.color;
 
-	switch(int(Input.texIndex))
+	switch(int(vTexIndex))
 	{
 		case  0: texColor *= texture(uTextures[ 0], Input.texCoord); break;
 		case  1: texColor *= texture(uTextures[ 1], Input.texCoord); break;

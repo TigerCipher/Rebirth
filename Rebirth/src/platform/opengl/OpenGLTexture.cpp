@@ -68,7 +68,7 @@ namespace rebirth
 		glTextureStorage2D(mId, 1, mInternalFormat, mWidth, mHeight);
 
 		glTextureParameteri(mId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTextureParameteri(mId, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(mId, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -90,7 +90,7 @@ namespace rebirth
 		glTextureStorage2D(mId, 1, mInternalFormat, mWidth, mHeight);
 
 		glTextureParameteri(mId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(mId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTextureParameteri(mId, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(mId, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}

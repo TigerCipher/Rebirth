@@ -88,7 +88,9 @@ namespace rebirth
 			if (ImGui::BeginDragDropSource())
 			{
 				const wchar_t* itemPath = relPath.c_str();
-				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
+				ImGui::Image((ImTextureID)icon->GetId(), { 64, 64 }, { 0, 1 }, { 1, 0 });
+				//ImGui::Text("%s", relPath.string().c_str());
 				ImGui::EndDragDropSource();
 			}
 

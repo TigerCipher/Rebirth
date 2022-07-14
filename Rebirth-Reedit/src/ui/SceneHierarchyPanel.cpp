@@ -31,7 +31,7 @@
 namespace rebirth
 {
 
-	//static bool sDirtyCameraFlag = false;
+	extern const std::filesystem::path gAssetsPath;
 
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& scene)
 	{
@@ -311,7 +311,24 @@ namespace rebirth
 
 		DrawComponent<SpriteComponent>("Sprite", entity, [](auto& component)
 			{
+				// Tint Color
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+
+				// Texture
+				ImGui::Button("Texture", {100.0f, 0.0f});
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						const wchar_t* path = (const wchar_t*)payload->Data;
+						std::filesystem::path texturePath = gAssetsPath / path;
+						component.texture = Texture2D::Create(texturePath.string());
+					}
+					ImGui::EndDragDropTarget();
+				}
+
+				// Tiling Factor
+				ImGui::DragFloat("Tiling Factor", &component.tilingFactor, 0.1f, 0.0f, 100.0f);
 			});
 	}
 

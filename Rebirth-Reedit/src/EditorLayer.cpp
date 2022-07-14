@@ -321,6 +321,9 @@ namespace rebirth
 
 		ImGui::End();
 
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 

@@ -429,7 +429,10 @@ namespace rebirth
 
 	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteComponent& spriteComponent, int entityId)
 	{
-		DrawQuad(transform, spriteComponent.color, entityId);
+		if (spriteComponent.texture)
+			DrawQuad(transform, spriteComponent.texture, spriteComponent.tilingFactor, spriteComponent.color, entityId);
+		else
+			DrawQuad(transform, spriteComponent.color, entityId);
 	}
 
 	Renderer2D::Stats Renderer2D::GetStats()
