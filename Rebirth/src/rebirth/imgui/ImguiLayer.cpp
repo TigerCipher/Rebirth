@@ -144,7 +144,6 @@ namespace rebirth
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
-
 		style.ScaleAllSizes(Application::Instance().GetWindow().GetHighDPIScaleFactor());
 
 	}
@@ -166,8 +165,9 @@ namespace rebirth
 
 		// #FIX: Right now this loads from the editor filepath - not good for sandbox
 		// #TODO: Font size should be able to change via user preferences in the editor
-		io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Bold.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Regular.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * 18.0f);
+		const float fontSize = 24.0f;
+		io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Bold.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * fontSize);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Regular.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * fontSize);
 
 
 		//ImGui::StyleColorsDark();
