@@ -25,6 +25,7 @@
 #include <Rebirth.h>
 
 #include "ui/SceneHierarchyPanel.h"
+#include "ui/ContentBrowserPanel.h"
 
 namespace rebirth
 {
@@ -73,5 +74,6 @@ namespace rebirth
 
 		int mGizmoType = -1;
 		SceneHierarchyPanel mSceneHierarchyPanel;
+		ContentBrowserPanel mContentBrowserPanel;
 	};
 }
