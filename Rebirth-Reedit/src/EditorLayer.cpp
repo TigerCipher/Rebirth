@@ -28,6 +28,9 @@
 
 namespace rebirth
 {
+
+	extern const std::filesystem::path gAssetsPath;
+
 	void EditorLayer::OnAttach()
 	{
 
@@ -342,6 +345,16 @@ namespace rebirth
 		uint32 textureID = mFramebuffer->GetColorAttachmentID();
 		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(gAssetsPath / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
 		// Gizmo smizmos
 		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && mGizmoType != -1 && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
@@ -471,14 +484,18 @@ namespace rebirth
 		std::string filepath = FileDialog::OpenFile("Rebirth Scene (*.rebirth)\0*.rebirth\0");
 		if (!filepath.empty())
 		{
-			//mActiveScene->DestroyAll();
-			mActiveScene = createRef<Scene>();
-			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
-			mSceneHierarchyPanel.SetContext(mActiveScene);
-
-			SceneSerializer serializer(mActiveScene);
-			serializer.DeserializeFromYaml(filepath);
+			OpenScene(filepath);
 		}
+	}
+
+	void EditorLayer::OpenScene(const std::filesystem::path& path)
+	{
+		mActiveScene = createRef<Scene>();
+		mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+
+		SceneSerializer serializer(mActiveScene);
+		serializer.DeserializeFromYaml(path.string());
 	}
 
 	void EditorLayer::SaveSceneAs()

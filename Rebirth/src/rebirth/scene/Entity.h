@@ -53,7 +53,7 @@ namespace rebirth
 		template<typename T>
 		bool HasComponent()
 		{
-			if(mId != entt::null) return mScene->mRegistry.any_of<T>(mId);
+			if(mId != entt::null && mScene->mRegistry.valid(mId)) return mScene->mRegistry.all_of<T>(mId);
 			return false;
 		}
 

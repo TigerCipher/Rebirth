@@ -29,11 +29,11 @@ namespace rebirth
 {
 
 	// TODO #FUTURE: Asset directory should be in relation to 'projects'
-	static const std::filesystem::path sAssetsPath = "assets";
+	extern const std::filesystem::path gAssetsPath = "assets";
 
 
 	ContentBrowserPanel::ContentBrowserPanel() :
-		mCurrentDir(sAssetsPath)
+		mCurrentDir(gAssetsPath)
 	{
 		mDirectoryIcon = Texture2D::Create("assets/icons/directory.png");
 		mFileIcon = Texture2D::Create("assets/icons/file.png");
@@ -43,7 +43,7 @@ namespace rebirth
 	{
 		ImGui::Begin("Content Browser");
 
-		if (mCurrentDir != sAssetsPath)
+		if (mCurrentDir != gAssetsPath)
 		{
 			if (ImGui::Button("<-"))
 			{
@@ -61,20 +61,37 @@ namespace rebirth
 			colCount = 1;
 
 		ImGui::Columns(colCount, 0, false);
-
 		for (auto& dirEntry : std::filesystem::directory_iterator(mCurrentDir))
 		{
 			const auto& path = dirEntry.path();
-			auto relPath = std::filesystem::relative(path, sAssetsPath);
+			auto relPath = std::filesystem::relative(path, gAssetsPath);
 			std::string filenameStr = relPath.filename().string();
 
+			ImGui::PushID(filenameStr.c_str());
 			Ref<Texture2D> icon = dirEntry.is_directory() ? mDirectoryIcon : mFileIcon;
 			if (path.parent_path().string().find("textures") != std::string::npos)
 			{
 				icon = Texture2D::Create(path.string());
 			//RB_CORE_TRACE(path.extension());
 			}
+
+			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_BorderShadow, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+
 			ImGui::ImageButton((ImTextureID)icon->GetId(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
+
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+
+			if (ImGui::BeginDragDropSource())
+			{
+				const wchar_t* itemPath = relPath.c_str();
+				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+				ImGui::EndDragDropSource();
+			}
+
 
 			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 			{
@@ -83,6 +100,7 @@ namespace rebirth
 			}
 			ImGui::TextWrapped(filenameStr.c_str());
 			ImGui::NextColumn();
+			ImGui::PopID();
 		}
 
 		ImGui::Columns(1);
