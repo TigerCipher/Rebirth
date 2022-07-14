@@ -25,6 +25,7 @@
 #include <Rebirth.h>
 
 #include "ui/SceneHierarchyPanel.h"
+#include "ui/ContentBrowserPanel.h"
 
 namespace rebirth
 {
@@ -43,9 +44,15 @@ namespace rebirth
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 		void NewScene();
 		void OpenScene();
+		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
 
+		void OnScenePlay();
+		void OnSceneStop();
 
+		void Toolbar();
+
+	private:
 		OrthoCameraController mCameraController;
 		bool mViewportFocused = false;
 		bool mViewportHovered = false;
@@ -73,5 +80,18 @@ namespace rebirth
 
 		int mGizmoType = -1;
 		SceneHierarchyPanel mSceneHierarchyPanel;
+		ContentBrowserPanel mContentBrowserPanel;
+
+
+		enum class SceneState
+		{
+			EDIT = 0,
+			PLAY
+		};
+
+		SceneState mSceneState = SceneState::EDIT;
+
+		Ref<Texture2D> mIconPlay;
+		Ref<Texture2D> mIconStop;
 	};
 }

@@ -39,10 +39,23 @@
 
 namespace rebirth
 {
+
+	struct CommandLineArgs
+	{
+		int count = 0;
+		char** args = nullptr;
+
+		const char* operator[](int index) const
+		{
+			RB_CORE_ASSERT(index < count);
+			return args[index];
+		}
+	};
+
 	class Application
 	{
 	public:
-		Application(const std::string& title, uint32 windowWidth, uint32 windowHeight);
+		Application(const std::string& title, uint32 windowWidth, uint32 windowHeight, CommandLineArgs cmd = CommandLineArgs());
 		//Application(const WindowProperties& props) : Application(props.title, props.width, props.height) {}
 		virtual ~Application();
 
@@ -57,12 +70,15 @@ namespace rebirth
 		Window& GetWindow() const { return *mWindow; }
 		ImguiLayer* GetImguiLayer() { return mImguiLayer; }
 
+		CommandLineArgs GetCommandLineArgs() const { return mCommandLine; }
+
 		static Application& Instance() { return *sInstance; }
 
 	private:
 
 		static Application* sInstance;
-		
+
+		CommandLineArgs mCommandLine;
 		Scope<Window> mWindow;
 		LayerStack mLayerStack;
 		ImguiLayer* mImguiLayer;
@@ -75,5 +91,5 @@ namespace rebirth
 	};
 
 	// Defined by game
-	Application* CreateApplication();
+	Application* CreateApplication(CommandLineArgs args);
 }

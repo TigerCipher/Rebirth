@@ -15,27 +15,29 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: MouseCodes.h
-// Date File Created: 06/18/2022 at 4:48 PM
+// File Name: ContentBrowserPanel.h
+// Date File Created: 7/13/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
-
-
 #pragma once
 
-// modified from glfw3.h
+#include "rebirth/renderer/Texture.h"
 
-#define RB_MOUSE_BUTTON_1         0
-#define RB_MOUSE_BUTTON_2         1
-#define RB_MOUSE_BUTTON_3         2
-#define RB_MOUSE_BUTTON_4         3
-#define RB_MOUSE_BUTTON_5         4
-#define RB_MOUSE_BUTTON_6         5
-#define RB_MOUSE_BUTTON_7         6
-#define RB_MOUSE_BUTTON_8         7
-#define RB_MOUSE_BUTTON_LAST      RB_MOUSE_BUTTON_8
-#define RB_MOUSE_BUTTON_LEFT      RB_MOUSE_BUTTON_1
-#define RB_MOUSE_BUTTON_RIGHT     RB_MOUSE_BUTTON_2
-#define RB_MOUSE_BUTTON_MIDDLE    RB_MOUSE_BUTTON_3
+namespace rebirth
+{
+	class ContentBrowserPanel
+	{
+	public:
+		ContentBrowserPanel();
+
+		void OnImguiRender();
+
+	private:
+		std::filesystem::path mCurrentDir;
+
+		Ref<Texture2D> mDirectoryIcon;
+		Ref<Texture2D> mFileIcon;
+	};
+}
+

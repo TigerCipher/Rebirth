@@ -57,6 +57,7 @@ namespace rebirth
 
 	void SceneCamera::SetViewportSize(uint32 width, uint32 height)
 	{
+		RB_CORE_ASSERT(width > 0 && height > 0);
 		float newApsect = (float)width / (float)height;
 		if (mAspectRatio != newApsect)
 		{

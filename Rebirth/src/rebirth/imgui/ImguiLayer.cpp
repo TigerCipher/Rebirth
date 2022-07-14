@@ -52,8 +52,8 @@ namespace rebirth
 
 		colors[ImGuiCol_Text] =						ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
 		colors[ImGuiCol_TextDisabled] =				ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-		colors[ImGuiCol_ChildBg] =					ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 		colors[ImGuiCol_WindowBg] =					ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
+		colors[ImGuiCol_ChildBg] =					ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 		colors[ImGuiCol_PopupBg] =					ImVec4(0.25f, 0.25f, 0.25f, 1.00f);
 
 		colors[ImGuiCol_Border] =					ImVec4(0.12f, 0.12f, 0.12f, 0.71f);
@@ -62,6 +62,7 @@ namespace rebirth
 		colors[ImGuiCol_FrameBg] =					ImVec4(0.42f, 0.42f, 0.42f, 0.54f);
 		colors[ImGuiCol_FrameBgHovered] =			ImVec4(0.42f, 0.42f, 0.42f, 0.40f);
 		colors[ImGuiCol_FrameBgActive] =			ImVec4(0.56f, 0.56f, 0.56f, 0.67f);
+
 
 		colors[ImGuiCol_TitleBg] =					ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
 		colors[ImGuiCol_TitleBgActive] =			ImVec4(0.22f, 0.22f, 0.22f, 1.00f);
@@ -144,7 +145,6 @@ namespace rebirth
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 		}
-
 		style.ScaleAllSizes(Application::Instance().GetWindow().GetHighDPIScaleFactor());
 
 	}
@@ -166,8 +166,9 @@ namespace rebirth
 
 		// #FIX: Right now this loads from the editor filepath - not good for sandbox
 		// #TODO: Font size should be able to change via user preferences in the editor
-		io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Bold.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Regular.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * 18.0f);
+		const float fontSize = 24.0f;
+		io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Bold.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * fontSize);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/ruda/Ruda-Regular.ttf", Application::Instance().GetWindow().GetHighDPIScaleFactor() * fontSize);
 
 
 		//ImGui::StyleColorsDark();

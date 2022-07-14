@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------
 // 
-// Sandbox
+// Rebirth
 //    Copyright 2022 Matthew Rogers
 // 
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,33 +15,35 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: ReeditApp.cpp
-// Date File Created: 06/26/2022
+// File Name: UniformBuffer.cpp
+// Date File Created: 7/13/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+#include "rbpch.h"
+#include "UniformBuffer.h"
 
-#include <Rebirth.h>
-#include <rebirth/core/EntryPoint.h>
+#include "Renderer.h"
+#include "platform/opengl/OpenGLUniformBuffer.h"
 
-#include "EditorLayer.h"
 
 namespace rebirth
 {
-	class ReeditApp final : public Application
+
+	Ref<UniformBuffer> UniformBuffer::Create(uint32 size, uint32 binding)
 	{
-	public:
-		ReeditApp(CommandLineArgs args) : Application("Rebirth Reedit", 2560, 1440, args)
+		switch (Renderer::GetAPI())
 		{
-			PushLayer(new EditorLayer());
+			case GraphicsAPI::API::NONE:
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+
+			case GraphicsAPI::API::OPENGL: return createRef<OpenGLUniformBuffer>(size, binding);
 		}
-		~ReeditApp() override = default;
 
-	};
-
-
-	Application* CreateApplication(CommandLineArgs args)
-	{
-		return new ReeditApp(args);
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
 	}
+
 }
+

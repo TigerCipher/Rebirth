@@ -169,19 +169,19 @@ namespace rebirth
 				{
 					case GLFW_PRESS:
 					{
-						KeyPressedEvent event(key, 0);
+						KeyPressedEvent event((KeyCode)key, 0);
 						data.eventCallback(event);
 						break;
 					}
 					case GLFW_RELEASE:
 					{
-						KeyReleasedEvent event(key);
+						KeyReleasedEvent event((KeyCode)key);
 						data.eventCallback(event);
 						break;
 					}
 					case GLFW_REPEAT:
 					{
-						KeyPressedEvent event(key, 1);
+						KeyPressedEvent event((KeyCode)key, 1);
 						data.eventCallback(event);
 						break;
 					}
@@ -197,13 +197,13 @@ namespace rebirth
 				{
 					case GLFW_PRESS:
 					{
-						MouseButtonPressedEvent event(button);
+						MouseButtonPressedEvent event((MouseButton)button);
 						data.eventCallback(event);
 						break;
 					}
 					case GLFW_RELEASE:
 					{
-						MouseButtonReleasedEvent event(button);
+						MouseButtonReleasedEvent event((MouseButton)button);
 						data.eventCallback(event);
 						break;
 					}

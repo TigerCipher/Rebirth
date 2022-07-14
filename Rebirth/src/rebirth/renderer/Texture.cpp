@@ -28,9 +28,16 @@
 
 namespace rebirth
 {
+	// Temporary texture asset management system
+	static std::unordered_map<std::string, Ref<Texture2D>> sTextures;
 
-	Ref<rebirth::Texture2D> Texture2D::Create(const std::string& path)
+	Ref<Texture2D> Texture2D::Create(const std::string& path)
 	{
+		if (sTextures.find(path) != sTextures.end())
+		{
+			return sTextures[path];
+		}
+
 		switch (Renderer::GetAPI())
 		{
 			case GraphicsAPI::API::NONE:
@@ -39,14 +46,19 @@ namespace rebirth
 				return nullptr;
 			}
 
-			case GraphicsAPI::API::OPENGL: return createRef<OpenGLTexture2D>(path);
+			case GraphicsAPI::API::OPENGL:
+			{
+				Ref<Texture2D> tex = createRef<OpenGLTexture2D>(path);
+				sTextures[path] = tex;
+				return tex;
+			}
 		}
 
 		RB_CORE_ASSERT(false, "Unknown graphics API");
 		return nullptr;
 	}
 
-	Ref<rebirth::Texture2D> Texture2D::Create(uint32 width, uint32 height)
+	Ref<Texture2D> Texture2D::Create(uint32 width, uint32 height)
 	{
 		switch (Renderer::GetAPI())
 		{

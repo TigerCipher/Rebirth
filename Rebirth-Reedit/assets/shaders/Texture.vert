@@ -7,19 +7,31 @@ layout(location=3) in float aTexIndex;
 layout(location=4) in float aTilingFactor;
 layout(location=5) in int aEntityID;
 
-out vec2 vTexCoord;
-out vec4 vColor;
-out flat float vTexIndex;
-out flat int vEntityID;
 
-uniform mat4 uViewProj;
+struct VertexOutput
+{
+	vec4 color;
+	vec2 texCoord;
+	float texIndex;
+	float padding;
+};
+
+
+
+layout(location = 0) out VertexOutput Output;
+layout(location = 4) out flat int vEntityID;
+
+layout(std140, binding = 0) uniform Camera
+{
+	mat4 uViewProj;
+};
 
 	
 void main()
 {
-	vTexCoord = aTexCoord * aTilingFactor;
-	vColor = aColor;
-	vTexIndex = aTexIndex;
+	Output.texCoord = aTexCoord * aTilingFactor;
+	Output.color = aColor;
+	Output.texIndex = aTexIndex;
 	vEntityID = aEntityID;
 	gl_Position = uViewProj * vec4(aPos, 1.0);
 }

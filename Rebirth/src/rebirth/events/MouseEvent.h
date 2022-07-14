@@ -25,6 +25,7 @@
 
 
 #include "Event.h"
+#include "rebirth/input/InputCodes.h"
 
 
 namespace rebirth
@@ -78,20 +79,20 @@ namespace rebirth
 	class MouseButtonEvent : public Event
 	{
 	public:
-		int GetMouseButton() const { return mButton; }
+		MouseButton GetMouseButton() const { return mButton; }
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	protected:
-		MouseButtonEvent(const int button)
+		MouseButtonEvent(MouseButton button)
 			: mButton(button) {}
 
-		int mButton;
+		MouseButton mButton;
 	};
 
 	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(const int button)
+		MouseButtonPressedEvent(MouseButton button)
 			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override
@@ -107,7 +108,7 @@ namespace rebirth
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(const int button)
+		MouseButtonReleasedEvent(MouseButton button)
 			: MouseButtonEvent(button) {}
 
 		std::string ToString() const override

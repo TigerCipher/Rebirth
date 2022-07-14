@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------
 // 
-// Sandbox
+// Rebirth
 //    Copyright 2022 Matthew Rogers
 // 
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,33 +15,35 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: ReeditApp.cpp
-// Date File Created: 06/26/2022
+// File Name: OpenGLUniformBuffer.cpp
+// Date File Created: 7/13/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+#include "rbpch.h"
+#include "OpenGLUniformBuffer.h"
 
-#include <Rebirth.h>
-#include <rebirth/core/EntryPoint.h>
+#include <glad/glad.h>
 
-#include "EditorLayer.h"
 
 namespace rebirth
 {
-	class ReeditApp final : public Application
+
+	OpenGLUniformBuffer::OpenGLUniformBuffer(uint32 size, uint32 binding)
 	{
-	public:
-		ReeditApp(CommandLineArgs args) : Application("Rebirth Reedit", 2560, 1440, args)
-		{
-			PushLayer(new EditorLayer());
-		}
-		~ReeditApp() override = default;
-
-	};
-
-
-	Application* CreateApplication(CommandLineArgs args)
-	{
-		return new ReeditApp(args);
+		glCreateBuffers(1, &mId);
+		glNamedBufferData(mId, size, nullptr, GL_DYNAMIC_DRAW);
+		glBindBufferBase(GL_UNIFORM_BUFFER, binding, mId);
 	}
+
+	OpenGLUniformBuffer::~OpenGLUniformBuffer()
+	{
+		glDeleteBuffers(1, &mId);
+	}
+
+	void OpenGLUniformBuffer::SetData(const void* data, uint32 size, uint32 offset /*= 0*/)
+	{
+		glNamedBufferSubData(mId, offset, size, data);
+	}
+
 }

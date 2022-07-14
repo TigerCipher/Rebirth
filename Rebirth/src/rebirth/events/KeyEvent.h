@@ -25,27 +25,27 @@
 
 
 #include "Event.h"
-
+#include "rebirth/input/InputCodes.h"
 
 namespace rebirth
 {
 	class KeyEvent : public Event
 	{
 	public:
-		int GetKeyCode() const { return mKeyCode; }
+		KeyCode GetKeyCode() const { return mKeyCode; }
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
 	protected:
-		KeyEvent(const int keycode)
+		KeyEvent(KeyCode keycode)
 			: mKeyCode(keycode) {}
 
-		int mKeyCode;
+		KeyCode mKeyCode;
 	};
 
 	class  KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(const int keycode, const int repeatCount)
+		KeyPressedEvent(KeyCode keycode, const int repeatCount)
 			: KeyEvent(keycode), mRepeatCount(repeatCount) {}
 
 		int GetRepeatCount() const { return mRepeatCount; }
@@ -65,7 +65,7 @@ namespace rebirth
 	class  KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(const int keycode)
+		KeyReleasedEvent(KeyCode keycode)
 			: KeyEvent(keycode) {}
 
 		std::string ToString() const override

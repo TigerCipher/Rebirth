@@ -101,7 +101,7 @@ void Sandbox2D::OnImguiRender()
 		ImGui::ColorPicker4("Square Color", glm::value_ptr(mSquareColor));
 
 		uint32_t textureID = mTexture->GetId();
-		ImGui::Image((void*)textureID, ImVec2{ 256.0f, 256.0f });
+		ImGui::Image((void*)(uint64_t)textureID, ImVec2{ 256.0f, 256.0f });
 		ImGui::End();
 
 }

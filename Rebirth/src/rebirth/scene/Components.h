@@ -29,6 +29,7 @@
 #include "rebirth/renderer/OrthoCamera.h"
 #include "SceneCamera.h"
 #include "ScriptableEntity.h"
+#include "rebirth/renderer/Texture.h"
 
 namespace rebirth
 {
@@ -62,6 +63,9 @@ namespace rebirth
 	struct SpriteComponent
 	{
 		glm::vec4 color{ 1.0f };
+		Ref<Texture2D> texture;
+		float tilingFactor = 1.0f;
+
 
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;
