@@ -23,6 +23,7 @@ project "Rebirth"
 	{
 		"src",
 		"%{IncludeDir.spdlog}",
+		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
@@ -36,6 +37,7 @@ project "Rebirth"
 
 	links
 	{
+		"Box2D",
 		"GLFW",
 		"Glad",
 		"ImGui",

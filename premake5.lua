@@ -38,6 +38,7 @@ group "Dependencies"
 	include "vendor/deps/Glad"
 	include "vendor/deps/imgui"
 	include "vendor/deps/yaml-cpp"
+	include "vendor/deps/box2d"
 group ""
 
 include "Rebirth"
