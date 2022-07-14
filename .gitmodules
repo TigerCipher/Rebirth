@@ -17,3 +17,6 @@
 [submodule "vendor/deps/ImGuizmo"]
 	path = vendor/deps/ImGuizmo
 	url = https://github.com/TigerCipher/ImGuizmo.git
+[submodule "vendor/deps/box2d"]
+	path = vendor/deps/box2d
+	url = https://github.com/TigerCipher/box2d
