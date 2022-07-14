@@ -22,6 +22,8 @@
 // ------------------------------------------------------------------------------
 #pragma once
 
+#include "rebirth/renderer/Texture.h"
+
 namespace rebirth
 {
 	class ContentBrowserPanel
@@ -33,6 +35,9 @@ namespace rebirth
 
 	private:
 		std::filesystem::path mCurrentDir;
+
+		Ref<Texture2D> mDirectoryIcon;
+		Ref<Texture2D> mFileIcon;
 	};
 }
 
