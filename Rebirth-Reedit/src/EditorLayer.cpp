@@ -46,8 +46,11 @@ namespace rebirth
 		if (cmd.count > 1)
 		{
 			auto scenePath = cmd[1];
-			SceneSerializer serializer(mActiveScene);
-			serializer.DeserializeFromYaml(scenePath);
+			if (std::filesystem::exists(scenePath))
+			{
+				SceneSerializer serializer(mActiveScene);
+				serializer.DeserializeFromYaml(scenePath);
+			}
 		}
 
 #if 0
@@ -396,7 +399,7 @@ namespace rebirth
 	{
 		if (e.GetMouseButton() == MouseButton::LEFT)
 		{
-			if(mViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
+			if (mViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
 				mSceneHierarchyPanel.SetSelectedEntity(mHoveredEntity);
 		}
 
