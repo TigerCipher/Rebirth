@@ -187,6 +187,7 @@ namespace rebirth
 
 	void Renderer2D::Flush()
 	{
+		if (sData.quadIndexCount == 0) return;
 		RB_PROFILE_FUNC();
 
 		for (uint32 i = 0; i < sData.textureSlotIndex; i++)

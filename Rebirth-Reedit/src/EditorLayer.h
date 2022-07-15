@@ -45,7 +45,9 @@ namespace rebirth
 		void NewScene();
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
+		void SaveScene();
 		void SaveSceneAs();
+		void SerializeScene(Ref<Scene> scene, const std::filesystem::path& path);
 
 		void OnScenePlay();
 		void OnSceneStop();
@@ -67,6 +69,8 @@ namespace rebirth
 		Ref<Scene> mActiveScene;
 		//Ref<Scene> mRuntimeScene;
 		Ref<Scene> mEditorScene;
+
+		std::filesystem::path mEditorScenePath;
 
 
 		Entity mSquareEntity;

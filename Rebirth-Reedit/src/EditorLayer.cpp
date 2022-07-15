@@ -55,6 +55,7 @@ namespace rebirth
 				SceneSerializer serializer(mActiveScene);
 				serializer.DeserializeFromYaml(scenePath);
 				mEditorScene = mActiveScene;
+				mEditorScenePath = scenePath;
 			}
 		}
 
@@ -141,7 +142,7 @@ namespace rebirth
 			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 		}
 
-		
+
 
 
 		Renderer2D::ResetStats();
@@ -172,7 +173,7 @@ namespace rebirth
 			}
 		}
 
-		
+
 
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= mViewportBounds[0].x;
@@ -472,9 +473,11 @@ namespace rebirth
 				}
 				break;
 			case KeyCode::S:
-				if (control && shift)
+				if (control)
 				{
-					SaveSceneAs();
+					if (shift)
+						SaveSceneAs();
+					else SaveScene();
 				}
 				break;
 
@@ -507,6 +510,8 @@ namespace rebirth
 		mActiveScene = createRef<Scene>();
 		mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 		mSceneHierarchyPanel.SetContext(mActiveScene);
+		mEditorScene = mActiveScene;
+		mEditorScenePath = std::filesystem::path();
 	}
 
 	void EditorLayer::OpenScene()
@@ -536,7 +541,18 @@ namespace rebirth
 			mEditorScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 			mSceneHierarchyPanel.SetContext(mEditorScene);
 			mActiveScene = mEditorScene;
+			mEditorScenePath = path;
 		}
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		if (mEditorScenePath.empty())
+		{
+			mEditorScenePath = "assets/scenes/untitled.rebirth";
+		}
+
+		SerializeScene(mActiveScene, mEditorScenePath);
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -544,9 +560,15 @@ namespace rebirth
 		std::string filepath = FileDialog::SaveFile("Rebirth Scene (*.rebirth)\0*.rebirth\0");
 		if (!filepath.empty())
 		{
-			SceneSerializer serializer(mActiveScene);
-			serializer.SerializeToYaml(filepath);
+			SerializeScene(mActiveScene, filepath);
+			mEditorScenePath = filepath;
 		}
+	}
+
+	void EditorLayer::SerializeScene(Ref<Scene> scene, const std::filesystem::path& path)
+	{
+		SceneSerializer serializer(scene);
+		serializer.SerializeToYaml(path.string());
 	}
 
 	void EditorLayer::OnScenePlay()
@@ -599,7 +621,7 @@ namespace rebirth
 		float size = ImGui::GetWindowHeight() - 4.0f;
 		ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
 
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, {1, 1}, 0))
+		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, { 1, 1 }, 0))
 		{
 			if (mSceneState == SceneState::EDIT)
 				OnScenePlay();

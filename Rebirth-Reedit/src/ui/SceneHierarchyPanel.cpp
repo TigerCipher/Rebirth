@@ -48,40 +48,31 @@ namespace rebirth
 	{
 		ImGui::Begin("Scene Hierarchy");
 
-		mContext->mRegistry.each([&](auto entity)
+		if (mContext)
+		{
+			mContext->mRegistry.each([&](auto entity)
+				{
+					Entity e{ entity, mContext.get() };
+					DrawEntityNode(e);
+				});
+
+
+			if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
 			{
-				Entity e{ entity, mContext.get() };
-				DrawEntityNode(e);
-			});
+				mSelectionContext = {};
+			}
 
-		//if (sDirtyCameraFlag)
-		//{
-		//	mContext->mRegistry.each([&](auto ent)
-		//		{
-		//			Entity e{ ent, mContext.get() };
-		//			if (e.HasComponent<CameraComponent>())
-		//			{
-		//				auto& cc = e.GetComponent<CameraComponent>();
-		//				cc.primary = false;
-		//			}
-		//		});
-		//}
+			// Context menu on blank space
+			if (ImGui::BeginPopupContextWindow(0, 1, false))
+			{
+				if (ImGui::MenuItem("Add Entity"))
+					mContext->CreateEntity("New Entity");
 
-		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
-		{
-			mSelectionContext = {};
+				ImGui::EndPopup();
+			}
 		}
 
-		// Context menu on blank space
-		if (ImGui::BeginPopupContextWindow(0, 1, false))
-		{
-			if (ImGui::MenuItem("Add Entity"))
-				mContext->CreateEntity("New Entity");
-
-			ImGui::EndPopup();
-		}
 		ImGui::End();
-
 
 
 		ImGui::Begin("Properties");
@@ -242,7 +233,7 @@ namespace rebirth
 			ImGui::EndPopup();
 		}
 		ImGui::PopItemWidth();
-		
+
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& trans)
 			{
@@ -321,7 +312,7 @@ namespace rebirth
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
 
 				// Texture
-				ImGui::Button("Texture", {100.0f, 0.0f});
+				ImGui::Button("Texture", { 100.0f, 0.0f });
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -345,7 +336,7 @@ namespace rebirth
 		DrawComponent<RigidBody2DComponent>("RigidBody 2D", entity, [](auto& component)
 			{
 
-				const char* bodyTypeStr[] = { "Static", "Dynamic", "Kinematic"};
+				const char* bodyTypeStr[] = { "Static", "Dynamic", "Kinematic" };
 				const char* currentBodyTypeStr = bodyTypeStr[(int)component.bodyType];
 				if (ImGui::BeginCombo("Body Type", currentBodyTypeStr))
 				{
