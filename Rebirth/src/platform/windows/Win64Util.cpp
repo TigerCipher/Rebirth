@@ -53,6 +53,7 @@ namespace rebirth
 
 		if (GetOpenFileNameA(&openFileName) == TRUE)
 		{
+			RB_CORE_TRACE("Opening file {} with filters: {}", openFileName.lpstrFile, filters);
 			return openFileName.lpstrFile;
 		}
 
@@ -81,6 +82,7 @@ namespace rebirth
 
 		if (GetSaveFileNameA(&openFileName) == TRUE)
 		{
+			RB_CORE_TRACE("Saving file {} with filters: {}", openFileName.lpstrFile, filters);
 			return openFileName.lpstrFile;
 		}
 
@@ -97,6 +99,7 @@ namespace rebirth
 
 	void Time::Init()
 	{
+		RB_CORE_TRACE("Initializing Rebirth timer");
 		QueryPerformanceFrequency((LARGE_INTEGER*) &sData.frequency);
 		sData.offset = GetTimerValue();
 	}

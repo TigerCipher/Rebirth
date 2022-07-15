@@ -141,8 +141,11 @@ namespace rebirth
 
 		RB_CORE_TRACE("Setting glfw window pointer");
 		glfwSetWindowUserPointer(mWindow, &mData);
+
+		// #TODO: Vsync should be a user preference decided at runtime, not compile time
 		SetVSync(true);
 
+		RB_CORE_TRACE("Setting glfw callbacks");
 
 		glfwSetWindowSizeCallback(mWindow, [](GLFWwindow* window, int width, int height)
 			{
@@ -230,6 +233,7 @@ namespace rebirth
 	void Win64Window::Shutdown()
 	{
 		RB_PROFILE_FUNC();
+		RB_CORE_INFO("Destroying window");
 		glfwDestroyWindow(mWindow);
 	}
 

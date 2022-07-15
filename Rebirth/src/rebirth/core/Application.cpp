@@ -41,12 +41,11 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
-		RB_CORE_TRACE("Creating core application");
+		RB_CORE_INFO("Creating core application");
 		sInstance = this;
 		Time::Init();
 		mWindow = Window::Create({title, windowWidth, windowHeight});
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-		//mWindow->SetVSync(false);
 
 
 		Renderer::Init();
@@ -61,11 +60,13 @@ namespace rebirth
 	Application::~Application()
 	{
 		RB_PROFILE_FUNC();
+		RB_CORE_INFO("Shutting down application");
 		Renderer::Shutdown();
 	}
 
 	void Application::Close()
 	{
+		RB_CORE_INFO("Closing application and exiting the run loop");
 		mRunning = false;
 	}
 
