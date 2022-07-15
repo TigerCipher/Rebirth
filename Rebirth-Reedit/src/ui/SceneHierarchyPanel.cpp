@@ -345,7 +345,7 @@ namespace rebirth
 				const char* currentBodyTypeStr = bodyTypeStr[(int)component.bodyType];
 				if (ImGui::BeginCombo("Body Type", currentBodyTypeStr))
 				{
-					for (int i = 0; i < 2; i++)
+					for (int i = 0; i < 3; i++)
 					{
 						bool isSelected = currentBodyTypeStr == bodyTypeStr[i];
 						if (ImGui::Selectable(bodyTypeStr[i], isSelected))

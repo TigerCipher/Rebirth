@@ -1,24 +1,15 @@
 Scene: Untitled
 Entities:
-  - Entity: 3425435435435
+  - Entity: 17592640909236090786
     TagComponent:
-      Tag: Left
+      Tag: Top
     TransformComponent:
-      Translation: [-0.354999989, 0, 0.349999994]
-      Rotation: [0, -0.785398185, 0]
+      Translation: [0, 0.5, 0]
+      Rotation: [1.57079637, 0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteComponent:
-      Color: [0, 1, 0.917646885, 1]
-  - Entity: 3425435435435
-    TagComponent:
-      Tag: Right
-    TransformComponent:
-      Translation: [0.351999998, 0, 0.349999994]
-      Rotation: [0, 0.785398185, 0]
-      Scale: [1, 1, 1]
-    SpriteComponent:
-      Color: [0, 0.588235319, 0.539792299, 1]
-  - Entity: 3425435435435
+      Color: [0, 0.874509811, 0.802491188, 1]
+  - Entity: 1913842019758403748
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -36,12 +27,21 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
-  - Entity: 3425435435435
+  - Entity: 11271021811449878470
     TagComponent:
-      Tag: Top
+      Tag: Right
     TransformComponent:
-      Translation: [0, 0.5, 0]
-      Rotation: [1.57079637, 0.785398185, 0]
+      Translation: [0.351999998, 0, 0.349999994]
+      Rotation: [0, 0.785398185, 0]
       Scale: [1, 1, 1]
     SpriteComponent:
-      Color: [0, 0.874509811, 0.802491188, 1]
+      Color: [0, 0.588235319, 0.539792299, 1]
+  - Entity: 17510560668519584759
+    TagComponent:
+      Tag: Left
+    TransformComponent:
+      Translation: [-0.354999989, 0, 0.349999994]
+      Rotation: [0, -0.785398185, 0]
+      Scale: [1, 1, 1]
+    SpriteComponent:
+      Color: [0, 1, 0.917646885, 1]

@@ -24,6 +24,7 @@
 #include "Scene.h"
 
 #include "Components.h"
+#include "ScriptableEntity.h"
 #include "rebirth/renderer/Renderer2D.h"
 #include "Entity.h"
 
@@ -59,7 +60,13 @@ namespace rebirth
 
 	Entity Scene::CreateEntity(const std::string& tag)
 	{
+		return CreateEntityWithUUID(UUID(), tag);
+	}
+
+	rebirth::Entity Scene::CreateEntityWithUUID(UUID uuid, const std::string& tag /*= std::string()*/)
+	{
 		Entity entity = { mRegistry.create(), this };
+		entity.AddComponent<IDComponent>(uuid);
 		auto& t = entity.AddComponent<TagComponent>();
 		t.tag = tag.empty() ? "Entity" : tag;
 
@@ -244,6 +251,12 @@ namespace rebirth
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{
 		static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent& component)
+	{
+
 	}
 
 	template<>

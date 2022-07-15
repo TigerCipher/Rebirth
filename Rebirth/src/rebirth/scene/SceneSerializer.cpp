@@ -159,8 +159,9 @@ namespace rebirth
 
 	static void SerializeEntity(YAML::Emitter& out, Entity entity)
 	{
+		RB_CORE_ASSERT(entity.HasComponent<IDComponent>(), "Entities must have a UUID IDComponent");
 		out << YAML::BeginMap; // Entity
-		out << YAML::Key << "Entity" << YAML::Value << "3425435435435"; // TODO: Entity ID goes here
+		out << YAML::Key << "Entity" << YAML::Value << entity.GetUUID();
 
 		if (entity.HasComponent<TagComponent>())
 		{
@@ -307,8 +308,7 @@ namespace rebirth
 		{
 			for (auto entity : entities)
 			{
-				// #TODO Implement UUIDs
-				uint64_t uuid = entity["Entity"].as<uint64_t>();
+				uint64 uuid = entity["Entity"].as<uint64>();
 
 				std::string name;
 				auto tagComponent = entity["TagComponent"];
@@ -317,7 +317,7 @@ namespace rebirth
 
 				RB_CORE_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
 
-				Entity deserializedEntity = mScene->CreateEntity(name);
+				Entity deserializedEntity = mScene->CreateEntityWithUUID(uuid, name);
 
 				auto transformComponent = entity["TransformComponent"];
 				if (transformComponent)

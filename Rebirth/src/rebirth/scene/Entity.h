@@ -23,6 +23,9 @@
 #pragma once
 
 #include "Scene.h"
+#include "rebirth/core/UUID.h"
+#include "Components.h"
+
 #include <entt.hpp>
 
 namespace rebirth
@@ -65,6 +68,8 @@ namespace rebirth
 			RB_CORE_ASSERT(HasComponent<T>(), "This entity does not have this component");
 			mScene->mRegistry.remove<T>(mId);
 		}
+
+		UUID GetUUID() { return GetComponent<IDComponent>().uuid; }
 
 		operator bool() const { return mId != entt::null && mScene != nullptr && mScene->mRegistry.valid(mId); }
 		operator uint32() const { return (uint32)mId; }

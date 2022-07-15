@@ -22,17 +22,26 @@
 // ------------------------------------------------------------------------------
 #pragma once
 
+
+#include "rebirth/renderer/OrthoCamera.h"
+#include "SceneCamera.h"
+#include "rebirth/renderer/Texture.h"
+#include "rebirth/core/UUID.h"
+
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#include "rebirth/renderer/OrthoCamera.h"
-#include "SceneCamera.h"
-#include "ScriptableEntity.h"
-#include "rebirth/renderer/Texture.h"
 
 namespace rebirth
 {
+
+	struct IDComponent
+	{
+		UUID uuid;
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+	};
 
 	struct TagComponent
 	{
@@ -82,6 +91,8 @@ namespace rebirth
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
 	};
+
+	class ScriptableEntity;
 
 	struct NativeScriptComponent
 	{

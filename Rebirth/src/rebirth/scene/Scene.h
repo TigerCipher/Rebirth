@@ -26,6 +26,7 @@
 
 #include "rebirth/core/Timestep.h"
 #include "rebirth/renderer/EditorCamera.h"
+#include "rebirth/core/UUID.h"
 
 class b2World;
 
@@ -40,6 +41,7 @@ namespace rebirth
 		virtual ~Scene();
 
 		Entity CreateEntity(const std::string& tag = std::string());
+		Entity CreateEntityWithUUID(UUID uuid, const std::string& tag = std::string());
 		void DestroyEntity(Entity entity);
 
 		void OnRuntimeStart();
