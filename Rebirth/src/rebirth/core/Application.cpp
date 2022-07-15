@@ -36,7 +36,7 @@ namespace rebirth
 {
 	Application* Application::sInstance = nullptr;
 
-	Application::Application(const std::string& title, uint32 windowWidth, uint32 windowHeight, CommandLineArgs cmd) :
+	Application::Application(ApplicationDesc appDesc, CommandLineArgs cmd) :
 		mCommandLine(cmd)
 	{
 		RB_PROFILE_FUNC();
@@ -44,7 +44,7 @@ namespace rebirth
 		RB_CORE_INFO("Creating core application");
 		sInstance = this;
 		Time::Init();
-		mWindow = Window::Create({title, windowWidth, windowHeight});
+		mWindow = Window::Create({appDesc.title, appDesc.windowWidth, appDesc.windowHeight});
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 
 

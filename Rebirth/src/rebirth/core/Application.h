@@ -52,11 +52,17 @@ namespace rebirth
 		}
 	};
 
+	struct ApplicationDesc
+	{
+		std::string title = "Rebirth Engine";
+		uint32 windowWidth = 1920;
+		uint32 windowHeight = 1080;
+	};
+
 	class Application
 	{
 	public:
-		Application(const std::string& title, uint32 windowWidth, uint32 windowHeight, CommandLineArgs cmd = CommandLineArgs());
-		//Application(const WindowProperties& props) : Application(props.title, props.width, props.height) {}
+		Application(ApplicationDesc appDesc, CommandLineArgs cmd = CommandLineArgs());
 		virtual ~Application();
 
 		void Run();

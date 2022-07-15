@@ -31,7 +31,7 @@ namespace rebirth
 	class ReeditApp final : public Application
 	{
 	public:
-		ReeditApp(CommandLineArgs args) : Application("Rebirth Reedit", 2560, 1440, args)
+		ReeditApp(ApplicationDesc appDesc, CommandLineArgs args) : Application(appDesc, args)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -42,6 +42,10 @@ namespace rebirth
 
 	Application* CreateApplication(CommandLineArgs args)
 	{
-		return new ReeditApp(args);
+		ApplicationDesc desc;
+		desc.title = "Rebirth Reedit";
+		desc.windowWidth = 2560;
+		desc.windowHeight = 1440;
+		return new ReeditApp(desc, args);
 	}
 }
