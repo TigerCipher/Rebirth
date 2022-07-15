@@ -27,6 +27,8 @@
 #include "rebirth/core/Timestep.h"
 #include "rebirth/renderer/EditorCamera.h"
 
+class b2World;
+
 namespace rebirth
 {
 	class Entity;
@@ -39,6 +41,9 @@ namespace rebirth
 
 		Entity CreateEntity(const std::string& tag = std::string());
 		void DestroyEntity(Entity entity);
+
+		void OnRuntimeStart();
+		void OnRuntimeStop();
 
 		void OnUpdateRuntime(Timestep ts);
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
@@ -57,6 +62,8 @@ namespace rebirth
 		entt::registry mRegistry;
 		uint32 mViewportWidth = 0;
 		uint32 mViewportHeight = 0;
+
+		b2World* mPhysicsWorld = nullptr;
 
 		friend class Entity;
 		friend class SceneSerializer;

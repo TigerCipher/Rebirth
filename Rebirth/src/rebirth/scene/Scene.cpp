@@ -27,8 +27,28 @@
 #include "rebirth/renderer/Renderer2D.h"
 #include "Entity.h"
 
+#include <box2d/b2_world.h>
+#include <box2d/b2_body.h>
+#include <box2d/b2_fixture.h>
+#include <box2d/b2_polygon_shape.h>
+
 namespace rebirth
 {
+
+	static b2BodyType GetBodyType(RigidBody2DComponent::BodyType bodyType)
+	{
+		switch (bodyType)
+		{
+			case RigidBody2DComponent::BodyType::STATIC: return b2_staticBody;
+			case RigidBody2DComponent::BodyType::DYNAMIC: return b2_dynamicBody;
+			case RigidBody2DComponent::BodyType::KINEMATIC: return b2_kinematicBody;
+			default: break;
+		}
+
+		RB_CORE_ASSERT(false, "Unknown physics body type");
+		return b2_staticBody;
+	}
+
 	Scene::Scene()
 	{
 	}
@@ -52,6 +72,49 @@ namespace rebirth
 		mRegistry.destroy(entity);
 	}
 
+	void Scene::OnRuntimeStart()
+	{
+		mPhysicsWorld = new b2World({ 0.0f, -9.8f });
+		auto view = mRegistry.view<RigidBody2DComponent>();
+		for (auto e : view)
+		{
+			Entity ent = { e, this };
+			auto& transform = ent.GetComponent<TransformComponent>();
+			auto& rb = ent.GetComponent<RigidBody2DComponent>();
+
+			b2BodyDef bodyDef;
+			bodyDef.type = GetBodyType(rb.bodyType);
+			bodyDef.position.Set(transform.translation.x, transform.translation.y);
+			bodyDef.angle = transform.rotation.z;
+
+			b2Body* body = mPhysicsWorld->CreateBody(&bodyDef);
+			body->SetFixedRotation(rb.fixedRotation);
+			rb.runtimeBody = body;
+
+			if (ent.HasComponent<BoxCollider2DComponent>())
+			{
+				auto& bc = ent.GetComponent<BoxCollider2DComponent>();
+
+				b2PolygonShape boxShape;
+				boxShape.SetAsBox(transform.scale.x * bc.size.x, transform.scale.y * bc.size.y);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &boxShape;
+				fixtureDef.density = bc.density;
+				fixtureDef.friction = bc.friction;
+				fixtureDef.restitution = bc.restitution;
+				fixtureDef.restitutionThreshold = bc.restitutionThreshold;
+
+				body->CreateFixture(&fixtureDef);
+			}
+		}
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		RB_DELETE(mPhysicsWorld);
+	}
+
 	void Scene::OnUpdateRuntime(Timestep ts)
 	{
 		RB_PROFILE_FUNC();
@@ -69,6 +132,29 @@ namespace rebirth
 
 					nsc.instance->OnUpdate(ts);
 				});
+		}
+
+		// Physics
+		{
+			const int32 velocityIterations = 6;
+			const int32 positionIterations = 2;
+			mPhysicsWorld->Step(ts, velocityIterations, positionIterations);
+
+			auto view = mRegistry.view<RigidBody2DComponent>();
+
+			for (auto e : view)
+			{
+				Entity ent = { e, this };
+				auto& transform = ent.GetComponent<TransformComponent>();
+				auto& rb = ent.GetComponent<RigidBody2DComponent>();
+
+				b2Body* body = (b2Body*)rb.runtimeBody;
+
+				const auto& position = body->GetPosition();
+				transform.translation.x = position.x;
+				transform.translation.y = position.y;
+				transform.rotation.z = body->GetAngle();
+			}
 		}
 
 
@@ -187,6 +273,18 @@ namespace rebirth
 
 	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<RigidBody2DComponent>(Entity entity, RigidBody2DComponent& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component)
 	{
 
 	}

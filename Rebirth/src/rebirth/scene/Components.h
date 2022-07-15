@@ -97,5 +97,36 @@ namespace rebirth
 			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->instance; nsc->instance = nullptr; };
 		}
 	};
+
+
+	// Physics
+
+	struct RigidBody2DComponent
+	{
+		enum class BodyType { STATIC = 0, DYNAMIC, KINEMATIC };
+		BodyType bodyType = BodyType::STATIC;
+		bool fixedRotation = false;
+
+		void* runtimeBody = nullptr;
+
+		RigidBody2DComponent() = default;
+		RigidBody2DComponent(const RigidBody2DComponent&) = default;
+	};
+
+	struct BoxCollider2DComponent
+	{
+		glm::vec2 offset = { 0, 0 };
+		glm::vec2 size = { 0.5f, 0.5f };
+
+		float density = 1.0f;
+		float friction = 0.5f;
+		float restitution = 0.0f;
+		float restitutionThreshold = 0.5f;
+
+		void* runtimeFixture = nullptr;
+
+		BoxCollider2DComponent() = default;
+		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
+	};
 }
 

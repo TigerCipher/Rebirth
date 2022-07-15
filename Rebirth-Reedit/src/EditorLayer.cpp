@@ -543,11 +543,13 @@ namespace rebirth
 
 	void EditorLayer::OnScenePlay()
 	{
+		mActiveScene->OnRuntimeStart();
 		mSceneState = SceneState::PLAY;
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
+		mActiveScene->OnRuntimeStop();
 		mSceneState = SceneState::EDIT;
 	}
 

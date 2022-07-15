@@ -35,6 +35,7 @@
 #define BIT(x) (1 << (x))
 //#define BIND_EVENT_FUNC(func) std::bind(&func, this, std::placeholders::_1)
 #define BIND_EVENT_FUNC(func) [this](auto&&... args)-> decltype(auto) { return this->func(std::forward<decltype(args)>(args)...); }
+#define RB_DELETE(x) delete x; x = nullptr;
 
 
 // Types and shortcuts

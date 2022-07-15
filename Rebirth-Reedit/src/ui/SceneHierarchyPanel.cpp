@@ -224,6 +224,8 @@ namespace rebirth
 			int numComponentsAvailable = 0;
 			numComponentsAvailable += AddComponent<CameraComponent>(mSelectionContext, "Camera");
 			numComponentsAvailable += AddComponent<SpriteComponent>(mSelectionContext, "Sprite");
+			numComponentsAvailable += AddComponent<RigidBody2DComponent>(mSelectionContext, "RigidBody 2D");
+			numComponentsAvailable += AddComponent<BoxCollider2DComponent>(mSelectionContext, "Box Collider 2D");
 
 			if (numComponentsAvailable == 0)
 			{
@@ -333,6 +335,41 @@ namespace rebirth
 
 				// Tiling Factor
 				ImGui::DragFloat("Tiling Factor", &component.tilingFactor, 0.1f, 0.0f, 100.0f);
+			});
+
+
+		DrawComponent<RigidBody2DComponent>("RigidBody 2D", entity, [](auto& component)
+			{
+
+				const char* bodyTypeStr[] = { "Static", "Dynamic", "Kinematic"};
+				const char* currentBodyTypeStr = bodyTypeStr[(int)component.bodyType];
+				if (ImGui::BeginCombo("Body Type", currentBodyTypeStr))
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						bool isSelected = currentBodyTypeStr == bodyTypeStr[i];
+						if (ImGui::Selectable(bodyTypeStr[i], isSelected))
+						{
+							currentBodyTypeStr = bodyTypeStr[i];
+							component.bodyType = (RigidBody2DComponent::BodyType)i;
+						}
+
+						if (isSelected) ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+
+				ImGui::Checkbox("Fixed Rotation", &component.fixedRotation);
+			});
+
+		DrawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto& component)
+			{
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.offset));
+				ImGui::DragFloat2("Size", glm::value_ptr(component.size));
+				ImGui::DragFloat("Density", &component.density, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution Threshold", &component.restitutionThreshold, 0.01f, 0.0f);
 			});
 	}
 
