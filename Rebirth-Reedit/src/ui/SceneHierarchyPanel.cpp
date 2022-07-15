@@ -204,6 +204,10 @@ namespace rebirth
 	{
 		if (entity.HasComponent<TagComponent>())
 		{
+			// Draws UUID for debug purposes
+			std::string uuid = std::to_string((uint64)entity.GetUUID());
+			UIHelper::DrawTooltip(uuid.c_str());
+
 			auto& tag = entity.GetComponent<TagComponent>().tag;
 
 			char buffer[256];
