@@ -58,6 +58,51 @@ namespace rebirth
 	{
 	}
 
+	template<typename T>
+	static void CopyComponent(const entt::registry& src, entt::registry& dest, std::unordered_map<UUID, entt::entity> enttMap)
+	{
+		auto view = src.view<T>();
+
+		for (auto e : view)
+		{
+			UUID uuid = src.get<IDComponent>(e).uuid;
+			RB_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
+			entt::entity enttId = enttMap.at(uuid);
+			auto& comp = src.get<T>(e);
+			dest.emplace_or_replace<T>(enttId, comp);
+		}
+	}
+
+	Ref<Scene> Scene::Copy(Ref<Scene> src)
+	{
+		Ref<Scene> newScene = createRef<Scene>();
+
+		newScene->mViewportWidth = src->mViewportWidth;
+		newScene->mViewportHeight = src->mViewportHeight;
+
+		std::unordered_map<UUID, entt::entity> enttMap;
+
+		auto& srcReg = src->mRegistry;
+		auto& destReg = newScene->mRegistry;
+		auto idView = srcReg.view<IDComponent>();
+
+		for (auto e : idView)
+		{
+			UUID uuid = srcReg.get<IDComponent>(e).uuid;
+			const auto& tag = srcReg.get<TagComponent>(e).tag;
+			enttMap[uuid] = newScene->CreateEntityWithUUID(uuid, tag);
+		}
+
+		CopyComponent<TransformComponent>(srcReg, destReg, enttMap);
+		CopyComponent<SpriteComponent>(srcReg, destReg, enttMap);
+		CopyComponent<CameraComponent>(srcReg, destReg, enttMap);
+		CopyComponent<NativeScriptComponent>(srcReg, destReg, enttMap);
+		CopyComponent<RigidBody2DComponent>(srcReg, destReg, enttMap);
+		CopyComponent<BoxCollider2DComponent>(srcReg, destReg, enttMap);
+
+		return newScene;
+	}
+
 	Entity Scene::CreateEntity(const std::string& tag)
 	{
 		return CreateEntityWithUUID(UUID(), tag);

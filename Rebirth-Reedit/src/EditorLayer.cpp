@@ -54,6 +54,7 @@ namespace rebirth
 			{
 				SceneSerializer serializer(mActiveScene);
 				serializer.DeserializeFromYaml(scenePath);
+				mEditorScene = mActiveScene;
 			}
 		}
 
@@ -514,6 +515,8 @@ namespace rebirth
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
+		if (mSceneState != SceneState::EDIT)
+			OnSceneStop();
 		if (path.extension().string() != ".rebirth")
 		{
 			RB_CLIENT_WARN("{} is not a scene file", path.filename().string());
@@ -524,10 +527,10 @@ namespace rebirth
 		SceneSerializer serializer(newScene);
 		if (serializer.DeserializeFromYaml(path.string()))
 		{
-			mActiveScene->DestroyAll();
-			mActiveScene = newScene;
-			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
-			mSceneHierarchyPanel.SetContext(mActiveScene);
+			mEditorScene = newScene;
+			mEditorScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+			mSceneHierarchyPanel.SetContext(mEditorScene);
+			mActiveScene = mEditorScene;
 		}
 	}
 
@@ -543,14 +546,23 @@ namespace rebirth
 
 	void EditorLayer::OnScenePlay()
 	{
-		mActiveScene->OnRuntimeStart();
 		mSceneState = SceneState::PLAY;
+
+		mActiveScene = Scene::Copy(mEditorScene);
+		mActiveScene->OnRuntimeStart();
+
+		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
-		mActiveScene->OnRuntimeStop();
 		mSceneState = SceneState::EDIT;
+
+		mActiveScene->OnRuntimeStop();
+
+		mActiveScene = mEditorScene;
+
+		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
 
 	void EditorLayer::Toolbar()

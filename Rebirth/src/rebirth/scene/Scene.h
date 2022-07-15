@@ -40,6 +40,8 @@ namespace rebirth
 		Scene();
 		virtual ~Scene();
 
+		static Ref<Scene> Copy(Ref<Scene> src);
+
 		Entity CreateEntity(const std::string& tag = std::string());
 		Entity CreateEntityWithUUID(UUID uuid, const std::string& tag = std::string());
 		void DestroyEntity(Entity entity);

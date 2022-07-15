@@ -63,6 +63,10 @@ namespace rebirth
 		Ref<VertexArray> mSquareVtxArray;
 
 		Ref<Scene> mActiveScene;
+		//Ref<Scene> mRuntimeScene;
+		Ref<Scene> mEditorScene;
+
+
 		Entity mSquareEntity;
 		Entity mCameraEntity;
 		Entity mSecondCamera;
