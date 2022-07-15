@@ -46,6 +46,14 @@ namespace rebirth
 			return comp;
 		}
 
+		template<typename T, typename... Args>
+		T& AddOrReplaceComponent(Args&&... args)
+		{
+			T& comp = mScene->mRegistry.emplace_or_replace<T>(mId, std::forward<Args>(args)...);
+			mScene->OnComponentAdded<T>(*this, comp);
+			return comp;
+		}
+
 		template<typename T>
 		T& GetComponent()
 		{
@@ -70,6 +78,7 @@ namespace rebirth
 		}
 
 		UUID GetUUID() { return GetComponent<IDComponent>().uuid; }
+		const std::string& GetTag() { return GetComponent<TagComponent>().tag; }
 
 		operator bool() const { return mId != entt::null && mScene != nullptr && mScene->mRegistry.valid(mId); }
 		operator uint32() const { return (uint32)mId; }

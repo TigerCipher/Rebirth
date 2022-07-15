@@ -44,6 +44,9 @@ namespace rebirth
 
 		Entity CreateEntity(const std::string& tag = std::string());
 		Entity CreateEntityWithUUID(UUID uuid, const std::string& tag = std::string());
+
+		void DuplicateEntity(Entity entity);
+
 		void DestroyEntity(Entity entity);
 
 		void OnRuntimeStart();

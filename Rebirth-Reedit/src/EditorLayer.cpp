@@ -491,6 +491,11 @@ namespace rebirth
 				mGizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 
+			case KeyCode::D:
+				if (control)
+					OnDuplicateEntity();
+				break;
+
 			default: break;
 		}
 
@@ -563,6 +568,15 @@ namespace rebirth
 		mActiveScene = mEditorScene;
 
 		mSceneHierarchyPanel.SetContext(mActiveScene);
+	}
+
+	void EditorLayer::OnDuplicateEntity()
+	{
+		if (mSceneState != SceneState::EDIT) return;
+		if (Entity e = mSceneHierarchyPanel.GetSelectedEntity())
+		{
+			mEditorScene->DuplicateEntity(e);
+		}
 	}
 
 	void EditorLayer::Toolbar()

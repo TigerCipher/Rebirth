@@ -50,6 +50,8 @@ namespace rebirth
 		void OnScenePlay();
 		void OnSceneStop();
 
+		void OnDuplicateEntity();
+
 		void Toolbar();
 
 	private:

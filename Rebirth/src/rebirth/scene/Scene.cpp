@@ -73,6 +73,15 @@ namespace rebirth
 		}
 	}
 
+	template<typename T>
+	static void CopyComponentIfExists(Entity src, Entity dest)
+	{
+		if (src.HasComponent<T>())
+		{
+			dest.AddOrReplaceComponent<T>(src.GetComponent<T>());
+		}
+	}
+
 	Ref<Scene> Scene::Copy(Ref<Scene> src)
 	{
 		Ref<Scene> newScene = createRef<Scene>();
@@ -117,6 +126,18 @@ namespace rebirth
 
 		entity.AddComponent<TransformComponent>();
 		return entity;
+	}
+
+	void Scene::DuplicateEntity(Entity entity)
+	{
+		Entity newEnt = CreateEntity(entity.GetTag());
+
+		CopyComponentIfExists<TransformComponent>(entity, newEnt);
+		CopyComponentIfExists<SpriteComponent>(entity, newEnt);
+		CopyComponentIfExists<CameraComponent>(entity, newEnt);
+		CopyComponentIfExists<NativeScriptComponent>(entity, newEnt);
+		CopyComponentIfExists<RigidBody2DComponent>(entity, newEnt);
+		CopyComponentIfExists<BoxCollider2DComponent>(entity, newEnt);
 	}
 
 	void Scene::DestroyEntity(Entity entity)
