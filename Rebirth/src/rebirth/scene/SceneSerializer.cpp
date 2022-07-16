@@ -219,6 +219,9 @@ namespace rebirth
 
 			auto& spriteComp = entity.GetComponent<SpriteComponent>();
 			out << YAML::Key << "Color" << YAML::Value << spriteComp.color;
+			if (spriteComp.texture)
+				out << YAML::Key << "TexturePath" << YAML::Value << spriteComp.texture->GetPath();
+			out << YAML::Key << "TilingFactor" << YAML::Value << spriteComp.tilingFactor;
 
 			out << YAML::EndMap; // SpriteComponent
 		}
@@ -353,6 +356,10 @@ namespace rebirth
 				{
 					auto& src = deserializedEntity.AddComponent<SpriteComponent>();
 					src.color = spriteRendererComponent["Color"].as<glm::vec4>();
+					if (spriteRendererComponent["TexturePath"])
+						src.texture = Texture2D::Create(spriteRendererComponent["TexturePath"].as<std::string>());
+					if (spriteRendererComponent["TilingFactor"])
+						src.tilingFactor = spriteRendererComponent["TilingFactor"].as<float>();
 				}
 
 				auto rigidComp = entity["RigidBody2DComponent"];

@@ -75,23 +75,6 @@ namespace rebirth
 			}(), ...);
 	}
 
-	//template<typename... Component>
-	//static void CopyComponent(const entt::registry& src, entt::registry& dest, const std::unordered_map<UUID, entt::entity>& enttMap)
-	//{
-	//	([&]()
-	//		{
-	//			auto view = src.view<Component>();
-	//			for (auto e : view)
-	//			{
-	//				UUID uuid = src.get<IDComponent>(e).uuid;
-	//				RB_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
-	//				entt::entity enttId = enttMap.at(uuid);
-	//				auto& comp = src.get<Component>(e);
-	//				dest.emplace_or_replace<Component>(enttId, comp);
-	//			}
-	//		}(), ...);
-	//}
-
 	template<typename... T>
 	static void CopyComponent(ComponentGroup<T...>, const entt::registry& src, entt::registry& dest, const std::unordered_map<UUID, entt::entity>& enttMap)
 	{
