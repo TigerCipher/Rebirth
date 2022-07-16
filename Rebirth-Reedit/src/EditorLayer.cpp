@@ -149,7 +149,7 @@ namespace rebirth
 
 		mFramebuffer->Bind();
 
-		RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
 		mFramebuffer->ClearAttachment(1, -1);
@@ -193,9 +193,31 @@ namespace rebirth
 			else mHoveredEntity = Entity((entt::entity)pixelData, mActiveScene.get());
 		}
 
-
+		//OnOverlayRender();
 		mFramebuffer->Unbind();
 
+	}
+
+	void EditorLayer::OnOverlayRender()
+	{
+		if (mSceneState == SceneState::PLAY)
+		{
+			Entity cam = mActiveScene->GetPrimaryCameraEntity();
+			Renderer2D::BeginScene(cam.GetComponent<CameraComponent>().camera, cam.GetComponent<TransformComponent>().GetTransform());
+		}
+		else
+		{
+			Renderer2D::BeginScene(mEditorCamera);
+		}
+
+		//if (Entity selected = mSceneHierarchyPanel.GetSelectedEntity())
+		//{
+		//	auto trans = selected.GetComponent<TransformComponent>();
+		//	Renderer2D::DrawQuad(trans.GetTransform(), { 1, 1, 0, 1 });
+		//}
+
+
+		Renderer2D::EndScene();
 	}
 
 	void EditorLayer::OnEvent(Event& e)

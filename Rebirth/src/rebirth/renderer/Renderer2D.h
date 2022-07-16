@@ -72,6 +72,8 @@ namespace rebirth
 
 		static void DrawSprite(const glm::mat4& transform, SpriteComponent& spriteComponent, int entityId);
 
+		static void DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness = 1.0f, float fade = 0.005f, int entityId = -1);
+
 		struct Stats
 		{
 			uint32 drawCalls = 0;
@@ -84,6 +86,7 @@ namespace rebirth
 		static void ResetStats();
 
 	private:
+		static void StartBatch();
 		static void ResetBatch();
 		static void CreateQuad(const glm::mat4& transform, const glm::vec4 color, const glm::vec2* texCoord, float texIndex, float tilingFactor, int entityId = -1);
 		static float GetTextureIndex(const Ref<Texture2D>& texture);

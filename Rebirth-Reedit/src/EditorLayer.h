@@ -37,6 +37,7 @@ namespace rebirth
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnUpdate(Timestep ts) override;
+		void OnOverlayRender();
 		void OnEvent(Event& e) override;
 		void OnImguiRender() override;
 	private:

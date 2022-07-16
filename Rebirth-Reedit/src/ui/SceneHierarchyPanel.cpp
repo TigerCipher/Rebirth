@@ -219,6 +219,7 @@ namespace rebirth
 			int numComponentsAvailable = 0;
 			numComponentsAvailable += AddComponent<CameraComponent>(mSelectionContext, "Camera");
 			numComponentsAvailable += AddComponent<SpriteComponent>(mSelectionContext, "Sprite");
+			numComponentsAvailable += AddComponent<CircleComponent>(mSelectionContext, "Circle");
 			numComponentsAvailable += AddComponent<RigidBody2DComponent>(mSelectionContext, "RigidBody 2D");
 			numComponentsAvailable += AddComponent<BoxCollider2DComponent>(mSelectionContext, "Box Collider 2D");
 
@@ -330,6 +331,13 @@ namespace rebirth
 
 				// Tiling Factor
 				ImGui::DragFloat("Tiling Factor", &component.tilingFactor, 0.1f, 0.0f, 100.0f);
+			});
+
+		DrawComponent<CircleComponent>("Circle", entity, [](auto& component)
+			{
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+				ImGui::DragFloat("Thickness", &component.thickness, 0.025f, 0.0f, 1.0f);
+				ImGui::DragFloat("Fade", &component.fade, 0.00025f, 0.0f, 3.0f);
 			});
 
 

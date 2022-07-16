@@ -226,6 +226,19 @@ namespace rebirth
 			out << YAML::EndMap; // SpriteComponent
 		}
 
+		if (entity.HasComponent<CircleComponent>())
+		{
+			out << YAML::Key << "CircleComponent";
+			out << YAML::BeginMap; // CircleComponent
+
+			auto& spriteComp = entity.GetComponent<CircleComponent>();
+			out << YAML::Key << "Color" << YAML::Value << spriteComp.color;
+			out << YAML::Key << "Thickness" << YAML::Value << spriteComp.thickness;
+			out << YAML::Key << "Fade" << YAML::Value << spriteComp.fade;
+
+			out << YAML::EndMap; // CircleComponent
+		}
+
 		if (entity.HasComponent<RigidBody2DComponent>())
 		{
 			out << YAML::Key << "RigidBody2DComponent";
@@ -360,6 +373,15 @@ namespace rebirth
 						src.texture = Texture2D::Create(spriteRendererComponent["TexturePath"].as<std::string>());
 					if (spriteRendererComponent["TilingFactor"])
 						src.tilingFactor = spriteRendererComponent["TilingFactor"].as<float>();
+				}
+
+				auto circleComp = entity["CircleComponent"];
+				if (circleComp)
+				{
+					auto& src = deserializedEntity.AddComponent<CircleComponent>();
+					src.color = circleComp["Color"].as<glm::vec4>();
+					src.thickness = circleComp["Thickness"].as<float>();
+					src.fade = circleComp["Fade"].as<float>();
 				}
 
 				auto rigidComp = entity["RigidBody2DComponent"];

@@ -81,6 +81,17 @@ namespace rebirth
 		SpriteComponent(const glm::vec4& col) : color(col) {}
 	};
 
+	struct CircleComponent
+	{
+		glm::vec4 color{ 1.0f };
+		float thickness = 1.0f; // filled in circle
+		float fade = 0.005f;
+
+
+		CircleComponent() = default;
+		CircleComponent(const CircleComponent&) = default;
+	};
+
 
 	struct CameraComponent
 	{
@@ -147,6 +158,7 @@ namespace rebirth
 	using AllComponents = ComponentGroup<
 		TransformComponent,
 		SpriteComponent,
+		CircleComponent,
 		CameraComponent,
 		NativeScriptComponent,
 		RigidBody2DComponent,

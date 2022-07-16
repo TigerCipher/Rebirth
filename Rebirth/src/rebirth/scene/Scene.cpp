@@ -272,11 +272,25 @@ namespace rebirth
 		if (camera)
 		{
 			Renderer2D::BeginScene(camera->GetProjection(), transform);
-			auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
-			for (auto entity : group)
+
+			// Sprites
 			{
-				auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-				Renderer2D::DrawSprite(trans.GetTransform(), sprite, (int)entity);
+				auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
+				for (auto entity : group)
+				{
+					auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+					Renderer2D::DrawSprite(trans.GetTransform(), sprite, (int)entity);
+				}
+			}
+
+			// Circles
+			{
+				auto view = mRegistry.view<TransformComponent, CircleComponent>();
+				for (auto entity : view)
+				{
+					auto [trans, circle] = view.get<TransformComponent, CircleComponent>(entity);
+					Renderer2D::DrawCircle(trans.GetTransform(), circle.color, circle.thickness, circle.fade, (int)entity);
+				}
 			}
 
 			Renderer2D::EndScene();
@@ -287,11 +301,22 @@ namespace rebirth
 	void Scene::OnUpdateEditor(Timestep ts, EditorCamera& camera)
 	{
 		Renderer2D::BeginScene(camera);
-		auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
-		for (auto entity : group)
 		{
-			auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
-			Renderer2D::DrawSprite(trans.GetTransform(), sprite, (int)entity);
+			auto group = mRegistry.group<TransformComponent>(entt::get<SpriteComponent>);
+			for (auto entity : group)
+			{
+				auto [trans, sprite] = group.get<TransformComponent, SpriteComponent>(entity);
+				Renderer2D::DrawSprite(trans.GetTransform(), sprite, (int)entity);
+			}
+		}
+
+		{
+			auto view = mRegistry.view<TransformComponent, CircleComponent>();
+			for (auto entity : view)
+			{
+				auto [trans, circle] = view.get<TransformComponent, CircleComponent>(entity);
+				Renderer2D::DrawCircle(trans.GetTransform(), circle.color, circle.thickness, circle.fade, (int)entity);
+			}
 		}
 
 		Renderer2D::EndScene();
@@ -358,6 +383,12 @@ namespace rebirth
 
 	template<>
 	void Scene::OnComponentAdded<SpriteComponent>(Entity entity, SpriteComponent& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CircleComponent>(Entity entity, CircleComponent& component)
 	{
 
 	}

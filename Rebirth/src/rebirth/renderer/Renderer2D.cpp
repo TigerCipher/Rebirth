@@ -42,22 +42,42 @@ namespace rebirth
 		int entityId = -1;
 	};
 
+	struct CircleVertex
+	{
+		glm::vec3 worldPos;
+		glm::vec3 localPos;
+		glm::vec4 color;
+		float thickness;
+		float fade;
+
+		// editor
+		int entityId = -1;
+	};
+
 	struct RenderData
 	{
 		static const uint32 MAX_QUADS = 10000;
 		static const uint32 MAX_VERTS = MAX_QUADS * 4;
 		static const uint32 MAX_INDICES = MAX_QUADS * 6;
-		static const uint32 MAX_TEXTURE_SLOTS = 32; // #TODO We have RendererAPI::GetCapabilities().maxSamples
+		static const uint32 MAX_TEXTURE_SLOTS = 32;
 
-		Ref<VertexArray> vertexArray;
-		Ref<VertexBuffer> vertexBuffer;
-		Ref<Shader> textureShader;
+		Ref<VertexArray> quadVertexArray;
+		Ref<VertexBuffer> quadVertexBuffer;
+		Ref<Shader> quadShader;
+
+		Ref<VertexArray> circleVertexArray;
+		Ref<VertexBuffer> circleVertexBuffer;
+		Ref<Shader> circleShader;
+
 		Ref<Texture2D> whiteTexture;
 
 		uint32 quadIndexCount = 0;
-
 		QuadVertex* quadVertexBufferBase = nullptr;
 		QuadVertex* quadVertexBufferPtr = nullptr;
+
+		uint32 circleIndexCount = 0;
+		CircleVertex* circleVertexBufferBase = nullptr;
+		CircleVertex* circleVertexBufferPtr = nullptr;
 
 		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> textureSlots;
 		uint32 textureSlotIndex = 1; // we use 0 for our default white texture
@@ -83,10 +103,12 @@ namespace rebirth
 	void Renderer2D::Init()
 	{
 		RB_PROFILE_FUNC();
-		sData.vertexArray = VertexArray::Create();
 
-		sData.vertexBuffer = VertexBuffer::Create(sData.MAX_VERTS * sizeof(QuadVertex));
-		sData.vertexBuffer->SetLayout({
+		// Quads
+		sData.quadVertexArray = VertexArray::Create();
+
+		sData.quadVertexBuffer = VertexBuffer::Create(sData.MAX_VERTS * sizeof(QuadVertex));
+		sData.quadVertexBuffer->SetLayout({
 				{ ShaderDataType::FLOAT3, "aPos" },
 				{ ShaderDataType::FLOAT4, "aColor" },
 				{ ShaderDataType::FLOAT2, "aTexCoord" },
@@ -94,7 +116,7 @@ namespace rebirth
 				{ ShaderDataType::FLOAT, "aTilingFactor" },
 				{ ShaderDataType::INT, "aEntityID" },
 			});
-		sData.vertexArray->AddVertexBuffer(sData.vertexBuffer);
+		sData.quadVertexArray->AddVertexBuffer(sData.quadVertexBuffer);
 
 		sData.quadVertexBufferBase = new QuadVertex[sData.MAX_VERTS];
 
@@ -115,8 +137,29 @@ namespace rebirth
 		}
 
 		Ref<IndexBuffer> sib = IndexBuffer::Create(sData.MAX_INDICES, quadIndices);
-		sData.vertexArray->SetIndexBuffer(sib);
+		sData.quadVertexArray->SetIndexBuffer(sib);
 		delete[] quadIndices;
+
+
+		// Circles
+		sData.circleVertexArray = VertexArray::Create();
+
+		sData.circleVertexBuffer = VertexBuffer::Create(sData.MAX_VERTS * sizeof(CircleVertex));
+		sData.circleVertexBuffer->SetLayout({
+				{ ShaderDataType::FLOAT3, "aWorldPos" },
+				{ ShaderDataType::FLOAT3, "aLocalPos" },
+				{ ShaderDataType::FLOAT4, "aColor" },
+				{ ShaderDataType::FLOAT, "aThickness" },
+				{ ShaderDataType::FLOAT, "aFade" },
+				{ ShaderDataType::INT, "aEntityID" },
+			});
+		sData.circleVertexArray->AddVertexBuffer(sData.circleVertexBuffer);
+		sData.circleVertexArray->SetIndexBuffer(sib);
+		sData.circleVertexBufferBase = new CircleVertex[sData.MAX_VERTS];
+
+
+
+
 
 		sData.whiteTexture = Texture2D::Create(1, 1);
 		uint32 whiteData = 0xffffffff;
@@ -128,7 +171,8 @@ namespace rebirth
 			samplers[i] = i;
 		}
 
-		sData.textureShader = Shader::Create("assets/shaders/Texture.glsl");
+		sData.quadShader = Shader::Create("assets/shaders/Quad.glsl");
+		sData.circleShader = Shader::Create("assets/shaders/Circle.glsl");
 
 		sData.textureSlots[0] = sData.whiteTexture;
 
@@ -151,9 +195,7 @@ namespace rebirth
 		sData.cameraBuffer.viewProjection = camera.GetProjection() * glm::inverse(transform);
 		sData.cameraUniformBuffer->SetData(&sData.cameraBuffer, sizeof(RenderData::CameraData));
 
-		sData.quadIndexCount = 0;
-		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
-		sData.textureSlotIndex = 1;
+		StartBatch();
 	}
 
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
@@ -161,9 +203,8 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		sData.cameraBuffer.viewProjection = camera.ViewProjectionMatrix();
 		sData.cameraUniformBuffer->SetData(&sData.cameraBuffer, sizeof(RenderData::CameraData));
-		sData.quadIndexCount = 0;
-		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
-		sData.textureSlotIndex = 1;
+
+		StartBatch();
 	}
 
 	void Renderer2D::BeginScene(const EditorCamera& camera)
@@ -171,40 +212,62 @@ namespace rebirth
 		RB_PROFILE_FUNC();
 		sData.cameraBuffer.viewProjection = camera.GetViewProjection();
 		sData.cameraUniformBuffer->SetData(&sData.cameraBuffer, sizeof(RenderData::CameraData));
-		sData.quadIndexCount = 0;
-		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
-		sData.textureSlotIndex = 1;
+
+		StartBatch();
 	}
 
 	void Renderer2D::EndScene()
 	{
 		RB_PROFILE_FUNC();
-		uint32 size = (uint32)((uint8_t*) sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
-		sData.vertexBuffer->SetData(sData.quadVertexBufferBase, size);
+		
 
 		Flush();
 	}
 
 	void Renderer2D::Flush()
 	{
-		if (sData.quadIndexCount == 0) return;
 		RB_PROFILE_FUNC();
-
-		for (uint32 i = 0; i < sData.textureSlotIndex; i++)
+		if (sData.quadIndexCount)
 		{
-			sData.textureSlots[i]->Bind(i);
+			uint32 size = (uint32)((uint8_t*)sData.quadVertexBufferPtr - (uint8_t*)sData.quadVertexBufferBase);
+			sData.quadVertexBuffer->SetData(sData.quadVertexBufferBase, size);
+
+			for (uint32 i = 0; i < sData.textureSlotIndex; i++)
+			{
+				sData.textureSlots[i]->Bind(i);
+			}
+			sData.quadShader->Bind();
+			RenderCommand::DrawIndexed(sData.quadVertexArray, sData.quadIndexCount);
+			sData.stats.drawCalls++;
 		}
-		sData.textureShader->Bind();
-		RenderCommand::DrawIndexed(sData.vertexArray, sData.quadIndexCount);
-		sData.stats.drawCalls++;
+
+		if (sData.circleIndexCount)
+		{
+			uint32 size = (uint32)((uint8_t*)sData.circleVertexBufferPtr - (uint8_t*)sData.circleVertexBufferBase);
+			sData.circleVertexBuffer->SetData(sData.circleVertexBufferBase, size);
+
+			sData.circleShader->Bind();
+			RenderCommand::DrawIndexed(sData.circleVertexArray, sData.circleIndexCount);
+			sData.stats.drawCalls++;
+		}
+		
+	}
+
+	void Renderer2D::StartBatch()
+	{
+		sData.quadIndexCount = 0;
+		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
+
+		sData.circleIndexCount = 0;
+		sData.circleVertexBufferPtr = sData.circleVertexBufferBase;
+
+		sData.textureSlotIndex = 1;
 	}
 
 	void Renderer2D::ResetBatch()
 	{
-		EndScene();
-		sData.quadIndexCount = 0;
-		sData.quadVertexBufferPtr = sData.quadVertexBufferBase;
-		sData.textureSlotIndex = 1;
+		Flush();
+		StartBatch();
 	}
 
 
@@ -434,6 +497,28 @@ namespace rebirth
 			DrawQuad(transform, spriteComponent.texture, spriteComponent.tilingFactor, spriteComponent.color, entityId);
 		else
 			DrawQuad(transform, spriteComponent.color, entityId);
+	}
+
+	void Renderer2D::DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness /*= 1.0f*/, float fade /*= 0.005f*/, int entityId /*= -1*/)
+	{
+		RB_PROFILE_FUNC();
+
+		// #TODO Resetting batch for circles
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			sData.circleVertexBufferPtr->worldPos = transform * sData.quadVertexPos[i];
+			sData.circleVertexBufferPtr->localPos = sData.quadVertexPos[i] * 2.0f;
+			sData.circleVertexBufferPtr->color = color;
+			sData.circleVertexBufferPtr->thickness = thickness;
+			sData.circleVertexBufferPtr->fade = fade;
+			sData.circleVertexBufferPtr->entityId = entityId;
+			sData.circleVertexBufferPtr++;
+		}
+
+
+		sData.circleIndexCount += 6;
+		sData.stats.quads++;
 	}
 
 	Renderer2D::Stats Renderer2D::GetStats()
