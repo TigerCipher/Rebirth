@@ -4,13 +4,23 @@ Entities:
     TagComponent:
       Tag: Circle
     TransformComponent:
-      Translation: [0.547634125, 3.64105988, 0]
+      Translation: [3.93245864, 5.57314348, -6.10351562e-05]
       Rotation: [0, 0, 0]
-      Scale: [1.5, 1.5, 1]
+      Scale: [1, 1, 1]
     CircleComponent:
       Color: [0.72046113, 0, 0.548131883, 1]
       Thickness: 0.075000003
       Fade: 0.00499999989
+    RigidBody2DComponent:
+      BodyType: Dynamic
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Offset: [0, 0]
+      Radius: 0.5
+      Density: 1
+      Friction: 0.5
+      Restitution: 0
+      RestitutionThreshold: 0.5
   - Entity: 4093426112857208150
     TagComponent:
       Tag: Box3
@@ -116,7 +126,7 @@ Entities:
     TagComponent:
       Tag: Camera
     TransformComponent:
-      Translation: [0, 2.0999999, 27.3360004]
+      Translation: [0, 3.09943581, 9.18913746]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
@@ -174,9 +184,9 @@ Entities:
     TagComponent:
       Tag: Slide2
     TransformComponent:
-      Translation: [-4.39502144, 5.03619099, 0]
-      Rotation: [0, 0, -0.589013994]
-      Scale: [4.63166761, 0.577989638, 1]
+      Translation: [-1.20218623, 2.90296626, 0]
+      Rotation: [0, 0, -0.589014113]
+      Scale: [6.59689093, 0.577989638, 1]
     SpriteComponent:
       Color: [0, 0.976945221, 0.765789866, 1]
       TilingFactor: 1

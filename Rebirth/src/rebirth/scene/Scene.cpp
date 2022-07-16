@@ -32,6 +32,7 @@
 #include <box2d/b2_body.h>
 #include <box2d/b2_fixture.h>
 #include <box2d/b2_polygon_shape.h>
+#include <box2d/b2_circle_shape.h>
 
 namespace rebirth
 {
@@ -196,6 +197,25 @@ namespace rebirth
 				fixtureDef.friction = bc.friction;
 				fixtureDef.restitution = bc.restitution;
 				fixtureDef.restitutionThreshold = bc.restitutionThreshold;
+
+				body->CreateFixture(&fixtureDef);
+			}
+
+
+			if (ent.HasComponent<CircleCollider2DComponent>())
+			{
+				auto& cc = ent.GetComponent<CircleCollider2DComponent>();
+
+				b2CircleShape circleShape;
+				circleShape.m_p.Set(cc.offset.x, cc.offset.y);
+				circleShape.m_radius = cc.radius;
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &circleShape;
+				fixtureDef.density = cc.density;
+				fixtureDef.friction = cc.friction;
+				fixtureDef.restitution = cc.restitution;
+				fixtureDef.restitutionThreshold = cc.restitutionThreshold;
 
 				body->CreateFixture(&fixtureDef);
 			}
@@ -414,6 +434,12 @@ namespace rebirth
 
 	template<>
 	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component)
+	{
+
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent& component)
 	{
 
 	}

@@ -151,17 +151,36 @@ namespace rebirth
 		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
 	};
 
+	struct CircleCollider2DComponent
+	{
+		glm::vec2 offset = { 0, 0 };
+		float radius = 0.5f;
+
+		float density = 1.0f;
+		float friction = 0.5f;
+		float restitution = 0.0f;
+		float restitutionThreshold = 0.5f;
+
+		void* runtimeFixture = nullptr;
+
+		CircleCollider2DComponent() = default;
+		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
+	};
+
 
 	template<typename... C>
 	struct ComponentGroup {};
 
-	using AllComponents = ComponentGroup<
+	using AllComponents = ComponentGroup
+		<
 		TransformComponent,
 		SpriteComponent,
 		CircleComponent,
 		CameraComponent,
 		NativeScriptComponent,
 		RigidBody2DComponent,
-		BoxCollider2DComponent>;
+		BoxCollider2DComponent,
+		CircleCollider2DComponent
+		>;
 }
 

@@ -222,6 +222,7 @@ namespace rebirth
 			numComponentsAvailable += AddComponent<CircleComponent>(mSelectionContext, "Circle");
 			numComponentsAvailable += AddComponent<RigidBody2DComponent>(mSelectionContext, "RigidBody 2D");
 			numComponentsAvailable += AddComponent<BoxCollider2DComponent>(mSelectionContext, "Box Collider 2D");
+			numComponentsAvailable += AddComponent<CircleCollider2DComponent>(mSelectionContext, "Circle Collider 2D");
 
 			if (numComponentsAvailable == 0)
 			{
@@ -369,6 +370,16 @@ namespace rebirth
 			{
 				ImGui::DragFloat2("Offset", glm::value_ptr(component.offset));
 				ImGui::DragFloat2("Size", glm::value_ptr(component.size));
+				ImGui::DragFloat("Density", &component.density, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution Threshold", &component.restitutionThreshold, 0.01f, 0.0f);
+			});
+
+		DrawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto& component)
+			{
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.offset));
+				ImGui::DragFloat("Radius", &component.radius, 0.1f, 0.1f);
 				ImGui::DragFloat("Density", &component.density, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
 				ImGui::DragFloat("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
