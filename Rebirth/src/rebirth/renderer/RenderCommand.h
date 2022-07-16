@@ -50,9 +50,21 @@ namespace rebirth
 			sRendererApi->Clear();
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count = 0)
+		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 indexCount = 0)
 		{
-			sRendererApi->DrawIndexed(vertexArray, count);
+			vertexArray->Bind();
+			sRendererApi->DrawIndexed(vertexArray, indexCount);
+		}
+
+		inline static void DrawLines(const Ref<VertexArray>& vertexArray, uint32 vertexCount)
+		{
+			vertexArray->Bind();
+			sRendererApi->DrawLines(vertexArray, vertexCount);
+		}
+
+		inline static void SetLineWidth(float width)
+		{
+			sRendererApi->SetLineWidth(width);
 		}
 
 	private:

@@ -74,6 +74,14 @@ namespace rebirth
 
 		static void DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness = 1.0f, float fade = 0.005f, int entityId = -1);
 
+		static void DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color, int entityId = -1);
+
+		static void DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, int entityId = -1);
+		static void DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityId = -1);
+
+		static void SetLineWidth(float width);
+		static float GetLineWidth();
+
 		struct Stats
 		{
 			uint32 drawCalls = 0;

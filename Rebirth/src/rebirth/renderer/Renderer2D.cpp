@@ -54,6 +54,15 @@ namespace rebirth
 		int entityId = -1;
 	};
 
+	struct LineVertex
+	{
+		glm::vec3 position;
+		glm::vec4 color;
+
+		// editor
+		int entityId = -1;
+	};
+
 	struct RenderData
 	{
 		static const uint32 MAX_QUADS = 10000;
@@ -69,7 +78,10 @@ namespace rebirth
 		Ref<VertexBuffer> circleVertexBuffer;
 		Ref<Shader> circleShader;
 
-		Ref<Texture2D> whiteTexture;
+		Ref<VertexArray> lineVertexArray;
+		Ref<VertexBuffer> lineVertexBuffer;
+		Ref<Shader> lineShader;
+
 
 		uint32 quadIndexCount = 0;
 		QuadVertex* quadVertexBufferBase = nullptr;
@@ -79,10 +91,18 @@ namespace rebirth
 		CircleVertex* circleVertexBufferBase = nullptr;
 		CircleVertex* circleVertexBufferPtr = nullptr;
 
+		uint32 lineVertexCount = 0;
+		LineVertex* lineVertexBufferBase = nullptr;
+		LineVertex* lineVertexBufferPtr = nullptr;
+
+		float lineWidth = 2.0f;
+
+		glm::vec4 quadVertexPos[4];
+
+		Ref<Texture2D> whiteTexture;
 		std::array<Ref<Texture2D>, MAX_TEXTURE_SLOTS> textureSlots;
 		uint32 textureSlotIndex = 1; // we use 0 for our default white texture
 
-		glm::vec4 quadVertexPos[4];
 
 
 		Renderer2D::Stats stats;
@@ -98,7 +118,7 @@ namespace rebirth
 
 	static RenderData sData;
 
-	
+
 
 	void Renderer2D::Init()
 	{
@@ -158,7 +178,23 @@ namespace rebirth
 		sData.circleVertexBufferBase = new CircleVertex[sData.MAX_VERTS];
 
 
+		// Lines
+		sData.lineVertexArray = VertexArray::Create();
 
+		sData.lineVertexBuffer = VertexBuffer::Create(sData.MAX_VERTS * sizeof(LineVertex));
+		sData.lineVertexBuffer->SetLayout({
+				{ ShaderDataType::FLOAT3, "aPos" },
+				{ ShaderDataType::FLOAT4, "aColor" },
+				{ ShaderDataType::INT, "aEntityID" },
+			});
+		sData.lineVertexArray->AddVertexBuffer(sData.lineVertexBuffer);
+		sData.lineVertexBufferBase = new LineVertex[sData.MAX_VERTS];
+
+
+
+		sData.quadShader = Shader::Create("assets/shaders/Quad.glsl");
+		sData.circleShader = Shader::Create("assets/shaders/Circle.glsl");
+		sData.lineShader = Shader::Create("assets/shaders/Line.glsl");
 
 
 		sData.whiteTexture = Texture2D::Create(1, 1);
@@ -171,14 +207,11 @@ namespace rebirth
 			samplers[i] = i;
 		}
 
-		sData.quadShader = Shader::Create("assets/shaders/Quad.glsl");
-		sData.circleShader = Shader::Create("assets/shaders/Circle.glsl");
-
 		sData.textureSlots[0] = sData.whiteTexture;
 
 		sData.quadVertexPos[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		sData.quadVertexPos[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		sData.quadVertexPos[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		sData.quadVertexPos[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		sData.quadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		sData.quadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
 		sData.cameraUniformBuffer = UniformBuffer::Create(sizeof(RenderData::CameraData), 0);
@@ -219,7 +252,7 @@ namespace rebirth
 	void Renderer2D::EndScene()
 	{
 		RB_PROFILE_FUNC();
-		
+
 
 		Flush();
 	}
@@ -250,7 +283,18 @@ namespace rebirth
 			RenderCommand::DrawIndexed(sData.circleVertexArray, sData.circleIndexCount);
 			sData.stats.drawCalls++;
 		}
-		
+
+		if (sData.lineVertexCount)
+		{
+			uint32 size = (uint32)((uint8_t*)sData.lineVertexBufferPtr - (uint8_t*)sData.lineVertexBufferBase);
+			sData.lineVertexBuffer->SetData(sData.lineVertexBufferBase, size);
+
+			sData.lineShader->Bind();
+			RenderCommand::SetLineWidth(sData.lineWidth);
+			RenderCommand::DrawLines(sData.lineVertexArray, sData.lineVertexCount);
+			sData.stats.drawCalls++;
+		}
+
 	}
 
 	void Renderer2D::StartBatch()
@@ -260,6 +304,9 @@ namespace rebirth
 
 		sData.circleIndexCount = 0;
 		sData.circleVertexBufferPtr = sData.circleVertexBufferBase;
+
+		sData.lineVertexCount = 0;
+		sData.lineVertexBufferPtr = sData.lineVertexBufferBase;
 
 		sData.textureSlotIndex = 1;
 	}
@@ -519,6 +566,58 @@ namespace rebirth
 
 		sData.circleIndexCount += 6;
 		sData.stats.quads++;
+	}
+
+	void Renderer2D::DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color, int entityId /*= -1*/)
+	{
+		sData.lineVertexBufferPtr->position = start;
+		sData.lineVertexBufferPtr->color = color;
+		sData.lineVertexBufferPtr->entityId = entityId;
+		sData.lineVertexBufferPtr++;
+
+		sData.lineVertexBufferPtr->position = end;
+		sData.lineVertexBufferPtr->color = color;
+		sData.lineVertexBufferPtr->entityId = entityId;
+		sData.lineVertexBufferPtr++;
+
+		sData.lineVertexCount += 2;
+	}
+
+	void Renderer2D::DrawRect(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, int entityId /*= -1*/)
+	{
+		glm::vec3 bottomLeft = glm::vec3(position.x - size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 bottomRight = glm::vec3(position.x + size.x * 0.5f, position.y - size.y * 0.5f, position.z);
+		glm::vec3 topRight = glm::vec3(position.x + size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+		glm::vec3 topLeft = glm::vec3(position.x - size.x * 0.5f, position.y + size.y * 0.5f, position.z);
+
+		DrawLine(bottomLeft, bottomRight, color);	// bottom edge
+		DrawLine(bottomRight, topRight, color);		// right edge
+		DrawLine(topRight, topLeft, color);			// top edge
+		DrawLine(topLeft, bottomLeft, color);		// left edge
+	}
+
+	void Renderer2D::DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityId /*= -1*/)
+	{
+		glm::vec3 lineVerts[4];
+		for (int i = 0; i < 4; i++)
+		{
+			lineVerts[i] = transform * sData.quadVertexPos[i];
+		}
+
+		DrawLine(lineVerts[0], lineVerts[1], color);	// bottom edge
+		DrawLine(lineVerts[1], lineVerts[2], color);	// right edge
+		DrawLine(lineVerts[2], lineVerts[3], color);	// top edge
+		DrawLine(lineVerts[3], lineVerts[0], color);    // left edge
+	}
+
+	void Renderer2D::SetLineWidth(float width)
+	{
+		sData.lineWidth = width;
+	}
+
+	float Renderer2D::GetLineWidth()
+	{
+		return sData.lineWidth;
 	}
 
 	Renderer2D::Stats Renderer2D::GetStats()

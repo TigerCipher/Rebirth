@@ -59,68 +59,11 @@ namespace rebirth
 			}
 		}
 
-//#if 0
-//		mSquareEntity = mActiveScene->CreateEntity("Square");
-//		mSquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 0.85f, 0.4f, 1.0f });
-//
-//		auto sq2 = mActiveScene->CreateEntity("Red Square");
-//		sq2.AddComponent<SpriteComponent>(glm::vec4{ 0.85f, 0.25f, 0.2f, 1.0f });
-//
-//
-//		mCameraEntity = mActiveScene->CreateEntity("Camera");
-//		auto& c = mCameraEntity.AddComponent<CameraComponent>();
-//		c.primary = true;
-//
-//		mSecondCamera = mActiveScene->CreateEntity("Camera 2");
-//		mSecondCamera.AddComponent<CameraComponent>();
-//
-//		class CameraController : public ScriptableEntity
-//		{
-//		public:
-//			void OnCreate()
-//			{
-//				auto& transform = GetComponent<TransformComponent>();
-//				transform.translation.x = rand() % 10 - 5.0f;
-//			}
-//
-//			void OnDestroy()
-//			{
-//
-//			}
-//
-//			void OnUpdate(Timestep ts)
-//			{
-//				auto& translation = GetComponent<TransformComponent>().translation;
-//				static float speed = 5.0f;
-//				if (Input::IsKeyPressed(RB_KEY_A))
-//				{
-//					translation.x -= speed * ts;
-//				}
-//
-//				if (Input::IsKeyPressed(RB_KEY_D))
-//				{
-//					translation.x += speed * ts;
-//				}
-//
-//				if (Input::IsKeyPressed(RB_KEY_W))
-//				{
-//					translation.y += speed * ts;
-//				}
-//
-//				if (Input::IsKeyPressed(RB_KEY_S))
-//				{
-//					translation.y -= speed * ts;
-//				}
-//			}
-//		};
-//
-//		mCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-//		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-//#endif
 
 		mEditorCamera = EditorCamera(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 
+		Renderer2D::SetLineWidth(10.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -153,6 +96,7 @@ namespace rebirth
 		RenderCommand::Clear();
 
 		mFramebuffer->ClearAttachment(1, -1);
+
 
 		switch (mSceneState)
 		{
@@ -212,9 +156,8 @@ namespace rebirth
 
 		if (Entity selected = mSceneHierarchyPanel.GetSelectedEntity())
 		{
-			auto trans = selected.GetComponent<TransformComponent>();
-			trans.scale = { 1.2f, 1.2f, 1.0f };
-			Renderer2D::DrawQuad(trans.GetTransform(), { 1, 1, 0, 1 });
+			const auto& trans = selected.GetComponent<TransformComponent>();
+			Renderer2D::DrawRect(trans.GetTransform(), {1.0f, 1.0f, 0.0f, 1.0f});
 		}
 
 
