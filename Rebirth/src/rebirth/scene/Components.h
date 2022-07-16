@@ -139,5 +139,17 @@ namespace rebirth
 		BoxCollider2DComponent() = default;
 		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
 	};
+
+
+	template<typename... C>
+	struct ComponentGroup {};
+
+	using AllComponents = ComponentGroup<
+		TransformComponent,
+		SpriteComponent,
+		CameraComponent,
+		NativeScriptComponent,
+		RigidBody2DComponent,
+		BoxCollider2DComponent>;
 }
 

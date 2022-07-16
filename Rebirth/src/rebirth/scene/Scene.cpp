@@ -56,30 +56,62 @@ namespace rebirth
 
 	Scene::~Scene()
 	{
+		RB_DELETE(mPhysicsWorld);
 	}
 
-	template<typename T>
-	static void CopyComponent(const entt::registry& src, entt::registry& dest, std::unordered_map<UUID, entt::entity> enttMap)
+	template<typename... T>
+	static void CopyComponent(const entt::registry& src, entt::registry& dst, const std::unordered_map<UUID, entt::entity>& enttMap)
 	{
-		auto view = src.view<T>();
+		([&]()
+			{
+				auto view = src.view<T>();
+				for (auto srcEntity : view)
+				{
+					entt::entity dstEntity = enttMap.at(src.get<IDComponent>(srcEntity).uuid);
 
-		for (auto e : view)
-		{
-			UUID uuid = src.get<IDComponent>(e).uuid;
-			RB_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
-			entt::entity enttId = enttMap.at(uuid);
-			auto& comp = src.get<T>(e);
-			dest.emplace_or_replace<T>(enttId, comp);
-		}
+					auto& srcComponent = src.get<T>(srcEntity);
+					dst.emplace_or_replace<T>(dstEntity, srcComponent);
+				}
+			}(), ...);
 	}
 
-	template<typename T>
+	//template<typename... Component>
+	//static void CopyComponent(const entt::registry& src, entt::registry& dest, const std::unordered_map<UUID, entt::entity>& enttMap)
+	//{
+	//	([&]()
+	//		{
+	//			auto view = src.view<Component>();
+	//			for (auto e : view)
+	//			{
+	//				UUID uuid = src.get<IDComponent>(e).uuid;
+	//				RB_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
+	//				entt::entity enttId = enttMap.at(uuid);
+	//				auto& comp = src.get<Component>(e);
+	//				dest.emplace_or_replace<Component>(enttId, comp);
+	//			}
+	//		}(), ...);
+	//}
+
+	template<typename... T>
+	static void CopyComponent(ComponentGroup<T...>, const entt::registry& src, entt::registry& dest, const std::unordered_map<UUID, entt::entity>& enttMap)
+	{
+		CopyComponent<T...>(src, dest, enttMap);
+	}
+
+	template<typename... T>
 	static void CopyComponentIfExists(Entity src, Entity dest)
 	{
-		if (src.HasComponent<T>())
-		{
-			dest.AddOrReplaceComponent<T>(src.GetComponent<T>());
-		}
+		([&]()
+			{
+				if (src.HasComponent<T>())
+					dest.AddOrReplaceComponent<T>(src.GetComponent<T>());
+			}(), ...);
+	}
+
+	template<typename... T>
+	static void CopyComponentIfExists(ComponentGroup<T...>, Entity src, Entity dest)
+	{
+		CopyComponentIfExists<T...>(src, dest);
 	}
 
 	Ref<Scene> Scene::Copy(Ref<Scene> src)
@@ -102,12 +134,14 @@ namespace rebirth
 			enttMap[uuid] = newScene->CreateEntityWithUUID(uuid, tag);
 		}
 
-		CopyComponent<TransformComponent>(srcReg, destReg, enttMap);
-		CopyComponent<SpriteComponent>(srcReg, destReg, enttMap);
-		CopyComponent<CameraComponent>(srcReg, destReg, enttMap);
-		CopyComponent<NativeScriptComponent>(srcReg, destReg, enttMap);
-		CopyComponent<RigidBody2DComponent>(srcReg, destReg, enttMap);
-		CopyComponent<BoxCollider2DComponent>(srcReg, destReg, enttMap);
+		CopyComponent(AllComponents{}, srcReg, destReg, enttMap);
+
+		//CopyComponent<TransformComponent>(srcReg, destReg, enttMap);
+		//CopyComponent<SpriteComponent>(srcReg, destReg, enttMap);
+		//CopyComponent<CameraComponent>(srcReg, destReg, enttMap);
+		//CopyComponent<NativeScriptComponent>(srcReg, destReg, enttMap);
+		//CopyComponent<RigidBody2DComponent>(srcReg, destReg, enttMap);
+		//CopyComponent<BoxCollider2DComponent>(srcReg, destReg, enttMap);
 
 		return newScene;
 	}
@@ -132,12 +166,14 @@ namespace rebirth
 	{
 		Entity newEnt = CreateEntity(entity.GetTag());
 
-		CopyComponentIfExists<TransformComponent>(entity, newEnt);
-		CopyComponentIfExists<SpriteComponent>(entity, newEnt);
-		CopyComponentIfExists<CameraComponent>(entity, newEnt);
-		CopyComponentIfExists<NativeScriptComponent>(entity, newEnt);
-		CopyComponentIfExists<RigidBody2DComponent>(entity, newEnt);
-		CopyComponentIfExists<BoxCollider2DComponent>(entity, newEnt);
+		CopyComponentIfExists(AllComponents{}, entity, newEnt);
+
+		//CopyComponentIfExists<TransformComponent>(entity, newEnt);
+		//CopyComponentIfExists<SpriteComponent>(entity, newEnt);
+		//CopyComponentIfExists<CameraComponent>(entity, newEnt);
+		//CopyComponentIfExists<NativeScriptComponent>(entity, newEnt);
+		//CopyComponentIfExists<RigidBody2DComponent>(entity, newEnt);
+		//CopyComponentIfExists<BoxCollider2DComponent>(entity, newEnt);
 	}
 
 	void Scene::DestroyEntity(Entity entity)
@@ -346,7 +382,7 @@ namespace rebirth
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		if(mViewportWidth > 0 && mViewportHeight > 0)
+		if (mViewportWidth > 0 && mViewportHeight > 0)
 			component.camera.SetViewportSize(mViewportWidth, mViewportHeight);
 	}
 
