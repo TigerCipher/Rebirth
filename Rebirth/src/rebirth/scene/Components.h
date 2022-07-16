@@ -41,6 +41,8 @@ namespace rebirth
 		UUID uuid;
 		IDComponent() = default;
 		IDComponent(const IDComponent&) = default;
+
+		const char* name = "IDComponent";
 	};
 
 	struct TagComponent
@@ -49,6 +51,8 @@ namespace rebirth
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& pTag) : tag(pTag) {}
+
+		const char* name = "TagComponent";
 	};
 
 	struct TransformComponent
@@ -67,6 +71,8 @@ namespace rebirth
 
 			return glm::translate(glm::mat4(1.0f), translation) * rot * glm::scale(glm::mat4(1.0f), scale);
 		}
+
+		const char* name = "TransformComponent";
 	};
 
 	struct SpriteComponent
@@ -79,6 +85,8 @@ namespace rebirth
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;
 		SpriteComponent(const glm::vec4& col) : color(col) {}
+
+		const char* name = "SpriteComponent";
 	};
 
 	struct CircleComponent
@@ -90,6 +98,8 @@ namespace rebirth
 
 		CircleComponent() = default;
 		CircleComponent(const CircleComponent&) = default;
+
+		const char* name = "CircleComponent";
 	};
 
 
@@ -101,6 +111,8 @@ namespace rebirth
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
+
+		const char* name = "CameraComponent";
 	};
 
 	class ScriptableEntity;
@@ -118,6 +130,8 @@ namespace rebirth
 			InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
 			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->instance; nsc->instance = nullptr; };
 		}
+
+		const char* name = "NativeScriptComponent";
 	};
 
 
@@ -133,6 +147,8 @@ namespace rebirth
 
 		RigidBody2DComponent() = default;
 		RigidBody2DComponent(const RigidBody2DComponent&) = default;
+
+		const char* name = "RigidBody2DComponent";
 	};
 
 	struct BoxCollider2DComponent
@@ -149,6 +165,8 @@ namespace rebirth
 
 		BoxCollider2DComponent() = default;
 		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
+
+		const char* name = "BoxCollider2DComponent";
 	};
 
 	struct CircleCollider2DComponent
@@ -165,14 +183,30 @@ namespace rebirth
 
 		CircleCollider2DComponent() = default;
 		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
+
+		const char* name = "CircleCollider2DComponent";
 	};
 
 
 	template<typename... C>
 	struct ComponentGroup {};
 
+	using AllComponents_NoID_NoTag = ComponentGroup
+		<
+		TransformComponent,
+		SpriteComponent,
+		CircleComponent,
+		CameraComponent,
+		NativeScriptComponent,
+		RigidBody2DComponent,
+		BoxCollider2DComponent,
+		CircleCollider2DComponent
+		>;
+
 	using AllComponents = ComponentGroup
 		<
+		IDComponent,
+		TagComponent,
 		TransformComponent,
 		SpriteComponent,
 		CircleComponent,

@@ -118,7 +118,7 @@ namespace rebirth
 			enttMap[uuid] = newScene->CreateEntityWithUUID(uuid, tag);
 		}
 
-		CopyComponent(AllComponents{}, srcReg, destReg, enttMap);
+		CopyComponent(AllComponents_NoID_NoTag{}, srcReg, destReg, enttMap);
 
 		//CopyComponent<TransformComponent>(srcReg, destReg, enttMap);
 		//CopyComponent<SpriteComponent>(srcReg, destReg, enttMap);
@@ -150,7 +150,7 @@ namespace rebirth
 	{
 		Entity newEnt = CreateEntity(entity.GetTag());
 
-		CopyComponentIfExists(AllComponents{}, entity, newEnt);
+		CopyComponentIfExists(AllComponents_NoID_NoTag{}, entity, newEnt);
 
 		//CopyComponentIfExists<TransformComponent>(entity, newEnt);
 		//CopyComponentIfExists<SpriteComponent>(entity, newEnt);
