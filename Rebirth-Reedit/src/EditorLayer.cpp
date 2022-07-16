@@ -193,7 +193,7 @@ namespace rebirth
 			else mHoveredEntity = Entity((entt::entity)pixelData, mActiveScene.get());
 		}
 
-		//OnOverlayRender();
+		OnOverlayRender();
 		mFramebuffer->Unbind();
 
 	}
@@ -210,11 +210,12 @@ namespace rebirth
 			Renderer2D::BeginScene(mEditorCamera);
 		}
 
-		//if (Entity selected = mSceneHierarchyPanel.GetSelectedEntity())
-		//{
-		//	auto trans = selected.GetComponent<TransformComponent>();
-		//	Renderer2D::DrawQuad(trans.GetTransform(), { 1, 1, 0, 1 });
-		//}
+		if (Entity selected = mSceneHierarchyPanel.GetSelectedEntity())
+		{
+			auto trans = selected.GetComponent<TransformComponent>();
+			trans.scale = { 1.2f, 1.2f, 1.0f };
+			Renderer2D::DrawQuad(trans.GetTransform(), { 1, 1, 0, 1 });
+		}
 
 
 		Renderer2D::EndScene();
