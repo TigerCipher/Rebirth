@@ -64,7 +64,6 @@ namespace rebirth
 	void OpenGLGraphicsAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count)
 	{
 		uint32 indexCount = count ? count : vertexArray->GetIndexBuffer()->GetCount();
-		RB_CORE_TRACE("Index Count: {}", indexCount);
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	}
 }
