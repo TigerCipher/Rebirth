@@ -63,7 +63,7 @@ namespace rebirth
 		mEditorCamera = EditorCamera(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 
-		Renderer2D::SetLineWidth(10.0f);
+		Renderer2D::SetLineWidth(6.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -154,10 +154,49 @@ namespace rebirth
 			Renderer2D::BeginScene(mEditorCamera);
 		}
 
+		if (mShowPhysicsColliders)
+		{
+			{
+				auto view = mActiveScene->GetAllEntities<TransformComponent, BoxCollider2DComponent>();
+				for (auto e : view)
+				{
+					auto [tc, bc] = view.get<TransformComponent, BoxCollider2DComponent>(e);
+
+					glm::vec3 trans = tc.translation + glm::vec3(bc.offset, 0.001f);
+					glm::vec3 scale = tc.scale * glm::vec3(bc.size * 2.0f, 1.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
+						glm::rotate(glm::mat4(1.0f), tc.rotation.z, { 0, 0, 1 }) *
+						glm::scale(glm::mat4(1.0f), scale);
+					Renderer2D::DrawRect(transform, { 0, 1, 0, 1 });
+				}
+			}
+
+			{
+				auto view = mActiveScene->GetAllEntities<TransformComponent, CircleCollider2DComponent>();
+				for (auto e : view)
+				{
+					auto [tc, cc] = view.get<TransformComponent, CircleCollider2DComponent>(e);
+
+					glm::vec3 trans = tc.translation + glm::vec3(cc.offset, 0.001f);
+					glm::vec3 scale = tc.scale * glm::vec3(cc.radius * 2.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
+						glm::scale(glm::mat4(1.0f), scale);
+					Renderer2D::DrawCircle(transform, { 0, 1, 0, 1 }, 0.01f);
+				}
+			}
+		}
+
 		if (Entity selected = mSceneHierarchyPanel.GetSelectedEntity())
 		{
-			const auto& trans = selected.GetComponent<TransformComponent>();
-			Renderer2D::DrawRect(trans.GetTransform(), {1.0f, 1.0f, 0.0f, 1.0f});
+			const auto& tc = selected.GetComponent<TransformComponent>();
+			glm::vec3 trans = tc.translation + glm::vec3(0, 0, 0.002f);
+			glm::vec3 scale = tc.scale;
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
+				glm::rotate(glm::mat4(1.0f), tc.rotation.z, { 0, 0, 1 }) *
+				glm::scale(glm::mat4(1.0f), scale);
+			Renderer2D::DrawRect(transform, {1.0f, 1.0f, 0.0f, 1.0f});
 		}
 
 
@@ -314,90 +353,8 @@ namespace rebirth
 
 		//static bool show = true;
 		//ImGui::ShowDemoWindow(&show);
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-		ImGui::Begin("Viewport");
-
-		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
-		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-		auto viewportOffset = ImGui::GetWindowPos();
-		mViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
-		mViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
-
-		mViewportFocused = ImGui::IsWindowFocused();
-		mViewportHovered = ImGui::IsWindowHovered();
-
-		if (!ImGui::IsAnyItemActive())
-			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused && !mViewportHovered);
-		else
-			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
-
-		ImVec2 viewPanelSize = ImGui::GetContentRegionAvail();
-
-		mViewportSize = { viewPanelSize.x, viewPanelSize.y };
-
-		uint32 textureID = mFramebuffer->GetColorAttachmentID();
-		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-			{
-				const wchar_t* path = (const wchar_t*)payload->Data;
-				OpenScene(gAssetsPath / path);
-			}
-			ImGui::EndDragDropTarget();
-		}
-
-		// Gizmo smizmos
-		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
-		if (selectedEntity && mGizmoType != -1 && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
-		{
-			ImGuizmo::SetOrthographic(false);
-			ImGuizmo::SetDrawlist();
-			ImGuizmo::SetRect(mViewportBounds[0].x, mViewportBounds[0].y,
-				mViewportBounds[1].x - mViewportBounds[0].x,
-				mViewportBounds[1].y - mViewportBounds[0].y);
-
-
-			// runtime
-			/*auto camEntity = mActiveScene->GetPrimaryCameraEntity();
-			const auto& cam = camEntity.GetComponent<CameraComponent>().camera;
-			const glm::mat4& camProj = cam.GetProjection();
-			glm::mat4 camView = glm::inverse(camEntity.GetComponent<TransformComponent>().GetTransform());*/
-
-			//editor
-			const glm::mat4& camProj = mEditorCamera.GetProjection();
-			glm::mat4 camView = mEditorCamera.GetViewMatrix();
-
-			auto& tc = selectedEntity.GetComponent<TransformComponent>();
-			glm::mat4 transform = tc.GetTransform();
-
-			bool snap = Input::IsKeyPressed(KeyCode::LEFT_CONTROL);
-			float snapValue = mGizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : mGizmoType == ImGuizmo::OPERATION::SCALE ? 0.25f : 0.5f; // 45 for rotation, 0.25 for scale, 0.5 for translation
-
-			float snapValues[3] = { snapValue, snapValue, snapValue };
-
-			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj), (ImGuizmo::OPERATION)mGizmoType,
-				ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
-
-			if (ImGuizmo::IsUsing())
-			{
-				glm::vec3 translation, rotation, scale;
-				Math::Decompose(transform, translation, rotation, scale);
-				glm::vec3 deltaRot = rotation - tc.rotation;
-				tc.translation = translation;
-				tc.rotation += deltaRot;
-				tc.scale = scale;
-			}
-
-		}
-
-
-
-		ImGui::End();
-		ImGui::PopStyleVar();
-
+		Settings();
+		Viewport();
 		Toolbar();
 
 		ImGui::End();
@@ -571,6 +528,84 @@ namespace rebirth
 		}
 	}
 
+	void EditorLayer::Viewport()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+		ImGui::Begin("Viewport");
+
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+		auto viewportOffset = ImGui::GetWindowPos();
+		mViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		mViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+
+		mViewportFocused = ImGui::IsWindowFocused();
+		mViewportHovered = ImGui::IsWindowHovered();
+
+		if (!ImGui::IsAnyItemActive())
+			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused && !mViewportHovered);
+		else
+			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
+
+		ImVec2 viewPanelSize = ImGui::GetContentRegionAvail();
+
+		mViewportSize = { viewPanelSize.x, viewPanelSize.y };
+
+		uint32 textureID = mFramebuffer->GetColorAttachmentID();
+		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(gAssetsPath / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		// Gizmo smizmos
+		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity && mGizmoType != -1 && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			ImGuizmo::SetRect(mViewportBounds[0].x, mViewportBounds[0].y,
+				mViewportBounds[1].x - mViewportBounds[0].x,
+				mViewportBounds[1].y - mViewportBounds[0].y);
+
+
+			//editor
+			const glm::mat4& camProj = mEditorCamera.GetProjection();
+			glm::mat4 camView = mEditorCamera.GetViewMatrix();
+
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			bool snap = Input::IsKeyPressed(KeyCode::LEFT_CONTROL);
+			float snapValue = mGizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : mGizmoType == ImGuizmo::OPERATION::SCALE ? 0.25f : 0.5f; // 45 for rotation, 0.25 for scale, 0.5 for translation
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj), (ImGuizmo::OPERATION)mGizmoType,
+				ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::Decompose(transform, translation, rotation, scale);
+				glm::vec3 deltaRot = rotation - tc.rotation;
+				tc.translation = translation;
+				tc.rotation += deltaRot;
+				tc.scale = scale;
+			}
+
+		}
+
+		ImGui::End();
+		ImGui::PopStyleVar();
+	}
+
 	void EditorLayer::Toolbar()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 2 });
@@ -604,4 +639,14 @@ namespace rebirth
 		ImGui::PopStyleColor(5);
 		ImGui::PopStyleVar(2);
 	}
+
+	void EditorLayer::Settings()
+	{
+		ImGui::Begin("Settings");
+
+		ImGui::Checkbox("Show Physics Colliders", &mShowPhysicsColliders);
+
+		ImGui::End(); // Settings
+	}
+
 }

@@ -61,6 +61,12 @@ namespace rebirth
 
 		Entity GetPrimaryCameraEntity();
 
+		template<typename... Components>
+		auto GetAllEntities()
+		{
+			return mRegistry.view<Components...>();
+		}
+
 	private:
 
 		template<typename T>

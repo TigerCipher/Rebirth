@@ -208,7 +208,7 @@ namespace rebirth
 
 				b2CircleShape circleShape;
 				circleShape.m_p.Set(cc.offset.x, cc.offset.y);
-				circleShape.m_radius = cc.radius;
+				circleShape.m_radius = transform.scale.x * cc.radius;
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &circleShape;

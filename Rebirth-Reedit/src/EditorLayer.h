@@ -55,7 +55,9 @@ namespace rebirth
 
 		void OnDuplicateEntity();
 
+		void Viewport();
 		void Toolbar();
+		void Settings();
 
 	private:
 		OrthoCameraController mCameraController;
@@ -104,5 +106,6 @@ namespace rebirth
 
 		Ref<Texture2D> mIconPlay;
 		Ref<Texture2D> mIconStop;
+		bool mShowPhysicsColliders = false;
 	};
 }
