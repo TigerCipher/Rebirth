@@ -50,6 +50,7 @@
 
 
 // Renderer
+#include "rebirth/renderer/Colors.h"
 #include "rebirth/renderer/Renderer.h"
 #include "rebirth/renderer/Renderer2D.h"
 #include "rebirth/renderer/RenderCommand.h"

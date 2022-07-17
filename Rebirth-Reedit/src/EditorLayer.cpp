@@ -183,7 +183,7 @@ namespace rebirth
 
 					glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
 						glm::scale(glm::mat4(1.0f), scale);
-					Renderer2D::DrawCircle(transform, { 0, 1, 0, 1 }, 0.01f);
+					Renderer2D::DrawCircle(transform, Colors::GREEN, 0.01f);
 				}
 			}
 		}
@@ -196,7 +196,7 @@ namespace rebirth
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
 				glm::rotate(glm::mat4(1.0f), tc.rotation.z, { 0, 0, 1 }) *
 				glm::scale(glm::mat4(1.0f), scale);
-			Renderer2D::DrawRect(transform, {1.0f, 1.0f, 0.0f, 1.0f});
+			Renderer2D::DrawRect(transform, Colors::YELLOW);
 		}
 
 

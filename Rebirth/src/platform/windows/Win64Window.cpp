@@ -125,6 +125,7 @@ namespace rebirth
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		}
 #endif
+
 		RB_CORE_TRACE("Creating glfw window");
 		mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
 			nullptr, nullptr);
