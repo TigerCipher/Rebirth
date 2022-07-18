@@ -41,17 +41,27 @@ namespace rebirth
 	static ImVec4 sFatalButtonOnTint = ImVec4(1.0f, 0.309803922f, 0.309803922f, 1.0f);
 	static ImVec4 sNoTint = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	static Ref<Texture2D> sTraceIcon = nullptr;
-	static Ref<Texture2D> sInfoIcon = nullptr;
-	static Ref<Texture2D> sWarnIcon = nullptr;
-	static Ref<Texture2D> sErrorIcon = nullptr;
-	static Ref<Texture2D> sFatalIcon = nullptr;
+	static Ref<Texture2D> sTraceIcon;
+	static Ref<Texture2D> sInfoIcon;
+	static Ref<Texture2D> sWarnIcon;
+	static Ref<Texture2D> sErrorIcon;
+	static Ref<Texture2D> sFatalIcon;
 
 
 	EditorConsolePanel::EditorConsolePanel()
 	{
 		RB_CORE_ASSERT(sInstance == nullptr);
 
+		// #TODO: Need a proper asset management system
+		// Core shaders for example have to be used by all projects - Rebirth Reedit, Sandbox, games, etc.
+		// Should have it so assets can be loaded from a working directory (the project) and the core engine directory (for things like shaders, missing texture image, etc)
+		// Or perhaps best solution is to enforce a certain folder structure, since the plan is to have games be made via the editor anyway rather than a VS project
+		// So could be:
+		// - Engine installation folder
+		// -- Rebirth-Reedit.exe
+		// -- resources (or assets) // editor icons, missing texture, shaders, etc
+		// - Game Project folder
+		// -- game assets // game textures, scenes, audio files, etc
 		sTraceIcon = Texture2D::Create("assets/icons/trace.png");
 		sInfoIcon = Texture2D::Create("assets/icons/info.png");
 		sWarnIcon = Texture2D::Create("assets/icons/warning.png");
@@ -68,6 +78,7 @@ namespace rebirth
 
 	void EditorConsolePanel::OnImguiRender()
 	{
+		//ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
 		ImGui::Begin("Console"); // Console
 
 		RenderMenu();
@@ -75,6 +86,7 @@ namespace rebirth
 		RenderConsole();
 
 		ImGui::End(); // Console
+		//ImGui::PopStyleColor();
 	}
 
 	void EditorConsolePanel::OnEvent(Event& e)
@@ -116,34 +128,32 @@ namespace rebirth
 		constexpr float buttonOffset = 39;
 		constexpr float rightSideOffset = 15;
 
-		// #TODO: Fix texture coords
-
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 5) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)sTraceIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, traceButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sTraceIcon->GetId(), { 32, 32 }, { 0, 1 }, { 1, 0 }, -1, { 0, 0, 0, 0 }, traceButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Trace;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 4) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)sInfoIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, infoButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sInfoIcon->GetId(), { 32, 32 }, { 0, 1 }, { 1, 0 }, -1, { 0, 0, 0, 0 }, infoButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Info;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 3) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)sWarnIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, warnButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sWarnIcon->GetId(), { 32, 32 }, { 0, 1 }, { 1, 0 }, -1, { 0, 0, 0, 0 }, warnButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Warning;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 2) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)sErrorIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, errorButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sErrorIcon->GetId(), { 32, 32 }, { 0, 1 }, { 1, 0 }, -1, { 0, 0, 0, 0 }, errorButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Error;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 1) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)sFatalIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, fatalButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sFatalIcon->GetId(), { 32, 32 }, { 0, 1 }, { 1, 0 }, -1, { 0, 0, 0, 0 }, fatalButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Fatal;
 		}
@@ -155,6 +165,8 @@ namespace rebirth
 
 	void EditorConsolePanel::RenderConsole()
 	{
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.00f));
 		ImGui::BeginChild("LogMessages");
 
 		if (!mBufferBegin || (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !mIsMessageInspectorHovered))
@@ -172,7 +184,8 @@ namespace rebirth
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 5));
 
 				if(i % 2 == 0)
-					ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.20f, 0.20f, 0.20f, 1.0f));
+					ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.11f, 0.11f, 0.11f, 1.00f));
+
 				ImGui::BeginChild(i + 1, ImVec2(0, ImGui::GetFontSize() * 1.75F), false,
 					ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysUseWindowPadding);
 
@@ -193,23 +206,30 @@ namespace rebirth
 
 				// #TODO: Fix texture coords
 				if (msg.GetCategory() == ConsoleMessage::Category::Category_Trace)
-					ImGui::Image((ImTextureID)sTraceIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sTraceButtonOnTint);
+					ImGui::Image((ImTextureID)sTraceIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sTraceButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Info)
-					ImGui::Image((ImTextureID)sInfoIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sInfoButtonOnTint);
+					ImGui::Image((ImTextureID)sInfoIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sInfoButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Warning)
-					ImGui::Image((ImTextureID)sWarnIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sWarningButtonOnTint);
+					ImGui::Image((ImTextureID)sWarnIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sWarningButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Error)
-					ImGui::Image((ImTextureID)sErrorIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sErrorButtonOnTint);
+					ImGui::Image((ImTextureID)sErrorIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sErrorButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Fatal)
-					ImGui::Image((ImTextureID)sFatalIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sFatalButtonOnTint);
+					ImGui::Image((ImTextureID)sFatalIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sFatalButtonOnTint);
 
 				ImGui::SameLine();
 
+
+				size_t newLinePos = text.find_first_of('\n');
+				size_t newLinePos2 = text.find_last_of('\n');
+				if (newLinePos != std::string::npos && newLinePos != newLinePos2)
+				{
+					text.replace(newLinePos, text.length() - 1, " ...");
+				}
 				if (text.length() > 200)
 				{
 					size_t spacePos = text.find_first_of(' ', 200);
 					if (spacePos != std::string::npos)
-						text.replace(spacePos, text.length() - 1, "...");
+						text.replace(spacePos, text.length() - 1, " ...");
 				}
 
 				ImGui::TextUnformatted(text.c_str());
@@ -258,7 +278,7 @@ namespace rebirth
 		}
 
 		ImGui::EndChild(); // LogMessages
-
+		ImGui::PopStyleColor(2);
 
 	}
 

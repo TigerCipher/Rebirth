@@ -47,7 +47,7 @@ namespace rebirth
 
 		std::vector<spdlog::sink_ptr> editorConsoleSinks =
 		{
-			std::make_shared<spdlog::sinks::basic_file_sink_mt>("test.log", true),
+			//std::make_shared<spdlog::sinks::basic_file_sink_mt>("test.log", true),
 			std::make_shared<EditorConsoleSink>(1)
 		};
 

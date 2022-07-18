@@ -28,6 +28,7 @@
 #include "rebirth/renderer/Renderer.h"
 #include "rebirth/util/PlatformUtil.h"
 #include "rebirth/debug/Statistics.h"
+#include "rebirth/imgui/Panels.h"
 
 // temp
 #include <glfw/glfw3.h>
@@ -46,6 +47,7 @@ namespace rebirth
 		Time::Init();
 		mWindow = Window::Create({appDesc.title, appDesc.windowWidth, appDesc.windowHeight});
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+		Panels::Init();
 
 
 		Renderer::Init();

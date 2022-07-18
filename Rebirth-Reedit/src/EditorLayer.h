@@ -95,7 +95,6 @@ namespace rebirth
 		int mGizmoType = -1;
 		SceneHierarchyPanel mSceneHierarchyPanel;
 		ContentBrowserPanel mContentBrowserPanel;
-		EditorConsolePanel mConsolePanel;
 
 
 		enum class SceneState

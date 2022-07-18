@@ -73,6 +73,7 @@
 
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"
+#include "rebirth/imgui/Panels.h"
 
 
 // Main function

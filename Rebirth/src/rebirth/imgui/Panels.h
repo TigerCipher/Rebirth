@@ -15,28 +15,23 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: EditorPanel.h
-// Date File Created: 7/17/2022
+// File Name: Panels.h
+// Date File Created: 7/18/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-#include "rebirth/core/Common.h"
-#include "rebirth/scene/Scene.h"
-#include "rebirth/events/Event.h"
+#include "EditorConsolePanel.h"
 
 namespace rebirth
 {
-	class EditorPanel
+	class Panels
 	{
 	public:
-		virtual ~EditorPanel() = default;
+		static Ref<EditorConsolePanel> sConsolePanel;
 
-		virtual void OnImguiRender() = 0;
-		virtual void OnEvent(Event& e) = 0;
-		virtual void SetContext(const Ref<Scene>& context) {}
+		static void Init();
 	};
-
 }
 
