@@ -28,21 +28,36 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
+#include <bitset>
+
 namespace rebirth
 {
 	static EditorConsolePanel* sInstance = nullptr;
 
 	static ImVec4 sTraceButtonOnTint = ImVec4(0.431372549f, 0.431372549f, 0.431372549f, 1.0f);
-	static ImVec4 sInfoButtonOnTint = ImVec4(0.0f, 0.431372549f, 1.0f, 1.0f);
+	static ImVec4 sInfoButtonOnTint = ImVec4(0.0f, 0.431372549f, 0.05466f, 1.0f);
 	static ImVec4 sWarningButtonOnTint = ImVec4(1.0f, 0.890196078f, 0.0588235294f, 1.0f);
 	static ImVec4 sErrorButtonOnTint = ImVec4(1.0f, 0.309803922f, 0.309803922f, 1.0f);
 	static ImVec4 sFatalButtonOnTint = ImVec4(1.0f, 0.309803922f, 0.309803922f, 1.0f);
 	static ImVec4 sNoTint = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
+	static Ref<Texture2D> sTraceIcon = nullptr;
+	static Ref<Texture2D> sInfoIcon = nullptr;
+	static Ref<Texture2D> sWarnIcon = nullptr;
+	static Ref<Texture2D> sErrorIcon = nullptr;
+	static Ref<Texture2D> sFatalIcon = nullptr;
+
 
 	EditorConsolePanel::EditorConsolePanel()
 	{
 		RB_CORE_ASSERT(sInstance == nullptr);
+
+		sTraceIcon = Texture2D::Create("assets/icons/trace.png");
+		sInfoIcon = Texture2D::Create("assets/icons/info.png");
+		sWarnIcon = Texture2D::Create("assets/icons/warning.png");
+		sErrorIcon = Texture2D::Create("assets/icons/error.png");
+		sFatalIcon = Texture2D::Create("assets/icons/fatal.png");
+
 		sInstance = this;
 	}
 
@@ -82,7 +97,10 @@ namespace rebirth
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
 
 		if (ImGui::Button("Clear"))
+		{
+			//RB_CORE_ERROR("Message filters: {}", std::bitset<8>(mMessageFilters).to_string());
 			mBufferBegin = 0;
+		}
 
 		// #TODO: Imgui helper methods for making label go on the left of the item
 		ImGui::SameLine(0.0f, 5.0f);
@@ -98,34 +116,34 @@ namespace rebirth
 		constexpr float buttonOffset = 39;
 		constexpr float rightSideOffset = 15;
 
-		Ref<Texture2D> icon = Texture2D::Create("assets/icons/stop_button.png"); // #TEMP temporary icon image
+		// #TODO: Fix texture coords
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 5) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, traceButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sTraceIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, traceButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Trace;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 4) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, infoButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sInfoIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, infoButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Info;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 3) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, infoButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sWarnIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, warnButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Warning;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 2) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, infoButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sErrorIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, errorButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Error;
 		}
 
 		ImGui::SameLine(ImGui::GetWindowWidth() - (buttonOffset * 1) - rightSideOffset);
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, infoButtonTint))
+		if (ImGui::ImageButton((ImTextureID)sFatalIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, -1, { 0, 0, 0, 0 }, fatalButtonTint))
 		{
 			mMessageFilters ^= (int16)ConsoleMessage::Category::Category_Fatal;
 		}
@@ -138,7 +156,6 @@ namespace rebirth
 	void EditorConsolePanel::RenderConsole()
 	{
 		ImGui::BeginChild("LogMessages");
-		Ref<Texture2D> icon = Texture2D::Create("assets/icons/stop_button.png"); // #TEMP temporary icon image
 
 		if (!mBufferBegin || (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !mIsMessageInspectorHovered))
 		{
@@ -174,16 +191,17 @@ namespace rebirth
 					ImGui::EndPopup();
 				}
 
+				// #TODO: Fix texture coords
 				if (msg.GetCategory() == ConsoleMessage::Category::Category_Trace)
-					ImGui::Image((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sTraceButtonOnTint);
+					ImGui::Image((ImTextureID)sTraceIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sTraceButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Info)
-					ImGui::Image((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sInfoButtonOnTint);
+					ImGui::Image((ImTextureID)sInfoIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sInfoButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Warning)
-					ImGui::Image((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sWarningButtonOnTint);
+					ImGui::Image((ImTextureID)sWarnIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sWarningButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Error)
-					ImGui::Image((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sErrorButtonOnTint);
+					ImGui::Image((ImTextureID)sErrorIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sErrorButtonOnTint);
 				else if (msg.GetCategory() == ConsoleMessage::Category::Category_Fatal)
-					ImGui::Image((ImTextureID)icon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sFatalButtonOnTint);
+					ImGui::Image((ImTextureID)sFatalIcon->GetId(), { 24, 24 }, { 0, 0 }, { 1, 1 }, sFatalButtonOnTint);
 
 				ImGui::SameLine();
 

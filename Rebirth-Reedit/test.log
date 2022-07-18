@@ -1,121 +1,131 @@
-[2022-07-17 20:55:41.627] [Console] [trace] Initializing engine
-[2022-07-17 20:55:41.627] [Console] [info] Creating core application
-[2022-07-17 20:55:41.627] [Console] [trace] Initializing Rebirth timer
-[2022-07-17 20:55:41.627] [Console] [info] Creating window Rebirth Reedit (2560, 1440)
-[2022-07-17 20:55:41.627] [Console] [trace] Initializing GLFW
-[2022-07-17 20:55:41.686] [Console] [trace] GLFW Initialized
-[2022-07-17 20:55:41.687] [Console] [trace] Creating glfw window
-[2022-07-17 20:55:41.970] [Console] [trace] Creating OpenGL context
-[2022-07-17 20:55:41.971] [Console] [trace] Loading Glad (OpenGL)
-[2022-07-17 20:55:41.973] [Console] [trace] Glad (OpenGL) loaded!
-[2022-07-17 20:55:41.973] [Console] [info] Detected graphics unit: NVIDIA GeForce RTX 3080/PCIe/SSE2 (NVIDIA Corporation)
-[2022-07-17 20:55:41.973] [Console] [info] Available OpenGL Version: 4.6.0 NVIDIA 516.40
-[2022-07-17 20:55:41.973] [Console] [trace] OpenGL Context created
-[2022-07-17 20:55:41.974] [Console] [trace] Setting glfw window pointer
-[2022-07-17 20:55:41.974] [Console] [trace] Setting glfw callbacks
-[2022-07-17 20:55:41.976] [Console] [trace] Loading shader file [assets/shaders/Quad.glsl]
-[2022-07-17 20:55:41.977] [Console] [trace] Shader file read
-[2022-07-17 20:55:41.977] [Console] [trace] Preprocessing shader file
-[2022-07-17 20:55:41.977] [Console] [trace] Finished preprocessing shader file
-[2022-07-17 20:55:41.982] [Console] [trace] OpenGLShader::Reflect - GL_VERTEX_SHADER assets/shaders/Quad.glsl
-[2022-07-17 20:55:41.982] [Console] [trace]     1 uniform buffers
-[2022-07-17 20:55:41.982] [Console] [trace]     0 resources
-[2022-07-17 20:55:41.982] [Console] [trace] Uniform Buffers:
-[2022-07-17 20:55:41.982] [Console] [trace]   _45_47
-[2022-07-17 20:55:41.983] [Console] [trace]     Size = 64
-[2022-07-17 20:55:41.983] [Console] [trace]     Binding = 0
-[2022-07-17 20:55:41.983] [Console] [trace]     Members = 1
-[2022-07-17 20:55:41.984] [Console] [trace] OpenGLShader::Reflect - GL_FRAGMENT_SHADER assets/shaders/Quad.glsl
-[2022-07-17 20:55:41.984] [Console] [trace]     0 uniform buffers
-[2022-07-17 20:55:41.984] [Console] [trace]     1 resources
-[2022-07-17 20:55:41.984] [Console] [trace] Uniform Buffers:
-[2022-07-17 20:55:41.988] [Console] [trace] Creating glsl shader program
-[2022-07-17 20:55:41.988] [Console] [trace] Creating and attaching GL_VERTEX_SHADER shader
-[2022-07-17 20:55:41.988] [Console] [trace] Creating and attaching GL_FRAGMENT_SHADER shader
-[2022-07-17 20:55:41.988] [Console] [trace] Linking shader program 1
-[2022-07-17 20:55:41.989] [Console] [trace] Shader program 1 successfully compiled
-[2022-07-17 20:55:41.989] [Console] [trace] Loading shader file [assets/shaders/Circle.glsl]
-[2022-07-17 20:55:41.989] [Console] [trace] Shader file read
-[2022-07-17 20:55:41.990] [Console] [trace] Preprocessing shader file
-[2022-07-17 20:55:41.990] [Console] [trace] Finished preprocessing shader file
-[2022-07-17 20:55:41.993] [Console] [trace] OpenGLShader::Reflect - GL_VERTEX_SHADER assets/shaders/Circle.glsl
-[2022-07-17 20:55:41.994] [Console] [trace]     1 uniform buffers
-[2022-07-17 20:55:41.994] [Console] [trace]     0 resources
-[2022-07-17 20:55:41.994] [Console] [trace] Uniform Buffers:
-[2022-07-17 20:55:41.994] [Console] [trace]   _47_49
-[2022-07-17 20:55:41.994] [Console] [trace]     Size = 64
-[2022-07-17 20:55:41.994] [Console] [trace]     Binding = 0
-[2022-07-17 20:55:41.994] [Console] [trace]     Members = 1
-[2022-07-17 20:55:41.995] [Console] [trace] OpenGLShader::Reflect - GL_FRAGMENT_SHADER assets/shaders/Circle.glsl
-[2022-07-17 20:55:41.996] [Console] [trace]     0 uniform buffers
-[2022-07-17 20:55:41.996] [Console] [trace]     0 resources
-[2022-07-17 20:55:41.996] [Console] [trace] Uniform Buffers:
-[2022-07-17 20:55:41.999] [Console] [trace] Creating glsl shader program
-[2022-07-17 20:55:42.000] [Console] [trace] Creating and attaching GL_VERTEX_SHADER shader
-[2022-07-17 20:55:42.000] [Console] [trace] Creating and attaching GL_FRAGMENT_SHADER shader
-[2022-07-17 20:55:42.000] [Console] [trace] Linking shader program 2
-[2022-07-17 20:55:42.000] [Console] [trace] Shader program 2 successfully compiled
-[2022-07-17 20:55:42.001] [Console] [trace] Loading shader file [assets/shaders/Line.glsl]
-[2022-07-17 20:55:42.001] [Console] [trace] Shader file read
-[2022-07-17 20:55:42.001] [Console] [trace] Preprocessing shader file
-[2022-07-17 20:55:42.001] [Console] [trace] Finished preprocessing shader file
-[2022-07-17 20:55:42.005] [Console] [trace] OpenGLShader::Reflect - GL_VERTEX_SHADER assets/shaders/Line.glsl
-[2022-07-17 20:55:42.005] [Console] [trace]     1 uniform buffers
-[2022-07-17 20:55:42.005] [Console] [trace]     0 resources
-[2022-07-17 20:55:42.005] [Console] [trace] Uniform Buffers:
-[2022-07-17 20:55:42.005] [Console] [trace]   _30_32
-[2022-07-17 20:55:42.005] [Console] [trace]     Size = 64
-[2022-07-17 20:55:42.005] [Console] [trace]     Binding = 0
-[2022-07-17 20:55:42.006] [Console] [trace]     Members = 1
-[2022-07-17 20:55:42.006] [Console] [trace] OpenGLShader::Reflect - GL_FRAGMENT_SHADER assets/shaders/Line.glsl
-[2022-07-17 20:55:42.006] [Console] [trace]     0 uniform buffers
-[2022-07-17 20:55:42.007] [Console] [trace]     0 resources
-[2022-07-17 20:55:42.007] [Console] [trace] Uniform Buffers:
-[2022-07-17 20:55:42.011] [Console] [trace] Creating glsl shader program
-[2022-07-17 20:55:42.011] [Console] [trace] Creating and attaching GL_VERTEX_SHADER shader
-[2022-07-17 20:55:42.011] [Console] [trace] Creating and attaching GL_FRAGMENT_SHADER shader
-[2022-07-17 20:55:42.011] [Console] [trace] Linking shader program 3
-[2022-07-17 20:55:42.011] [Console] [trace] Shader program 3 successfully compiled
-[2022-07-17 20:55:42.013] [Console] [trace] Core application created
-[2022-07-17 20:55:42.014] [Console] [trace] Loading texture from file assets/icons/directory.png
-[2022-07-17 20:55:42.016] [Console] [trace] Texture assets/icons/directory.png loaded
-[2022-07-17 20:55:42.016] [Console] [trace] Loading texture from file assets/icons/file.png
-[2022-07-17 20:55:42.019] [Console] [trace] Texture assets/icons/file.png loaded
-[2022-07-17 20:55:42.019] [Console] [trace] Loading texture from file assets/textures/default.png
-[2022-07-17 20:55:42.019] [Console] [trace] Texture assets/textures/default.png loaded
-[2022-07-17 20:55:42.019] [Console] [trace] Loading texture from file assets/icons/play_button.png
-[2022-07-17 20:55:42.020] [Console] [trace] Texture assets/icons/play_button.png loaded
-[2022-07-17 20:55:42.020] [Console] [trace] Loading texture from file assets/icons/stop_button.png
-[2022-07-17 20:55:42.020] [Console] [trace] Texture assets/icons/stop_button.png loaded
-[2022-07-17 20:55:42.057] [Console] [trace] Deserializing scene 'Untitled'
-[2022-07-17 20:55:42.058] [Console] [trace] Deserialized entity with ID = 6055281785575892954, name = Circle
-[2022-07-17 20:55:42.059] [Console] [trace] Deserialized entity with ID = 4093426112857208150, name = Box3
-[2022-07-17 20:55:42.060] [Console] [trace] Loading texture from file assets\textures\missing_texture.png
-[2022-07-17 20:55:42.064] [Console] [trace] Texture assets\textures\missing_texture.png loaded
-[2022-07-17 20:55:42.064] [Console] [trace] Deserialized entity with ID = 9907102674514187183, name = Box2
-[2022-07-17 20:55:42.065] [Console] [trace] Deserialized entity with ID = 8722242987254335646, name = WallLeft
-[2022-07-17 20:55:42.066] [Console] [trace] Deserialized entity with ID = 5284477593096963682, name = Slide1
-[2022-07-17 20:55:42.067] [Console] [trace] Deserialized entity with ID = 13644379816123897674, name = Wall
-[2022-07-17 20:55:42.067] [Console] [trace] Deserialized entity with ID = 2816085816676143559, name = Camera
-[2022-07-17 20:55:42.068] [Console] [trace] Deserialized entity with ID = 14832869699008905468, name = Box
-[2022-07-17 20:55:42.069] [Console] [trace] Deserialized entity with ID = 2534844247145119317, name = Floor
-[2022-07-17 20:55:42.069] [Console] [trace] Deserialized entity with ID = 5516446744378407606, name = Slide2
-[2022-07-17 20:55:42.070] [Console] [trace] Deserialized entity with ID = 7796108043495779122, name = Slide3
-[2022-07-17 20:56:24.802] [Console] [trace] Deserializing scene 'Untitled'
-[2022-07-17 20:56:24.802] [Console] [trace] Deserialized entity with ID = 14103180748687754756, name = Square
-[2022-07-17 20:56:24.803] [Console] [trace] Deserialized entity with ID = 11660613968393413079, name = Red Square
-[2022-07-17 20:56:24.804] [Console] [trace] Deserialized entity with ID = 6763970118530916790, name = Camera
-[2022-07-17 20:56:26.990] [Console] [trace] Deserializing scene 'Untitled'
-[2022-07-17 20:56:26.990] [Console] [trace] Deserialized entity with ID = 6055281785575892954, name = Circle
-[2022-07-17 20:56:26.991] [Console] [trace] Deserialized entity with ID = 4093426112857208150, name = Box3
-[2022-07-17 20:56:26.992] [Console] [trace] Deserialized entity with ID = 9907102674514187183, name = Box2
-[2022-07-17 20:56:26.993] [Console] [trace] Deserialized entity with ID = 8722242987254335646, name = WallLeft
-[2022-07-17 20:56:26.993] [Console] [trace] Deserialized entity with ID = 5284477593096963682, name = Slide1
-[2022-07-17 20:56:26.994] [Console] [trace] Deserialized entity with ID = 13644379816123897674, name = Wall
-[2022-07-17 20:56:26.994] [Console] [trace] Deserialized entity with ID = 2816085816676143559, name = Camera
-[2022-07-17 20:56:26.995] [Console] [trace] Deserialized entity with ID = 14832869699008905468, name = Box
-[2022-07-17 20:56:26.996] [Console] [trace] Deserialized entity with ID = 2534844247145119317, name = Floor
-[2022-07-17 20:56:26.996] [Console] [trace] Deserialized entity with ID = 5516446744378407606, name = Slide2
-[2022-07-17 20:56:26.997] [Console] [trace] Deserialized entity with ID = 7796108043495779122, name = Slide3
-[2022-07-17 20:57:04.169] [Console] [info] Shutting down application
-[2022-07-17 20:57:04.170] [Console] [info] Destroying window
+[2022-07-18 00:22:48.942] [Console] [trace] Initializing engine
+[2022-07-18 00:22:48.942] [Console] [info] Creating core application
+[2022-07-18 00:22:48.942] [Console] [trace] Initializing Rebirth timer
+[2022-07-18 00:22:48.942] [Console] [info] Creating window Rebirth Reedit (2560, 1440)
+[2022-07-18 00:22:48.943] [Console] [trace] Initializing GLFW
+[2022-07-18 00:22:49.012] [Console] [trace] GLFW Initialized
+[2022-07-18 00:22:49.012] [Console] [trace] Creating glfw window
+[2022-07-18 00:22:49.337] [Console] [trace] Creating OpenGL context
+[2022-07-18 00:22:49.338] [Console] [trace] Loading Glad (OpenGL)
+[2022-07-18 00:22:49.339] [Console] [trace] Glad (OpenGL) loaded!
+[2022-07-18 00:22:49.340] [Console] [info] Detected graphics unit: NVIDIA GeForce RTX 3080/PCIe/SSE2 (NVIDIA Corporation)
+[2022-07-18 00:22:49.340] [Console] [info] Available OpenGL Version: 4.6.0 NVIDIA 516.40
+[2022-07-18 00:22:49.340] [Console] [trace] OpenGL Context created
+[2022-07-18 00:22:49.340] [Console] [trace] Setting glfw window pointer
+[2022-07-18 00:22:49.340] [Console] [trace] Setting glfw callbacks
+[2022-07-18 00:22:49.342] [Console] [trace] Loading shader file [assets/shaders/Quad.glsl]
+[2022-07-18 00:22:49.343] [Console] [trace] Shader file read
+[2022-07-18 00:22:49.343] [Console] [trace] Preprocessing shader file
+[2022-07-18 00:22:49.343] [Console] [trace] Finished preprocessing shader file
+[2022-07-18 00:22:49.347] [Console] [trace] OpenGLShader::Reflect - GL_VERTEX_SHADER assets/shaders/Quad.glsl
+[2022-07-18 00:22:49.348] [Console] [trace]     1 uniform buffers
+[2022-07-18 00:22:49.348] [Console] [trace]     0 resources
+[2022-07-18 00:22:49.348] [Console] [trace] Uniform Buffers:
+[2022-07-18 00:22:49.348] [Console] [trace]   _45_47
+[2022-07-18 00:22:49.348] [Console] [trace]     Size = 64
+[2022-07-18 00:22:49.348] [Console] [trace]     Binding = 0
+[2022-07-18 00:22:49.348] [Console] [trace]     Members = 1
+[2022-07-18 00:22:49.350] [Console] [trace] OpenGLShader::Reflect - GL_FRAGMENT_SHADER assets/shaders/Quad.glsl
+[2022-07-18 00:22:49.350] [Console] [trace]     0 uniform buffers
+[2022-07-18 00:22:49.350] [Console] [trace]     1 resources
+[2022-07-18 00:22:49.350] [Console] [trace] Uniform Buffers:
+[2022-07-18 00:22:49.354] [Console] [trace] Creating glsl shader program
+[2022-07-18 00:22:49.354] [Console] [trace] Creating and attaching GL_VERTEX_SHADER shader
+[2022-07-18 00:22:49.354] [Console] [trace] Creating and attaching GL_FRAGMENT_SHADER shader
+[2022-07-18 00:22:49.355] [Console] [trace] Linking shader program 1
+[2022-07-18 00:22:49.355] [Console] [trace] Shader program 1 successfully compiled
+[2022-07-18 00:22:49.355] [Console] [trace] Loading shader file [assets/shaders/Circle.glsl]
+[2022-07-18 00:22:49.356] [Console] [trace] Shader file read
+[2022-07-18 00:22:49.356] [Console] [trace] Preprocessing shader file
+[2022-07-18 00:22:49.356] [Console] [trace] Finished preprocessing shader file
+[2022-07-18 00:22:49.360] [Console] [trace] OpenGLShader::Reflect - GL_VERTEX_SHADER assets/shaders/Circle.glsl
+[2022-07-18 00:22:49.360] [Console] [trace]     1 uniform buffers
+[2022-07-18 00:22:49.360] [Console] [trace]     0 resources
+[2022-07-18 00:22:49.360] [Console] [trace] Uniform Buffers:
+[2022-07-18 00:22:49.360] [Console] [trace]   _47_49
+[2022-07-18 00:22:49.360] [Console] [trace]     Size = 64
+[2022-07-18 00:22:49.360] [Console] [trace]     Binding = 0
+[2022-07-18 00:22:49.360] [Console] [trace]     Members = 1
+[2022-07-18 00:22:49.361] [Console] [trace] OpenGLShader::Reflect - GL_FRAGMENT_SHADER assets/shaders/Circle.glsl
+[2022-07-18 00:22:49.361] [Console] [trace]     0 uniform buffers
+[2022-07-18 00:22:49.361] [Console] [trace]     0 resources
+[2022-07-18 00:22:49.362] [Console] [trace] Uniform Buffers:
+[2022-07-18 00:22:49.365] [Console] [trace] Creating glsl shader program
+[2022-07-18 00:22:49.365] [Console] [trace] Creating and attaching GL_VERTEX_SHADER shader
+[2022-07-18 00:22:49.365] [Console] [trace] Creating and attaching GL_FRAGMENT_SHADER shader
+[2022-07-18 00:22:49.366] [Console] [trace] Linking shader program 2
+[2022-07-18 00:22:49.366] [Console] [trace] Shader program 2 successfully compiled
+[2022-07-18 00:22:49.366] [Console] [trace] Loading shader file [assets/shaders/Line.glsl]
+[2022-07-18 00:22:49.366] [Console] [trace] Shader file read
+[2022-07-18 00:22:49.366] [Console] [trace] Preprocessing shader file
+[2022-07-18 00:22:49.366] [Console] [trace] Finished preprocessing shader file
+[2022-07-18 00:22:49.370] [Console] [trace] OpenGLShader::Reflect - GL_VERTEX_SHADER assets/shaders/Line.glsl
+[2022-07-18 00:22:49.370] [Console] [trace]     1 uniform buffers
+[2022-07-18 00:22:49.370] [Console] [trace]     0 resources
+[2022-07-18 00:22:49.370] [Console] [trace] Uniform Buffers:
+[2022-07-18 00:22:49.370] [Console] [trace]   _30_32
+[2022-07-18 00:22:49.371] [Console] [trace]     Size = 64
+[2022-07-18 00:22:49.371] [Console] [trace]     Binding = 0
+[2022-07-18 00:22:49.371] [Console] [trace]     Members = 1
+[2022-07-18 00:22:49.371] [Console] [trace] OpenGLShader::Reflect - GL_FRAGMENT_SHADER assets/shaders/Line.glsl
+[2022-07-18 00:22:49.371] [Console] [trace]     0 uniform buffers
+[2022-07-18 00:22:49.371] [Console] [trace]     0 resources
+[2022-07-18 00:22:49.372] [Console] [trace] Uniform Buffers:
+[2022-07-18 00:22:49.375] [Console] [trace] Creating glsl shader program
+[2022-07-18 00:22:49.375] [Console] [trace] Creating and attaching GL_VERTEX_SHADER shader
+[2022-07-18 00:22:49.375] [Console] [trace] Creating and attaching GL_FRAGMENT_SHADER shader
+[2022-07-18 00:22:49.376] [Console] [trace] Linking shader program 3
+[2022-07-18 00:22:49.376] [Console] [trace] Shader program 3 successfully compiled
+[2022-07-18 00:22:49.377] [Console] [trace] Core application created
+[2022-07-18 00:22:49.377] [Console] [trace] Loading texture from file assets/icons/directory.png
+[2022-07-18 00:22:49.379] [Console] [trace] Texture assets/icons/directory.png loaded
+[2022-07-18 00:22:49.379] [Console] [trace] Loading texture from file assets/icons/file.png
+[2022-07-18 00:22:49.382] [Console] [trace] Texture assets/icons/file.png loaded
+[2022-07-18 00:22:49.382] [Console] [trace] Loading texture from file assets/icons/trace.png
+[2022-07-18 00:22:49.387] [Console] [trace] Texture assets/icons/trace.png loaded
+[2022-07-18 00:22:49.387] [Console] [trace] Loading texture from file assets/icons/info.png
+[2022-07-18 00:22:49.391] [Console] [trace] Texture assets/icons/info.png loaded
+[2022-07-18 00:22:49.391] [Console] [trace] Loading texture from file assets/icons/warning.png
+[2022-07-18 00:22:49.397] [Console] [trace] Texture assets/icons/warning.png loaded
+[2022-07-18 00:22:49.397] [Console] [trace] Loading texture from file assets/icons/error.png
+[2022-07-18 00:22:49.402] [Console] [trace] Texture assets/icons/error.png loaded
+[2022-07-18 00:22:49.402] [Console] [trace] Loading texture from file assets/icons/fatal.png
+[2022-07-18 00:22:49.406] [Console] [trace] Texture assets/icons/fatal.png loaded
+[2022-07-18 00:22:49.407] [Console] [trace] Loading texture from file assets/textures/default.png
+[2022-07-18 00:22:49.407] [Console] [trace] Texture assets/textures/default.png loaded
+[2022-07-18 00:22:49.407] [Console] [trace] Loading texture from file assets/icons/play_button.png
+[2022-07-18 00:22:49.407] [Console] [trace] Texture assets/icons/play_button.png loaded
+[2022-07-18 00:22:49.408] [Console] [trace] Loading texture from file assets/icons/stop_button.png
+[2022-07-18 00:22:49.408] [Console] [trace] Texture assets/icons/stop_button.png loaded
+[2022-07-18 00:22:49.439] [Console] [info] Deserializing scene 'Untitled'
+[2022-07-18 00:22:49.440] [Console] [info] Deserializing TransformComponent for entity 6055281785575892954
+[2022-07-18 00:22:49.441] [Console] [info] Deserialized entity with ID = 6055281785575892954, name = Circle
+[2022-07-18 00:22:49.441] [Console] [info] Deserializing TransformComponent for entity 4093426112857208150
+[2022-07-18 00:22:49.441] [Console] [trace] Loading texture from file assets\textures\missing_texture.png
+[2022-07-18 00:22:49.446] [Console] [trace] Texture assets\textures\missing_texture.png loaded
+[2022-07-18 00:22:49.446] [Console] [info] Deserialized entity with ID = 4093426112857208150, name = Box3
+[2022-07-18 00:22:49.447] [Console] [info] Deserializing TransformComponent for entity 9907102674514187183
+[2022-07-18 00:22:49.448] [Console] [info] Deserialized entity with ID = 9907102674514187183, name = Box2
+[2022-07-18 00:22:49.448] [Console] [info] Deserializing TransformComponent for entity 8722242987254335646
+[2022-07-18 00:22:49.448] [Console] [info] Deserialized entity with ID = 8722242987254335646, name = WallLeft
+[2022-07-18 00:22:49.449] [Console] [info] Deserializing TransformComponent for entity 5284477593096963682
+[2022-07-18 00:22:49.449] [Console] [info] Deserialized entity with ID = 5284477593096963682, name = Slide1
+[2022-07-18 00:22:49.449] [Console] [info] Deserializing TransformComponent for entity 13644379816123897674
+[2022-07-18 00:22:49.450] [Console] [info] Deserialized entity with ID = 13644379816123897674, name = Wall
+[2022-07-18 00:22:49.450] [Console] [info] Deserializing TransformComponent for entity 2816085816676143559
+[2022-07-18 00:22:49.451] [Console] [info] Deserialized entity with ID = 2816085816676143559, name = Camera
+[2022-07-18 00:22:49.451] [Console] [info] Deserializing TransformComponent for entity 14832869699008905468
+[2022-07-18 00:22:49.452] [Console] [info] Deserialized entity with ID = 14832869699008905468, name = Box
+[2022-07-18 00:22:49.452] [Console] [info] Deserializing TransformComponent for entity 2534844247145119317
+[2022-07-18 00:22:49.452] [Console] [info] Deserialized entity with ID = 2534844247145119317, name = Floor
+[2022-07-18 00:22:49.453] [Console] [info] Deserializing TransformComponent for entity 5516446744378407606
+[2022-07-18 00:22:49.453] [Console] [info] Deserialized entity with ID = 5516446744378407606, name = Slide2
+[2022-07-18 00:22:49.453] [Console] [info] Deserializing TransformComponent for entity 7796108043495779122
+[2022-07-18 00:22:49.454] [Console] [info] Deserialized entity with ID = 7796108043495779122, name = Slide3
+[2022-07-18 00:23:25.153] [Console] [error] Message filters: 00011111
+[2022-07-18 00:23:25.833] [Console] [error] Message filters: 00011111
+[2022-07-18 00:23:26.076] [Console] [error] Message filters: 00011111
+[2022-07-18 00:23:26.264] [Console] [error] Message filters: 00011111
+[2022-07-18 00:23:26.437] [Console] [error] Message filters: 00011111
+[2022-07-18 00:23:37.891] [Console] [info] Shutting down application
+[2022-07-18 00:23:37.891] [Console] [info] Destroying window

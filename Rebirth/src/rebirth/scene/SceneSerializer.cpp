@@ -161,7 +161,9 @@ namespace rebirth
 			{
 				if (entity.HasComponent<T>())
 				{
-					SerializeComponent<T>(out, entity, entity.GetComponent<T>());
+					const T& component = entity.GetComponent<T>();
+					RB_CORE_INFO("Serializing {} for entity {}", component.name, entity.GetUUID());
+					SerializeComponent<T>(out, entity, component);
 				}
 			}(), ...);
 
@@ -313,6 +315,7 @@ namespace rebirth
 					if (deserializedEntity.HasComponent<T>())
 					{
 						auto& comp = deserializedEntity.GetComponent<T>();
+						RB_CORE_INFO("Deserializing {} for entity {}", comp.name, deserializedEntity.GetUUID());
 						DeserializeComponent<T>(node, comp);
 					}
 					else
@@ -460,14 +463,18 @@ namespace rebirth
 		}
 		catch (YAML::ParserException e)
 		{
+			RB_CORE_ERROR("Failed to load scene file {}", filepath);
 			return false;
 		}
 
 		if (!data["Scene"])
+		{
+			RB_CORE_ERROR("Scene file {} does not contain Scene node", filepath);
 			return false;
+		}
 
 		std::string sceneName = data["Scene"].as<std::string>();
-		RB_CORE_TRACE("Deserializing scene '{}'", sceneName);
+		RB_CORE_INFO("Deserializing scene '{}'", sceneName);
 
 		auto entities = data["Entities"];
 		if (entities)
@@ -481,11 +488,10 @@ namespace rebirth
 				if (tagComponent)
 					name = tagComponent["Tag"].as<std::string>();
 
-				RB_CORE_TRACE("Deserialized entity with ID = {}, name = {}", uuid, name);
-
 				Entity deserializedEntity = mScene->CreateEntityWithUUID(uuid, name);
 
 				DeserializeAllComponents(AllComponents_NoID_NoTag{}, entity, deserializedEntity);
+				RB_CORE_INFO("Deserialized entity with ID = {}, name = {}", uuid, name);
 			}
 		}
 
