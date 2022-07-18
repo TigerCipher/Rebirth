@@ -57,8 +57,8 @@ namespace rebirth
 		template<typename T>
 		T& GetComponent()
 		{
-			if (!HasComponent<T>())
-				RB_CORE_ERROR("Type name: {}", typeid(T).name());
+			//if (!HasComponent<T>())
+			//	RB_CORE_ERROR("Type name: {}", typeid(T).name());
 			RB_CORE_ASSERT(HasComponent<T>(), "This entity does not have this component");
 			return mScene->mRegistry.get<T>(mId);
 		}

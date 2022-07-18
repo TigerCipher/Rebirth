@@ -24,12 +24,15 @@
 #include "Log.h"
 
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#include "rebirth/debug/EditorConsoleSink.h"
 
 namespace rebirth
 {
 
 	SharedPtr<spdlog::logger> Log::sCoreLogger;
 	SharedPtr<spdlog::logger> Log::sClientLogger;
+	SharedPtr<spdlog::logger> Log::sEditorLogger;
 
 
 	void Log::Init()
@@ -41,5 +44,14 @@ namespace rebirth
 
 		sClientLogger = spdlog::stdout_color_mt("Client");
 		sClientLogger->set_level(spdlog::level::trace);
+
+		std::vector<spdlog::sink_ptr> editorConsoleSinks =
+		{
+			std::make_shared<spdlog::sinks::basic_file_sink_mt>("test.log", true),
+			std::make_shared<EditorConsoleSink>(1)
+		};
+
+		sEditorLogger = std::make_shared<spdlog::logger>("Console", editorConsoleSinks.begin(), editorConsoleSinks.end());
+		sEditorLogger->set_level(spdlog::level::trace);
 	}
 }

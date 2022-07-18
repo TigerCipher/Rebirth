@@ -20,10 +20,11 @@
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
+#ifndef REBIRTH_LOG_HEADER
+#define REBIRTH_LOG_HEADER
 #pragma once
 
-#include "rebirth/core/Common.h"
+//#include "rebirth/core/Common.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
@@ -42,10 +43,12 @@ namespace rebirth
 
 		static SharedPtr<spdlog::logger>& GetCoreLogger() { return sCoreLogger; }
 		static SharedPtr<spdlog::logger>& GetClientLogger() { return sClientLogger; }
+		static SharedPtr<spdlog::logger>& GetEditorLogger() { return sEditorLogger; }
 
 	private:
 		static SharedPtr<spdlog::logger> sCoreLogger;
 		static SharedPtr<spdlog::logger> sClientLogger;
+		static SharedPtr<spdlog::logger> sEditorLogger;
 	};
 }
 
@@ -69,11 +72,11 @@ inline OStream& operator<<(OStream& os, glm::qua<T, Q> quaternion)
 }
 
 
-#define RB_CORE_TRACE(...)	::rebirth::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define RB_CORE_INFO(...)	::rebirth::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define RB_CORE_WARN(...)	::rebirth::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define RB_CORE_ERROR(...)	::rebirth::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define RB_CORE_FATAL(...)	::rebirth::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define RB_CORE_TRACE(...)	::rebirth::Log::GetCoreLogger()->trace(__VA_ARGS__);	  ::rebirth::Log::GetEditorLogger()->trace(__VA_ARGS__)
+#define RB_CORE_INFO(...)	::rebirth::Log::GetCoreLogger()->info(__VA_ARGS__);		  ::rebirth::Log::GetEditorLogger()->info(__VA_ARGS__)
+#define RB_CORE_WARN(...)	::rebirth::Log::GetCoreLogger()->warn(__VA_ARGS__);		  ::rebirth::Log::GetEditorLogger()->warn(__VA_ARGS__)
+#define RB_CORE_ERROR(...)	::rebirth::Log::GetCoreLogger()->error(__VA_ARGS__);	  ::rebirth::Log::GetEditorLogger()->error(__VA_ARGS__)
+#define RB_CORE_FATAL(...)	::rebirth::Log::GetCoreLogger()->critical(__VA_ARGS__);	  ::rebirth::Log::GetEditorLogger()->critical(__VA_ARGS__)
 
 #define RB_CLIENT_TRACE(...)	::rebirth::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define RB_CLIENT_INFO(...)		::rebirth::Log::GetClientLogger()->info(__VA_ARGS__)
@@ -96,3 +99,6 @@ inline OStream& operator<<(OStream& os, glm::qua<T, Q> quaternion)
 //	#define RB_ERROR(...)	RB_CLIENT_ERROR(__VA_ARGS__)
 //	#define RB_FATAL(...)	RB_CLIENT_FATAL(__VA_ARGS__)
 //#endif
+
+
+#endif // REBIRTH_LOG_HEADER

@@ -23,6 +23,7 @@
 #pragma once
 
 #include <Rebirth.h>
+#include <rebirth/imgui/EditorConsolePanel.h>
 
 #include "ui/SceneHierarchyPanel.h"
 #include "ui/ContentBrowserPanel.h"
@@ -94,6 +95,7 @@ namespace rebirth
 		int mGizmoType = -1;
 		SceneHierarchyPanel mSceneHierarchyPanel;
 		ContentBrowserPanel mContentBrowserPanel;
+		EditorConsolePanel mConsolePanel;
 
 
 		enum class SceneState

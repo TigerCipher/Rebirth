@@ -305,6 +305,7 @@ namespace rebirth
 
 		mSceneHierarchyPanel.OnImguiRender();
 		mContentBrowserPanel.OnImguiRender();
+		mConsolePanel.OnImguiRender();
 
 
 		ImGui::Begin("Statistics");
