@@ -24,6 +24,7 @@
 #include "EditorConsolePanel.h"
 
 #include "rebirth/renderer/Texture.h"
+#include "rebirth/events/SceneEvent.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -92,7 +93,13 @@ namespace rebirth
 
 	void EditorConsolePanel::OnEvent(Event& e)
 	{
-
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<ScenePreStartEvent>([this](ScenePreStartEvent& se)
+			{
+				if (mShouldClearOnPlay)
+					mBufferBegin = 0;
+				return false;
+			});
 	}
 
 	void EditorConsolePanel::RenderMenu()
@@ -122,10 +129,10 @@ namespace rebirth
 		ImGui::SameLine();
 		ImGui::Checkbox("##ClearOnPlay", &mShouldClearOnPlay);
 
-		ImGui::SameLine(0.0f, 5.0f);
-		ImGui::TextUnformatted("Collapse:");
-		ImGui::SameLine();
-		ImGui::Checkbox("##CollapseMessages", &mCollapseMessages);
+		//ImGui::SameLine(0.0f, 5.0f);
+		//ImGui::TextUnformatted("Collapse:");
+		//ImGui::SameLine();
+		//ImGui::Checkbox("##CollapseMessages", &mCollapseMessages);
 
 		constexpr float buttonOffset = 39;
 		constexpr float rightSideOffset = 15;
@@ -245,11 +252,11 @@ namespace rebirth
 
 					ImGui::TextWrapped(text.c_str());
 
-					if (mCollapseMessages && msg.GetCount() > 1)
-					{
-						ImGui::SameLine(ImGui::GetWindowWidth() - 30);
-						ImGui::Text("%d", msg.GetCount());
-					}
+					//if (mCollapseMessages && msg.GetCount() > 1)
+					//{
+					//	ImGui::SameLine(ImGui::GetWindowWidth() - 30);
+					//	ImGui::Text("%d", msg.GetCount());
+					//}
 
 				}
 			}
@@ -268,7 +275,7 @@ namespace rebirth
 			{
 				ImGui::Begin("Message Inspector");
 
-				mIsMessageInspectorHovered = ImGui::IsWindowHovered();
+				mIsMessageInspectorHovered = ImGui::IsWindowHovered() || ImGui::IsWindowFocused();
 
 				ImGui::PushTextWrapPos();
 				const auto& msg = mSelectedMessage->GetMessage();

@@ -205,6 +205,7 @@ namespace rebirth
 
 	void EditorLayer::OnEvent(Event& e)
 	{
+		Panels::sConsolePanel->OnEvent(e);
 		mCameraController.OnEvent(e);
 
 		if (mSceneState == SceneState::EDIT)
@@ -505,7 +506,13 @@ namespace rebirth
 		mSceneState = SceneState::PLAY;
 
 		mActiveScene = Scene::Copy(mEditorScene);
+
+		// #TODO: OnEvent should have a companion DispatchEvent?
+		ScenePreStartEvent scenePreStart(mActiveScene);
+		Application::Instance().OnEvent(scenePreStart);
 		mActiveScene->OnRuntimeStart();
+		ScenePreStartEvent scenePostStart(mActiveScene);
+		Application::Instance().OnEvent(scenePostStart);
 
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
@@ -514,7 +521,11 @@ namespace rebirth
 	{
 		mSceneState = SceneState::EDIT;
 
+		ScenePreStopEvent scenePreStop(mActiveScene);
+		Application::Instance().OnEvent(scenePreStop);
 		mActiveScene->OnRuntimeStop();
+		ScenePostStopEvent scenePostStop(mActiveScene);
+		Application::Instance().OnEvent(scenePostStop);
 
 		mActiveScene = mEditorScene;
 

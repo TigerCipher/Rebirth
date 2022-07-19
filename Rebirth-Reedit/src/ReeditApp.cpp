@@ -47,6 +47,7 @@ namespace rebirth
 		desc.windowWidth = 2560;
 		desc.windowHeight = 1440;
 		desc.flags |= WindowFlag_Maximized;
+		desc.flags |= WindowFlag_VSync;
 		return new ReeditApp(desc, args);
 	}
 }

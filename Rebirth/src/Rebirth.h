@@ -42,6 +42,7 @@
 // Events
 #include "rebirth/events/KeyEvent.h"
 #include "rebirth/events/MouseEvent.h"
+#include "rebirth/events/SceneEvent.h"
 
 
 // Input

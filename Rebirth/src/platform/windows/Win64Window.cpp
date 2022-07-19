@@ -142,6 +142,7 @@ namespace rebirth
 
 		if ((props.flags & WindowFlag_Maximized))
 		{
+			RB_CORE_INFO("Maximizing window");
 			glfwMaximizeWindow(mWindow);
 		}
 
@@ -153,7 +154,11 @@ namespace rebirth
 		glfwSetWindowUserPointer(mWindow, &mData);
 
 		// #TODO: Vsync should be a user preference decided at runtime, not compile time
-		SetVSync(true);
+		if ((props.flags & WindowFlag_VSync))
+		{
+			RB_CORE_INFO("Enabling VSync");
+			SetVSync(true);
+		}
 
 		RB_CORE_TRACE("Setting glfw callbacks");
 
