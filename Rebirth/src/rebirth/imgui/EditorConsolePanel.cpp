@@ -109,11 +109,10 @@ namespace rebirth
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.3f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
 
-		ImGui::BeginChild("ConsoleToolbar", { 0, 48 }, false, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysUseWindowPadding);
+		ImGui::BeginChild("ConsoleToolbar", { 0, 40 }, false, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysUseWindowPadding);
 
 		if (ImGui::Button("Clear"))
 		{
-			//RB_CORE_ERROR("Message filters: {}", std::bitset<8>(mMessageFilters).to_string());
 			mBufferBegin = 0;
 		}
 
@@ -171,124 +170,124 @@ namespace rebirth
 
 	void EditorConsolePanel::RenderConsole()
 	{
-		//ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		//ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.00f));
-
-		// #TODO: figure out correct color flag to set
 		ImGui::PushStyleColor(ImGuiCol_TableRowBg, ImVec4(0.1f, 0.1f, 0.1f, 1.00f));
 		ImGui::PushStyleColor(ImGuiCol_TableRowBgAlt, ImVec4(0.11f, 0.11f, 0.11f, 1.00f));
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 5));
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		int colorsToPop = 3;
 		ImGui::BeginChild("ConsoleChild");
-		ImGui::BeginTable("LogMessages", 1, ImGuiTableFlags_RowBg);
-
-		if (!mBufferBegin || (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !mIsMessageInspectorHovered))
+		if(ImGui::BeginTable("LogMessages", 1, ImGuiTableFlags_RowBg))
 		{
-			mDisplayMessageInspector = false;
-			mSelectedMessage = nullptr;
-		}
-
-		for (uint32 i = 0; i < mBufferBegin; i++)
-		{
-			const auto& msg = mMessageBuffer[i];
-
-			if (mMessageFilters & msg.GetLogLevel())
+			colorsToPop = 2;
+			if (!mBufferBegin || (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !mIsMessageInspectorHovered))
 			{
+				mDisplayMessageInspector = false;
+				mSelectedMessage = nullptr;
+			}
 
-				ImGui::TableNextColumn();
+			for (uint32 i = 0; i < mBufferBegin; i++)
+			{
+				const auto& msg = mMessageBuffer[i];
 
-				std::string text = msg.GetMessage();
-
-				ImGui::PushID(fmt::format("Copy_{}", i).c_str());
-				if (ImGui::Button("Copy"))
+				if (mMessageFilters & msg.GetLogLevel())
 				{
-					ImGui::SetClipboardText(text.c_str());
-				}
-				ImGui::PopID();
-				ImGui::SameLine();
 
-				ImGui::PushID(fmt::format("Inspect_{}", i).c_str());
-				if (ImGui::Button("Inspect")) // #TODO: Make magnifying glass image icon or something
-				{
-					mSelectedMessage = &mMessageBuffer[i];
-					mDisplayMessageInspector = true;
-				}
-				ImGui::PopID();
-				ImGui::SameLine();
+					ImGui::TableNextColumn();
+
+					std::string text = msg.GetMessage();
+
+					ImGui::PushID(fmt::format("Copy_{}", i).c_str());
+					if (ImGui::Button("Copy"))
+					{
+						ImGui::SetClipboardText(text.c_str());
+					}
+					ImGui::PopID();
+					ImGui::SameLine();
+
+					ImGui::PushID(fmt::format("Inspect_{}", i).c_str());
+					if (ImGui::Button("Inspect")) // #TODO: Make magnifying glass image icon or something
+					{
+						mSelectedMessage = &mMessageBuffer[i];
+						mDisplayMessageInspector = true;
+					}
+					ImGui::PopID();
+					ImGui::SameLine();
 
 #pragma warning(disable: 4312)
-				if (msg.GetLogLevel() == LogLevel_Trace)
-					ImGui::Image((ImTextureID)sTraceIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sTraceButtonOnTint);
-				else if (msg.GetLogLevel() == LogLevel_Info)
-					ImGui::Image((ImTextureID)sInfoIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sInfoButtonOnTint);
-				else if (msg.GetLogLevel() == LogLevel_Warning)
-					ImGui::Image((ImTextureID)sWarnIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sWarningButtonOnTint);
-				else if (msg.GetLogLevel() == LogLevel_Error)
-					ImGui::Image((ImTextureID)sErrorIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sErrorButtonOnTint);
-				else if (msg.GetLogLevel() == LogLevel_Fatal)
-					ImGui::Image((ImTextureID)sFatalIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sFatalButtonOnTint);
+					if (msg.GetLogLevel() == LogLevel_Trace)
+						ImGui::Image((ImTextureID)sTraceIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sTraceButtonOnTint);
+					else if (msg.GetLogLevel() == LogLevel_Info)
+						ImGui::Image((ImTextureID)sInfoIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sInfoButtonOnTint);
+					else if (msg.GetLogLevel() == LogLevel_Warning)
+						ImGui::Image((ImTextureID)sWarnIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sWarningButtonOnTint);
+					else if (msg.GetLogLevel() == LogLevel_Error)
+						ImGui::Image((ImTextureID)sErrorIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sErrorButtonOnTint);
+					else if (msg.GetLogLevel() == LogLevel_Fatal)
+						ImGui::Image((ImTextureID)sFatalIcon->GetId(), { 24, 24 }, { 0, 1 }, { 1, 0 }, sFatalButtonOnTint);
 #pragma warning(default: 4312)
-				ImGui::SameLine();
+					ImGui::SameLine();
 
 
 
-				size_t newLinePos = text.find_first_of('\n');
-				size_t newLinePos2 = text.find_last_of('\n');
-				if (newLinePos != std::string::npos && newLinePos != newLinePos2)
-				{
-					text.replace(newLinePos, text.length() - 1, " ...");
-				}
+					size_t newLinePos = text.find_first_of('\n');
+					size_t newLinePos2 = text.find_last_of('\n');
+					if (newLinePos != std::string::npos && newLinePos != newLinePos2)
+					{
+						text.replace(newLinePos, text.length() - 1, " ...");
+					}
 
-				if (text.length() > 200)
-				{
-					size_t spacePos = text.find_first_of(' ', 24);
-					if (spacePos != std::string::npos)
-						text.replace(spacePos, text.length() - 1, " ...");
-				}
+					if (text.length() > 200)
+					{
+						size_t spacePos = text.find_first_of(' ', 24);
+						if (spacePos != std::string::npos)
+							text.replace(spacePos, text.length() - 1, " ...");
+					}
 
 
 					ImGui::TextWrapped(text.c_str());
 
-				if (mCollapseMessages && msg.GetCount() > 1)
-				{
-					ImGui::SameLine(ImGui::GetWindowWidth() - 30);
-					ImGui::Text("%d", msg.GetCount());
+					if (mCollapseMessages && msg.GetCount() > 1)
+					{
+						ImGui::SameLine(ImGui::GetWindowWidth() - 30);
+						ImGui::Text("%d", msg.GetCount());
+					}
+
 				}
-
 			}
+
+			if (mNewMessageAdded)
+			{
+				ImGui::SetScrollHereY(1.0f);
+				mNewMessageAdded = false;
+			}
+
+			if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY() && !mDisplayMessageInspector)
+				ImGui::SetScrollHereY(1.0f);
+
+			ImGui::PopStyleColor();
+			if (mDisplayMessageInspector && mSelectedMessage != nullptr)
+			{
+
+				ImGui::Begin("Message Inspector");
+
+				mIsMessageInspectorHovered = ImGui::IsWindowHovered();
+
+				ImGui::PushTextWrapPos();
+				const auto& msg = mSelectedMessage->GetMessage();
+				ImGui::TextUnformatted(msg.c_str());
+				ImGui::PopTextWrapPos();
+
+				ImGui::End();
+			}
+			else
+			{
+				mIsMessageInspectorHovered = false;
+			}
+
+			ImGui::EndTable(); // LogMessages
 		}
 
-		if (mNewMessageAdded)
-		{
-			ImGui::SetScrollHereY(1.0f);
-			mNewMessageAdded = false;
-		}
-
-		if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY() && !mDisplayMessageInspector)
-			ImGui::SetScrollHereY(1.0f);
-
-		if (mDisplayMessageInspector && mSelectedMessage != nullptr)
-		{
-
-			ImGui::Begin("Message Inspector");
-
-			mIsMessageInspectorHovered = ImGui::IsWindowHovered();
-
-			ImGui::PushTextWrapPos();
-			const auto& msg = mSelectedMessage->GetMessage();
-			ImGui::TextUnformatted(msg.c_str());
-			ImGui::PopTextWrapPos();
-
-			ImGui::End();
-		}
-		else
-		{
-			mIsMessageInspectorHovered = false;
-		}
-
-		ImGui::EndTable(); // LogMessages
-		ImGui::EndChild();
-		ImGui::PopStyleColor(2);
-		ImGui::PopStyleVar();
+		ImGui::EndChild(); // ConsoleChild
+		ImGui::PopStyleColor(colorsToPop);
 
 	}
 

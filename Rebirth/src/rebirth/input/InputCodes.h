@@ -26,7 +26,7 @@
 namespace rebirth
 {
 
-	enum class KeyCode
+	enum class KeyCode : uint16
 	{
 
 		SPACE			= 32,
@@ -154,7 +154,7 @@ namespace rebirth
 	};
 
 
-	enum class MouseButton
+	enum class MouseButton : uint16
 	{
 		// Rebirth buttons start at "Button 1" instead of 0. Many games refer to the left mouse button as button 1, not 0
 		B1     = 0,
