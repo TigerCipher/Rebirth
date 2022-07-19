@@ -45,7 +45,7 @@ namespace rebirth
 		RB_CORE_INFO("Creating core application");
 		sInstance = this;
 		Time::Init();
-		mWindow = Window::Create({appDesc.title, appDesc.windowWidth, appDesc.windowHeight});
+		mWindow = Window::Create(appDesc);
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 		Panels::Init();
 

@@ -35,7 +35,7 @@ namespace rebirth
 {
 	static uint8 gGlfwWindowCount = 0;
 
-	Scope<Window> Window::Create(const WindowProperties& props)
+	Scope<Window> Window::Create(const ApplicationDesc& props)
 	{
 		return createScope<Win64Window>(props);
 	}
@@ -46,7 +46,7 @@ namespace rebirth
 	}
 
 
-	Win64Window::Win64Window(const WindowProperties& props)
+	Win64Window::Win64Window(const ApplicationDesc& props)
 	{
 		RB_PROFILE_FUNC();
 		Init(props);
@@ -85,15 +85,18 @@ namespace rebirth
 		return mData.vSync;
 	}
 
-	void Win64Window::Init(const WindowProperties& props)
+	void Win64Window::Init(const ApplicationDesc& props)
 	{
 		RB_PROFILE_FUNC();
+		const int maxWidth = GetSystemMetrics(SM_CXSCREEN);
+		const int maxHeight = GetSystemMetrics(SM_CYSCREEN);
+
+		mData.width = props.windowWidth;
+		mData.height = props.windowHeight;
 		mData.title = props.title;
-		mData.width = props.width;
-		mData.height = props.height;
 
 
-		RB_CORE_INFO("Creating window {0} ({1}, {2})", props.title, props.width, props.height);
+		RB_CORE_INFO("Creating window {0} ({1}, {2})", props.title, mData.width, mData.height);
 
 
 		if (!gGlfwWindowCount)
@@ -117,7 +120,9 @@ namespace rebirth
 			glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
 		}
 
-		glfwWindowHint(GLFW_DECORATED, props.decorated);
+		glfwWindowHint(GLFW_DECORATED, (props.flags & WindowFlag_NotDecorated) ? GLFW_FALSE : GLFW_TRUE);
+		// Maximizing window seems to be broken on windows?
+		//glfwWindowHint(GLFW_MAXIMIZED, (props.flags & WindowFlag_Maximized) ? GLFW_TRUE : GLFW_FALSE);
 
 #ifdef RB_DEBUG
 		if (Renderer::GetAPI() == GraphicsAPI::API::OPENGL)
@@ -125,16 +130,20 @@ namespace rebirth
 			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 		}
 #endif
-
 		RB_CORE_TRACE("Creating glfw window");
-		mWindow = glfwCreateWindow(static_cast<int>(props.width), static_cast<int>(props.height), mData.title.c_str(),
+
+		mWindow = glfwCreateWindow(static_cast<int>(mData.width), static_cast<int>(mData.height), mData.title.c_str(),
 			nullptr, nullptr);
 		gGlfwWindowCount++;
 
 
-		const int maxWidth = GetSystemMetrics(SM_CXSCREEN);
-		const int maxHeight = GetSystemMetrics(SM_CYSCREEN);
-		glfwSetWindowMonitor(mWindow, nullptr, (maxWidth / 2) - (props.width / 2), (maxHeight / 2) - (props.height / 2), props.width, props.height, GLFW_DONT_CARE);
+		glfwSetWindowMonitor(mWindow, nullptr, (maxWidth / 2) - (mData.width / 2), (maxHeight / 2) - (mData.height / 2),
+			mData.width, mData.height, GLFW_DONT_CARE);
+
+		if ((props.flags & WindowFlag_Maximized))
+		{
+			glfwMaximizeWindow(mWindow);
+		}
 
 		mContext = createScope<OpenGLContext>(mWindow);
 		mContext->Init();

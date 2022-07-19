@@ -27,19 +27,10 @@
 
 #include "rebirth/core/Common.h"
 #include "rebirth/events/Event.h"
+#include "ApplicationDesc.h"
 
 namespace rebirth
 {
-	struct WindowProperties
-	{
-		std::string title;
-		uint32 width;
-		uint32 height;
-		bool decorated = true;
-
-		WindowProperties(const std::string& pTitle = "Rebirth Engine", uint32 pWidth = 1920, uint32 pHeight = 1080) : title(pTitle), width(pWidth), height(pHeight) {}
-	};
-
 	class Window
 	{
 	public:
@@ -60,6 +51,6 @@ namespace rebirth
 
 		virtual void* GetNativeWindow() const = 0;
 
-		static Scope<Window> Create(const WindowProperties& props = WindowProperties());
+		static Scope<Window> Create(const ApplicationDesc& appDesc);
 	};
 }

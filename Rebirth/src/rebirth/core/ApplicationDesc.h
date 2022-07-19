@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------------------
 // 
-// Sandbox
+// Rebirth
 //    Copyright 2022 Matthew Rogers
 // 
 //    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,38 +15,32 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: ReeditApp.cpp
-// Date File Created: 06/26/2022
+// File Name: ApplicationDesc.h
+// Date File Created: 7/19/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
-#include <Rebirth.h>
-#include <rebirth/core/EntryPoint.h>
-
-#include "EditorLayer.h"
+#pragma once
+#include "Common.h"
+#include <string>
 
 namespace rebirth
 {
-	class ReeditApp final : public Application
+	enum WindowFlags : int16
 	{
-	public:
-		ReeditApp(ApplicationDesc appDesc, CommandLineArgs args) : Application(appDesc, args)
-		{
-			PushLayer(new EditorLayer());
-		}
-		~ReeditApp() override = default;
-
+		WindowFlag_None = 0,
+		WindowFlag_NotDecorated = BIT(0),
+		WindowFlag_Maximized = BIT(1),
+		WindowFlag_Fullscreen = BIT(2),
+		WindowFlag_VSync = BIT(3)
 	};
 
-
-	Application* CreateApplication(CommandLineArgs args)
+	struct ApplicationDesc
 	{
-		ApplicationDesc desc;
-		desc.title = "Rebirth Reedit";
-		desc.windowWidth = 2560;
-		desc.windowHeight = 1440;
-		desc.flags |= WindowFlag_Maximized;
-		return new ReeditApp(desc, args);
-	}
+		std::string title;
+		uint32 windowWidth = 1920;
+		uint32 windowHeight = 1080;
+		int32 flags = WindowFlag_None;
+	};
 }
+

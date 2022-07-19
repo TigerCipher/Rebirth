@@ -34,7 +34,7 @@ namespace rebirth
 	class Win64Window : public Window
 	{
 	public:
-		Win64Window(const WindowProperties& props);
+		Win64Window(const ApplicationDesc& props);
 
 		virtual ~Win64Window();
 
@@ -66,7 +66,7 @@ namespace rebirth
 		WindowData mData;
 		float mHighDpiScaleFactor = 1.0f;
 
-		virtual void Init(const WindowProperties& props);
+		virtual void Init(const ApplicationDesc& props);
 		virtual void Shutdown();
 	};
 }

@@ -36,6 +36,7 @@
 #include "rebirth/renderer/VertexArray.h"
 
 #include "Timestep.h"
+#include "ApplicationDesc.h"
 
 namespace rebirth
 {
@@ -50,13 +51,6 @@ namespace rebirth
 			RB_CORE_ASSERT(index < count);
 			return args[index];
 		}
-	};
-
-	struct ApplicationDesc
-	{
-		std::string title = "Rebirth Engine";
-		uint32 windowWidth = 1920;
-		uint32 windowHeight = 1080;
 	};
 
 	class Application

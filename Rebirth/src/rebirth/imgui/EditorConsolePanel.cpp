@@ -266,7 +266,6 @@ namespace rebirth
 			ImGui::PopStyleColor();
 			if (mDisplayMessageInspector && mSelectedMessage != nullptr)
 			{
-
 				ImGui::Begin("Message Inspector");
 
 				mIsMessageInspectorHovered = ImGui::IsWindowHovered();

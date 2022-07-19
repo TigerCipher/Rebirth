@@ -34,6 +34,8 @@
 #include <spdlog/fmt/ostr.h>
 #pragma warning(pop)
 
+#include <bitset>
+
 namespace rebirth
 {
 	class Log
