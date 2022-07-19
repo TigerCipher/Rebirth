@@ -53,6 +53,7 @@ namespace rebirth
 
 		void OnScenePlay();
 		void OnSceneStop();
+		void OnSceneSimulate();
 
 		void OnDuplicateEntity();
 
@@ -100,13 +101,15 @@ namespace rebirth
 		enum class SceneState
 		{
 			EDIT = 0,
-			PLAY
+			PLAY,
+			SIMULATE
 		};
 
 		SceneState mSceneState = SceneState::EDIT;
 
 		Ref<Texture2D> mIconPlay;
 		Ref<Texture2D> mIconStop;
+		Ref<Texture2D> mIconSimulate;
 		bool mShowPhysicsColliders = false;
 	};
 }

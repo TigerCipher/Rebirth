@@ -37,6 +37,7 @@ namespace rebirth
 		mTexture = Texture2D::Create("assets/textures/default.png");
 		mIconPlay = Texture2D::Create("assets/icons/play_button.png");
 		mIconStop = Texture2D::Create("assets/icons/stop_button.png");
+		mIconSimulate = Texture2D::Create("assets/icons/simulate_button.png");
 
 		FramebufferDesc spec;
 		spec.attachements = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INT, FramebufferTextureFormat::DEPTH };
@@ -44,7 +45,8 @@ namespace rebirth
 		spec.height = Application::Instance().GetWindow().GetHeight();
 		mFramebuffer = Framebuffer::Create(spec);
 
-		mActiveScene = createRef<Scene>();
+		mEditorScene = createRef<Scene>();
+		mActiveScene = mEditorScene;
 
 		auto cmd = Application::Instance().GetCommandLineArgs();
 		if (cmd.count > 1)
@@ -115,6 +117,11 @@ namespace rebirth
 				mActiveScene->OnUpdateRuntime(ts);
 				break;
 			}
+			case SceneState::SIMULATE:
+			{
+				mActiveScene->OnUpdateSimulation(ts, mEditorCamera);
+				break;
+			}
 		}
 
 
@@ -147,6 +154,7 @@ namespace rebirth
 		if (mSceneState == SceneState::PLAY)
 		{
 			Entity cam = mActiveScene->GetPrimaryCameraEntity();
+			if (!cam) return;
 			Renderer2D::BeginScene(cam.GetComponent<CameraComponent>().camera, cam.GetComponent<TransformComponent>().GetTransform());
 		}
 		else
@@ -503,6 +511,8 @@ namespace rebirth
 
 	void EditorLayer::OnScenePlay()
 	{
+		if (mSceneState == SceneState::SIMULATE)
+			OnSceneStop();
 		mSceneState = SceneState::PLAY;
 
 		mActiveScene = Scene::Copy(mEditorScene);
@@ -521,13 +531,30 @@ namespace rebirth
 	{
 		mSceneState = SceneState::EDIT;
 
-		ScenePreStopEvent scenePreStop(mActiveScene);
-		Application::Instance().OnEvent(scenePreStop);
-		mActiveScene->OnRuntimeStop();
-		ScenePostStopEvent scenePostStop(mActiveScene);
-		Application::Instance().OnEvent(scenePostStop);
+		if (mSceneState == SceneState::PLAY)
+		{
+			ScenePreStopEvent scenePreStop(mActiveScene);
+			Application::Instance().OnEvent(scenePreStop);
+			mActiveScene->OnRuntimeStop();
+			ScenePostStopEvent scenePostStop(mActiveScene);
+			Application::Instance().OnEvent(scenePostStop);
+		}
+		else if (mSceneState == SceneState::SIMULATE)
+			mActiveScene->OnSimulationStop();
+
 
 		mActiveScene = mEditorScene;
+
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+	}
+
+	void EditorLayer::OnSceneSimulate()
+	{
+		if (mSceneState == SceneState::PLAY)
+			OnSceneStop();
+		mSceneState = SceneState::SIMULATE;
+		mActiveScene = Scene::Copy(mEditorScene);
+		mActiveScene->OnSimulationStart();
 
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
@@ -634,18 +661,40 @@ namespace rebirth
 
 		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
+		bool toolbarEnabled = (bool)mActiveScene;
+		ImVec4 tint = ImVec4(1, 1, 1, 1);
+		if (!toolbarEnabled)
+			tint.w = 0.5f;
 
-		Ref<Texture2D> icon = mSceneState == SceneState::EDIT ? mIconPlay : mIconStop;
 		float size = ImGui::GetWindowHeight() - 4.0f;
-		ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
-
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, { 1, 1 }, 0))
 		{
-			if (mSceneState == SceneState::EDIT)
-				OnScenePlay();
-			else if (mSceneState == SceneState::PLAY)
-				OnSceneStop();
+			Ref<Texture2D> icon = (mSceneState == SceneState::EDIT || mSceneState == SceneState::SIMULATE) ? mIconPlay : mIconStop;
+			ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+			if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, { 1, 1 }, 0, {0, 0, 0, 0}, tint) && toolbarEnabled)
+			{
+				if (mSceneState == SceneState::EDIT || mSceneState == SceneState::SIMULATE)
+					OnScenePlay();
+				else if (mSceneState == SceneState::PLAY)
+					OnSceneStop();
+			}
 		}
+
+		ImGui::SameLine();
+
+		{
+			Ref<Texture2D> icon = (mSceneState == SceneState::EDIT || mSceneState == SceneState::PLAY) ? mIconSimulate : mIconStop;
+			//ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+			if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, { 1, 1 }, 0, {0, 0, 0, 0}, tint) && toolbarEnabled)
+			{
+				if (mSceneState == SceneState::EDIT || mSceneState == SceneState::PLAY)
+					OnSceneSimulate();
+				else if (mSceneState == SceneState::SIMULATE)
+					OnSceneStop();
+			}
+		}
+
 
 		ImGui::End(); // ##toolbar
 

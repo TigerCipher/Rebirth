@@ -52,8 +52,12 @@ namespace rebirth
 		void OnRuntimeStart();
 		void OnRuntimeStop();
 
+		void OnSimulationStart();
+		void OnSimulationStop();
+
 		void OnUpdateRuntime(Timestep ts);
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
+		void OnUpdateSimulation(Timestep ts, EditorCamera& camera);
 
 		void OnViewportResize(uint32 width, uint32 height);
 
@@ -71,6 +75,11 @@ namespace rebirth
 
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
+
+		void OnPhysics2DStart();
+		void OnPhysics2DStop();
+
+		void RenderScene(EditorCamera& camera);
 
 		entt::registry mRegistry;
 		uint32 mViewportWidth = 0;
