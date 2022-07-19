@@ -66,7 +66,10 @@ namespace rebirth
 			if (ImGui::BeginPopupContextWindow(0, 1, false))
 			{
 				if (ImGui::MenuItem("Add Entity"))
-					mContext->CreateEntity("New Entity");
+				{
+					Entity e = mContext->CreateEntity("New Entity");
+					RB_CORE_TRACE("Creating new entity with ID: {}", e.GetUUID());
+				}
 
 				ImGui::EndPopup();
 			}

@@ -27,6 +27,7 @@
 
 namespace rebirth
 {
+
 	class EditorConsolePanel : public EditorPanel
 	{
 	public:
@@ -51,11 +52,8 @@ namespace rebirth
 
 		std::array<ConsoleMessage, sMessageBufferCapacity> mMessageBuffer;
 		uint32 mBufferBegin = 0;
-		int32 mMessageFilters = (int16)ConsoleMessage::Category::Category_Trace
-			| (int16)ConsoleMessage::Category::Category_Info
-			| (int16)ConsoleMessage::Category::Category_Warning
-			| (int16)ConsoleMessage::Category::Category_Error
-			| (int16)ConsoleMessage::Category::Category_Fatal;
+		int32 mMessageFilters = LogLevel_Trace | LogLevel_Info | LogLevel_Warning
+			| LogLevel_Error | LogLevel_Fatal;
 
 		ConsoleMessage* mSelectedMessage = nullptr;
 

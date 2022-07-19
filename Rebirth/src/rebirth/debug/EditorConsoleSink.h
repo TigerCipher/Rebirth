@@ -59,7 +59,7 @@ namespace rebirth
 		{
 			for (const auto& msg : mMessageBuffer)
 			{
-				if (msg.GetCategory() == ConsoleMessage::Category::Category_None)
+				if (msg.GetLogLevel() == LogLevel_None)
 					continue;
 				EditorConsolePanel::PushMessage(msg);
 			}
@@ -67,24 +67,24 @@ namespace rebirth
 			mMessageCount = 0;
 		}
 	private:
-		static ConsoleMessage::Category GetCategory(spdlog::level::level_enum level)
+		static LogLevel GetCategory(spdlog::level::level_enum level)
 		{
 			switch (level)
 			{
 				case spdlog::level::trace:
 				case spdlog::level::debug:
-					return ConsoleMessage::Category::Category_Trace;
+					return LogLevel_Trace;
 				case spdlog::level::info:
-					return ConsoleMessage::Category::Category_Info;
+					return LogLevel_Info;
 				case spdlog::level::warn:
-					return ConsoleMessage::Category::Category_Warning;
+					return LogLevel_Warning;
 				case spdlog::level::err:
-					return ConsoleMessage::Category::Category_Error;
+					return LogLevel_Error;
 				case spdlog::level::critical:
-					return ConsoleMessage::Category::Category_Fatal;
+					return LogLevel_Fatal;
 				default:
 					RB_CORE_ASSERT(false, "Invalid Console Message Category");
-					return ConsoleMessage::Category::Category_None;
+					return LogLevel_None;
 			}
 		}
 	private:

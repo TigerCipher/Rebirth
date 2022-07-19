@@ -351,9 +351,10 @@ namespace rebirth
 		ImGui::Text("Max Aniostropy: %f", GraphicsAPI::GetCapabilities().maxAniostropy);
 
 		ImGui::End();
-
-		//static bool show = true;
-		//ImGui::ShowDemoWindow(&show);
+#ifdef RB_SHOW_IMGUI_DEMO
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
+#endif
 		Settings();
 		Viewport();
 		Toolbar();

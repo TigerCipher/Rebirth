@@ -27,33 +27,34 @@
 
 namespace rebirth
 {
+	enum LogLevel : int16
+	{
+		LogLevel_None = -1,
+		LogLevel_Trace = BIT(0),
+		LogLevel_Info = BIT(1),
+		LogLevel_Warning = BIT(2),
+		LogLevel_Error = BIT(3),
+		LogLevel_Fatal = BIT(4),
+	};
+
 	class ConsoleMessage
 	{
 	public:
-		enum class Category
-		{
-			Category_None	 = -1,
-			Category_Trace	 = BIT(0),
-			Category_Info	 = BIT(1),
-			Category_Warning = BIT(2),
-			Category_Error	 = BIT(3),
-			Category_Fatal	 = BIT(4),
-		};
 
 		ConsoleMessage() = default;
-		ConsoleMessage(const std::string& msg, Category category) :
-			mMessageId(std::hash<std::string>()(msg)), mMessage(msg), mCount(1), mCategory(category) {}
+		ConsoleMessage(const std::string& msg, LogLevel category) :
+			mMessageId(std::hash<std::string>()(msg)), mMessage(msg), mCount(1), mLogLevel(category) {}
 
 		uint64 GetId() const { return mMessageId; }
 		const std::string& GetMessage() const { return mMessage; }
 		uint32 GetCount() const { return mCount; }
-		Category GetCategory() const { return mCategory; }
+		LogLevel GetLogLevel() const { return mLogLevel; }
 
 	private:
 		uint64 mMessageId = 0;
 		std::string mMessage = "";
 		uint32 mCount = 0;
-		Category mCategory = Category::Category_None;
+		LogLevel mLogLevel = LogLevel_None;
 
 		// Editor
 		friend class EditorConsolePanel;
