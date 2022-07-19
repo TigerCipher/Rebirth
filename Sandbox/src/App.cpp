@@ -31,7 +31,7 @@
 class Sandbox final : public rebirth::Application
 {
 public:
-	Sandbox(rebirth::CommandLineArgs args) : Application("Sandbox", 1920, 1080, args)
+	Sandbox(rebirth::CommandLineArgs args) : Application({"Sandbox", 1920, 1080}, args)
 	{
 		//PushLayer(new SampleLayer());
 		PushLayer(new Sandbox2D());

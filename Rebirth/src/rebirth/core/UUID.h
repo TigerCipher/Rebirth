@@ -15,36 +15,40 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: rbpch.h
-// Date File Created: 06/15/2022 at 2:16 PM
+// File Name: UUID.h
+// Date File Created: 7/15/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <memory>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <filesystem>
+#include <xhash>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+namespace rebirth
+{
+	class UUID
+	{
+	public:
+		UUID();
+		UUID(uint64 id);
+		UUID(const UUID&) = default;
 
-#include "rebirth/core/Common.h"
-#include "rebirth/debug/Log.h"
-#include "rebirth/debug/Profiler.h"
+		operator uint64() const { return mUUID; }
+	private:
+		uint64 mUUID;
+	};
+}
 
-#ifdef RB_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
+
+namespace std
+{
+	template<>
+	struct hash<rebirth::UUID>
+	{
+		std::size_t operator()(const rebirth::UUID& uuid) const
+		{
+			return hash<uint64_t>()((uint64_t)uuid);
+		}
+	};
+}
 

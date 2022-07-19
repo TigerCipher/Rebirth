@@ -15,36 +15,23 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: rbpch.h
-// Date File Created: 06/15/2022 at 2:16 PM
+// File Name: Panels.cpp
+// Date File Created: 7/18/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+#include "rbpch.h"
+#include "Panels.h"
 
-#pragma once
+namespace rebirth
+{
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <memory>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <filesystem>
+	Ref<EditorConsolePanel> Panels::sConsolePanel;
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+	void Panels::Init()
+	{
+		sConsolePanel = createRef<EditorConsolePanel>();
+	}
 
-#include "rebirth/core/Common.h"
-#include "rebirth/debug/Log.h"
-#include "rebirth/debug/Profiler.h"
-
-#ifdef RB_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
+}
 

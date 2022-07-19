@@ -15,42 +15,49 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Window.h
-// Date File Created: 06/15/2022 at 10:39 PM
+// File Name: ConsoleMessage.h
+// Date File Created: 7/17/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-#include "rbpch.h"
-
 #include "rebirth/core/Common.h"
-#include "rebirth/events/Event.h"
-#include "ApplicationDesc.h"
+#include <string>
 
 namespace rebirth
 {
-	class Window
+	enum LogLevel : int16
+	{
+		LogLevel_None = -1,
+		LogLevel_Trace = BIT(0),
+		LogLevel_Info = BIT(1),
+		LogLevel_Warning = BIT(2),
+		LogLevel_Error = BIT(3),
+		LogLevel_Fatal = BIT(4),
+	};
+
+	class ConsoleMessage
 	{
 	public:
-		using EventCallbackFn = std::function<void(Event&)>;
 
-		virtual ~Window() {}
+		ConsoleMessage() = default;
+		ConsoleMessage(const std::string& msg, LogLevel category) :
+			mMessageId(std::hash<std::string>()(msg)), mMessage(msg), mCount(1), mLogLevel(category) {}
 
-		virtual void OnUpdate() = 0;
-		virtual uint32 GetWidth() const = 0;
-		virtual uint32 GetHeight() const = 0;
+		uint64 GetId() const { return mMessageId; }
+		const std::string& GetMessage() const { return mMessage; }
+		uint32 GetCount() const { return mCount; }
+		LogLevel GetLogLevel() const { return mLogLevel; }
 
-		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+	private:
+		uint64 mMessageId = 0;
+		std::string mMessage = "";
+		uint32 mCount = 0;
+		LogLevel mLogLevel = LogLevel_None;
 
-		virtual void SetVSync(bool enabled) = 0;
-		virtual bool IsVSync() const = 0;
-
-		virtual float GetHighDPIScaleFactor() const = 0;
-
-		virtual void* GetNativeWindow() const = 0;
-
-		static Scope<Window> Create(const ApplicationDesc& appDesc);
+		// Editor
+		friend class EditorConsolePanel;
 	};
 }
+

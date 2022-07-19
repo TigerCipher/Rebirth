@@ -22,17 +22,28 @@
 // ------------------------------------------------------------------------------
 #pragma once
 
+
+#include "rebirth/renderer/OrthoCamera.h"
+#include "SceneCamera.h"
+#include "rebirth/renderer/Texture.h"
+#include "rebirth/core/UUID.h"
+
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
-#include "rebirth/renderer/OrthoCamera.h"
-#include "SceneCamera.h"
-#include "ScriptableEntity.h"
-#include "rebirth/renderer/Texture.h"
 
 namespace rebirth
 {
+
+	struct IDComponent
+	{
+		UUID uuid;
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+
+		const char* name = "IDComponent";
+	};
 
 	struct TagComponent
 	{
@@ -40,6 +51,8 @@ namespace rebirth
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& pTag) : tag(pTag) {}
+
+		const char* name = "TagComponent";
 	};
 
 	struct TransformComponent
@@ -58,6 +71,8 @@ namespace rebirth
 
 			return glm::translate(glm::mat4(1.0f), translation) * rot * glm::scale(glm::mat4(1.0f), scale);
 		}
+
+		const char* name = "TransformComponent";
 	};
 
 	struct SpriteComponent
@@ -70,6 +85,21 @@ namespace rebirth
 		SpriteComponent() = default;
 		SpriteComponent(const SpriteComponent&) = default;
 		SpriteComponent(const glm::vec4& col) : color(col) {}
+
+		const char* name = "SpriteComponent";
+	};
+
+	struct CircleComponent
+	{
+		glm::vec4 color{ 1.0f };
+		float thickness = 1.0f; // filled in circle
+		float fade = 0.005f;
+
+
+		CircleComponent() = default;
+		CircleComponent(const CircleComponent&) = default;
+
+		const char* name = "CircleComponent";
 	};
 
 
@@ -81,7 +111,11 @@ namespace rebirth
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
+
+		const char* name = "CameraComponent";
 	};
+
+	class ScriptableEntity;
 
 	struct NativeScriptComponent
 	{
@@ -96,6 +130,91 @@ namespace rebirth
 			InstantiateScript = []() { return static_cast<ScriptableEntity*>(new T()); };
 			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->instance; nsc->instance = nullptr; };
 		}
+
+		const char* name = "NativeScriptComponent";
 	};
+
+
+	// Physics
+
+	struct RigidBody2DComponent
+	{
+		enum class BodyType { STATIC = 0, DYNAMIC, KINEMATIC };
+		BodyType bodyType = BodyType::STATIC;
+		bool fixedRotation = false;
+
+		void* runtimeBody = nullptr;
+
+		RigidBody2DComponent() = default;
+		RigidBody2DComponent(const RigidBody2DComponent&) = default;
+
+		const char* name = "RigidBody2DComponent";
+	};
+
+	struct BoxCollider2DComponent
+	{
+		glm::vec2 offset = { 0, 0 };
+		glm::vec2 size = { 0.5f, 0.5f };
+
+		float density = 1.0f;
+		float friction = 0.5f;
+		float restitution = 0.0f;
+		float restitutionThreshold = 0.5f;
+
+		void* runtimeFixture = nullptr;
+
+		BoxCollider2DComponent() = default;
+		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
+
+		const char* name = "BoxCollider2DComponent";
+	};
+
+	struct CircleCollider2DComponent
+	{
+		glm::vec2 offset = { 0, 0 };
+		float radius = 0.5f;
+
+		float density = 1.0f;
+		float friction = 0.5f;
+		float restitution = 0.0f;
+		float restitutionThreshold = 0.5f;
+
+		void* runtimeFixture = nullptr;
+
+		CircleCollider2DComponent() = default;
+		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
+
+		const char* name = "CircleCollider2DComponent";
+	};
+
+
+	template<typename... C>
+	struct ComponentGroup {};
+
+	using AllComponents_NoID_NoTag = ComponentGroup
+		<
+		TransformComponent,
+		SpriteComponent,
+		CircleComponent,
+		CameraComponent,
+		NativeScriptComponent,
+		RigidBody2DComponent,
+		BoxCollider2DComponent,
+		CircleCollider2DComponent
+		>;
+
+	using AllComponents = ComponentGroup
+		<
+		IDComponent,
+		TagComponent,
+		TransformComponent,
+		SpriteComponent,
+		CircleComponent,
+		CameraComponent,
+		NativeScriptComponent,
+		RigidBody2DComponent,
+		BoxCollider2DComponent,
+		CircleCollider2DComponent
+		>;
 }
 

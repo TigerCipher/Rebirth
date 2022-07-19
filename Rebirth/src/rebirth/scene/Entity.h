@@ -23,6 +23,9 @@
 #pragma once
 
 #include "Scene.h"
+#include "rebirth/core/UUID.h"
+#include "Components.h"
+
 #include <entt.hpp>
 
 namespace rebirth
@@ -43,9 +46,19 @@ namespace rebirth
 			return comp;
 		}
 
+		template<typename T, typename... Args>
+		T& AddOrReplaceComponent(Args&&... args)
+		{
+			T& comp = mScene->mRegistry.emplace_or_replace<T>(mId, std::forward<Args>(args)...);
+			mScene->OnComponentAdded<T>(*this, comp);
+			return comp;
+		}
+
 		template<typename T>
 		T& GetComponent()
 		{
+			//if (!HasComponent<T>())
+			//	RB_CORE_ERROR("Type name: {}", typeid(T).name());
 			RB_CORE_ASSERT(HasComponent<T>(), "This entity does not have this component");
 			return mScene->mRegistry.get<T>(mId);
 		}
@@ -53,7 +66,7 @@ namespace rebirth
 		template<typename T>
 		bool HasComponent()
 		{
-			if(mId != entt::null && mScene->mRegistry.valid(mId)) return mScene->mRegistry.all_of<T>(mId);
+			if (mId != entt::null && mScene->mRegistry.valid(mId)) return mScene->mRegistry.all_of<T>(mId);
 			return false;
 		}
 
@@ -64,7 +77,10 @@ namespace rebirth
 			mScene->mRegistry.remove<T>(mId);
 		}
 
-		operator bool() const { return mId != entt::null && mScene != nullptr; }
+		UUID GetUUID() { return GetComponent<IDComponent>().uuid; }
+		const std::string& GetTag() { return GetComponent<TagComponent>().tag; }
+
+		operator bool() const { return mId != entt::null && mScene != nullptr && mScene->mRegistry.valid(mId); }
 		operator uint32() const { return (uint32)mId; }
 		operator entt::entity() const { return mId; }
 

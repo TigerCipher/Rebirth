@@ -42,6 +42,7 @@
 // Events
 #include "rebirth/events/KeyEvent.h"
 #include "rebirth/events/MouseEvent.h"
+#include "rebirth/events/SceneEvent.h"
 
 
 // Input
@@ -50,6 +51,7 @@
 
 
 // Renderer
+#include "rebirth/renderer/Colors.h"
 #include "rebirth/renderer/Renderer.h"
 #include "rebirth/renderer/Renderer2D.h"
 #include "rebirth/renderer/RenderCommand.h"
@@ -72,6 +74,7 @@
 
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"
+#include "rebirth/imgui/Panels.h"
 
 
 // Main function

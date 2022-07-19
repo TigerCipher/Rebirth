@@ -50,6 +50,8 @@ namespace rebirth
 
 		uint32 GetId() const override { return mId; }
 
+		const std::string& GetPath() const override { return mPath; }
+
 		bool IsLoaded() const override { return mLoaded; }
 
 		bool operator==(const Texture& other) const override

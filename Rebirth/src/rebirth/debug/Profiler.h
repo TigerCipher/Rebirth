@@ -28,6 +28,8 @@
 #include <fstream>
 #include <thread>
 
+#include "Log.h"
+
 namespace rebirth
 {
 	struct ProfileResult

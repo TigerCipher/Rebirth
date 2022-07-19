@@ -15,36 +15,36 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: rbpch.h
-// Date File Created: 06/15/2022 at 2:16 PM
+// File Name: UUID.cpp
+// Date File Created: 7/15/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
+#include "rbpch.h"
+#include "UUID.h"
 
-#pragma once
+#include <random>
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <memory>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <filesystem>
+namespace rebirth
+{
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+	static std::random_device sRandDevice;
+	static std::mt19937_64 sRandEngine(sRandDevice());
+	static std::uniform_int_distribution<uint64> sDistribution;
 
-#include "rebirth/core/Common.h"
-#include "rebirth/debug/Log.h"
-#include "rebirth/debug/Profiler.h"
 
-#ifdef RB_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
+	UUID::UUID() :
+		mUUID(sDistribution(sRandEngine))
+	{
+
+	}
+
+	UUID::UUID(uint64 id) :
+		mUUID(id)
+	{
+
+	}
+
+}
+
 

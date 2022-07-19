@@ -37,6 +37,7 @@ namespace rebirth
 		mTexture = Texture2D::Create("assets/textures/default.png");
 		mIconPlay = Texture2D::Create("assets/icons/play_button.png");
 		mIconStop = Texture2D::Create("assets/icons/stop_button.png");
+		mIconSimulate = Texture2D::Create("assets/icons/simulate_button.png");
 
 		FramebufferDesc spec;
 		spec.attachements = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INT, FramebufferTextureFormat::DEPTH };
@@ -44,7 +45,8 @@ namespace rebirth
 		spec.height = Application::Instance().GetWindow().GetHeight();
 		mFramebuffer = Framebuffer::Create(spec);
 
-		mActiveScene = createRef<Scene>();
+		mEditorScene = createRef<Scene>();
+		mActiveScene = mEditorScene;
 
 		auto cmd = Application::Instance().GetCommandLineArgs();
 		if (cmd.count > 1)
@@ -54,71 +56,16 @@ namespace rebirth
 			{
 				SceneSerializer serializer(mActiveScene);
 				serializer.DeserializeFromYaml(scenePath);
+				mEditorScene = mActiveScene;
+				mEditorScenePath = scenePath;
 			}
 		}
 
-//#if 0
-//		mSquareEntity = mActiveScene->CreateEntity("Square");
-//		mSquareEntity.AddComponent<SpriteComponent>(glm::vec4{ 0.3f, 0.85f, 0.4f, 1.0f });
-//
-//		auto sq2 = mActiveScene->CreateEntity("Red Square");
-//		sq2.AddComponent<SpriteComponent>(glm::vec4{ 0.85f, 0.25f, 0.2f, 1.0f });
-//
-//
-//		mCameraEntity = mActiveScene->CreateEntity("Camera");
-//		auto& c = mCameraEntity.AddComponent<CameraComponent>();
-//		c.primary = true;
-//
-//		mSecondCamera = mActiveScene->CreateEntity("Camera 2");
-//		mSecondCamera.AddComponent<CameraComponent>();
-//
-//		class CameraController : public ScriptableEntity
-//		{
-//		public:
-//			void OnCreate()
-//			{
-//				auto& transform = GetComponent<TransformComponent>();
-//				transform.translation.x = rand() % 10 - 5.0f;
-//			}
-//
-//			void OnDestroy()
-//			{
-//
-//			}
-//
-//			void OnUpdate(Timestep ts)
-//			{
-//				auto& translation = GetComponent<TransformComponent>().translation;
-//				static float speed = 5.0f;
-//				if (Input::IsKeyPressed(RB_KEY_A))
-//				{
-//					translation.x -= speed * ts;
-//				}
-//
-//				if (Input::IsKeyPressed(RB_KEY_D))
-//				{
-//					translation.x += speed * ts;
-//				}
-//
-//				if (Input::IsKeyPressed(RB_KEY_W))
-//				{
-//					translation.y += speed * ts;
-//				}
-//
-//				if (Input::IsKeyPressed(RB_KEY_S))
-//				{
-//					translation.y -= speed * ts;
-//				}
-//			}
-//		};
-//
-//		mCameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-//		mSecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-//#endif
 
 		mEditorCamera = EditorCamera(45.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 
+		Renderer2D::SetLineWidth(6.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -140,17 +87,18 @@ namespace rebirth
 			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 		}
 
-		
+
 
 
 		Renderer2D::ResetStats();
 
 		mFramebuffer->Bind();
 
-		RenderCommand::SetClearColor({ 0.05f, 0.05f, 0.05f, 1.0f });
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		RenderCommand::Clear();
 
 		mFramebuffer->ClearAttachment(1, -1);
+
 
 		switch (mSceneState)
 		{
@@ -169,9 +117,14 @@ namespace rebirth
 				mActiveScene->OnUpdateRuntime(ts);
 				break;
 			}
+			case SceneState::SIMULATE:
+			{
+				mActiveScene->OnUpdateSimulation(ts, mEditorCamera);
+				break;
+			}
 		}
 
-		
+
 
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= mViewportBounds[0].x;
@@ -191,13 +144,76 @@ namespace rebirth
 			else mHoveredEntity = Entity((entt::entity)pixelData, mActiveScene.get());
 		}
 
-
+		OnOverlayRender();
 		mFramebuffer->Unbind();
 
 	}
 
+	void EditorLayer::OnOverlayRender()
+	{
+		if (mSceneState == SceneState::PLAY)
+		{
+			Entity cam = mActiveScene->GetPrimaryCameraEntity();
+			if (!cam) return;
+			Renderer2D::BeginScene(cam.GetComponent<CameraComponent>().camera, cam.GetComponent<TransformComponent>().GetTransform());
+		}
+		else
+		{
+			Renderer2D::BeginScene(mEditorCamera);
+		}
+
+		if (mShowPhysicsColliders)
+		{
+			{
+				auto view = mActiveScene->GetAllEntities<TransformComponent, BoxCollider2DComponent>();
+				for (auto e : view)
+				{
+					auto [tc, bc] = view.get<TransformComponent, BoxCollider2DComponent>(e);
+
+					glm::vec3 trans = tc.translation + glm::vec3(bc.offset, 0.001f);
+					glm::vec3 scale = tc.scale * glm::vec3(bc.size * 2.0f, 1.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
+						glm::rotate(glm::mat4(1.0f), tc.rotation.z, { 0, 0, 1 }) *
+						glm::scale(glm::mat4(1.0f), scale);
+					Renderer2D::DrawRect(transform, { 0, 1, 0, 1 });
+				}
+			}
+
+			{
+				auto view = mActiveScene->GetAllEntities<TransformComponent, CircleCollider2DComponent>();
+				for (auto e : view)
+				{
+					auto [tc, cc] = view.get<TransformComponent, CircleCollider2DComponent>(e);
+
+					glm::vec3 trans = tc.translation + glm::vec3(cc.offset, 0.001f);
+					glm::vec3 scale = tc.scale * glm::vec3(cc.radius * 2.0f);
+
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
+						glm::scale(glm::mat4(1.0f), scale);
+					Renderer2D::DrawCircle(transform, Colors::GREEN, 0.01f);
+				}
+			}
+		}
+
+		if (Entity selected = mSceneHierarchyPanel.GetSelectedEntity())
+		{
+			const auto& tc = selected.GetComponent<TransformComponent>();
+			glm::vec3 trans = tc.translation + glm::vec3(0, 0, 0.002f);
+			glm::vec3 scale = tc.scale;
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), trans) *
+				glm::rotate(glm::mat4(1.0f), tc.rotation.z, { 0, 0, 1 }) *
+				glm::scale(glm::mat4(1.0f), scale);
+			Renderer2D::DrawRect(transform, Colors::YELLOW);
+		}
+
+
+		Renderer2D::EndScene();
+	}
+
 	void EditorLayer::OnEvent(Event& e)
 	{
+		Panels::sConsolePanel->OnEvent(e);
 		mCameraController.OnEvent(e);
 
 		if (mSceneState == SceneState::EDIT)
@@ -276,7 +292,11 @@ namespace rebirth
 				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 				{
 					OpenScene();
+				}
 
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
+				{
+					SaveScene();
 				}
 
 				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
@@ -294,6 +314,7 @@ namespace rebirth
 
 		mSceneHierarchyPanel.OnImguiRender();
 		mContentBrowserPanel.OnImguiRender();
+		Panels::sConsolePanel->OnImguiRender();
 
 
 		ImGui::Begin("Statistics");
@@ -339,93 +360,12 @@ namespace rebirth
 		ImGui::Text("Max Aniostropy: %f", GraphicsAPI::GetCapabilities().maxAniostropy);
 
 		ImGui::End();
-
+#ifdef RB_SHOW_IMGUI_DEMO
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-		ImGui::Begin("Viewport");
-
-		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
-		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-		auto viewportOffset = ImGui::GetWindowPos();
-		mViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
-		mViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
-
-		mViewportFocused = ImGui::IsWindowFocused();
-		mViewportHovered = ImGui::IsWindowHovered();
-
-		if (!ImGui::IsAnyItemActive())
-			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused && !mViewportHovered);
-		else
-			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
-
-		ImVec2 viewPanelSize = ImGui::GetContentRegionAvail();
-
-		mViewportSize = { viewPanelSize.x, viewPanelSize.y };
-
-		uint32 textureID = mFramebuffer->GetColorAttachmentID();
-		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
-			{
-				const wchar_t* path = (const wchar_t*)payload->Data;
-				OpenScene(gAssetsPath / path);
-			}
-			ImGui::EndDragDropTarget();
-		}
-
-		// Gizmo smizmos
-		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
-		if (selectedEntity && mGizmoType != -1 && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
-		{
-			ImGuizmo::SetOrthographic(false);
-			ImGuizmo::SetDrawlist();
-			ImGuizmo::SetRect(mViewportBounds[0].x, mViewportBounds[0].y,
-				mViewportBounds[1].x - mViewportBounds[0].x,
-				mViewportBounds[1].y - mViewportBounds[0].y);
-
-
-			// runtime
-			/*auto camEntity = mActiveScene->GetPrimaryCameraEntity();
-			const auto& cam = camEntity.GetComponent<CameraComponent>().camera;
-			const glm::mat4& camProj = cam.GetProjection();
-			glm::mat4 camView = glm::inverse(camEntity.GetComponent<TransformComponent>().GetTransform());*/
-
-			//editor
-			const glm::mat4& camProj = mEditorCamera.GetProjection();
-			glm::mat4 camView = mEditorCamera.GetViewMatrix();
-
-			auto& tc = selectedEntity.GetComponent<TransformComponent>();
-			glm::mat4 transform = tc.GetTransform();
-
-			bool snap = Input::IsKeyPressed(KeyCode::LEFT_CONTROL);
-			float snapValue = mGizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : mGizmoType == ImGuizmo::OPERATION::SCALE ? 0.25f : 0.5f; // 45 for rotation, 0.25 for scale, 0.5 for translation
-
-			float snapValues[3] = { snapValue, snapValue, snapValue };
-
-			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj), (ImGuizmo::OPERATION)mGizmoType,
-				ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
-
-			if (ImGuizmo::IsUsing())
-			{
-				glm::vec3 translation, rotation, scale;
-				Math::Decompose(transform, translation, rotation, scale);
-				glm::vec3 deltaRot = rotation - tc.rotation;
-				tc.translation = translation;
-				tc.rotation += deltaRot;
-				tc.scale = scale;
-			}
-
-		}
-
-
-
-		ImGui::End();
-		ImGui::PopStyleVar();
-
+#endif
+		Settings();
+		Viewport();
 		Toolbar();
 
 		ImGui::End();
@@ -471,9 +411,11 @@ namespace rebirth
 				}
 				break;
 			case KeyCode::S:
-				if (control && shift)
+				if (control)
 				{
-					SaveSceneAs();
+					if (shift)
+						SaveSceneAs();
+					else SaveScene();
 				}
 				break;
 
@@ -490,6 +432,11 @@ namespace rebirth
 				mGizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 
+			case KeyCode::D:
+				if (control)
+					OnDuplicateEntity();
+				break;
+
 			default: break;
 		}
 
@@ -501,6 +448,8 @@ namespace rebirth
 		mActiveScene = createRef<Scene>();
 		mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 		mSceneHierarchyPanel.SetContext(mActiveScene);
+		mEditorScene = mActiveScene;
+		mEditorScenePath = std::filesystem::path();
 	}
 
 	void EditorLayer::OpenScene()
@@ -514,19 +463,34 @@ namespace rebirth
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
+		if (mSceneState != SceneState::EDIT)
+			OnSceneStop();
 		if (path.extension().string() != ".rebirth")
 		{
 			RB_CLIENT_WARN("{} is not a scene file", path.filename().string());
 			return;
 		}
 
-		SceneSerializer serializer(mActiveScene);
+		Ref<Scene> newScene = createRef<Scene>();
+		SceneSerializer serializer(newScene);
 		if (serializer.DeserializeFromYaml(path.string()))
 		{
-			mActiveScene = createRef<Scene>();
-			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
-			mSceneHierarchyPanel.SetContext(mActiveScene);
+			mEditorScene = newScene;
+			mEditorScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+			mSceneHierarchyPanel.SetContext(mEditorScene);
+			mActiveScene = mEditorScene;
+			mEditorScenePath = path;
 		}
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		if (mEditorScenePath.empty())
+		{
+			mEditorScenePath = "assets/scenes/untitled.rebirth";
+		}
+
+		SerializeScene(mActiveScene, mEditorScenePath);
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -534,19 +498,152 @@ namespace rebirth
 		std::string filepath = FileDialog::SaveFile("Rebirth Scene (*.rebirth)\0*.rebirth\0");
 		if (!filepath.empty())
 		{
-			SceneSerializer serializer(mActiveScene);
-			serializer.SerializeToYaml(filepath);
+			SerializeScene(mActiveScene, filepath);
+			mEditorScenePath = filepath;
 		}
+	}
+
+	void EditorLayer::SerializeScene(Ref<Scene> scene, const std::filesystem::path& path)
+	{
+		SceneSerializer serializer(scene);
+		serializer.SerializeToYaml(path.string());
 	}
 
 	void EditorLayer::OnScenePlay()
 	{
+		if (mSceneState == SceneState::SIMULATE)
+			OnSceneStop();
 		mSceneState = SceneState::PLAY;
+
+		mActiveScene = Scene::Copy(mEditorScene);
+
+		// #TODO: OnEvent should have a companion DispatchEvent?
+		ScenePreStartEvent scenePreStart(mActiveScene);
+		Application::Instance().OnEvent(scenePreStart);
+		mActiveScene->OnRuntimeStart();
+		ScenePreStartEvent scenePostStart(mActiveScene);
+		Application::Instance().OnEvent(scenePostStart);
+
+		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
 		mSceneState = SceneState::EDIT;
+
+		if (mSceneState == SceneState::PLAY)
+		{
+			ScenePreStopEvent scenePreStop(mActiveScene);
+			Application::Instance().OnEvent(scenePreStop);
+			mActiveScene->OnRuntimeStop();
+			ScenePostStopEvent scenePostStop(mActiveScene);
+			Application::Instance().OnEvent(scenePostStop);
+		}
+		else if (mSceneState == SceneState::SIMULATE)
+			mActiveScene->OnSimulationStop();
+
+
+		mActiveScene = mEditorScene;
+
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+	}
+
+	void EditorLayer::OnSceneSimulate()
+	{
+		if (mSceneState == SceneState::PLAY)
+			OnSceneStop();
+		mSceneState = SceneState::SIMULATE;
+		mActiveScene = Scene::Copy(mEditorScene);
+		mActiveScene->OnSimulationStart();
+
+		mSceneHierarchyPanel.SetContext(mActiveScene);
+	}
+
+	void EditorLayer::OnDuplicateEntity()
+	{
+		if (mSceneState != SceneState::EDIT) return;
+		if (Entity e = mSceneHierarchyPanel.GetSelectedEntity())
+		{
+			mEditorScene->DuplicateEntity(e);
+		}
+	}
+
+	void EditorLayer::Viewport()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
+		ImGui::Begin("Viewport");
+
+		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+		auto viewportOffset = ImGui::GetWindowPos();
+		mViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+		mViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
+
+		mViewportFocused = ImGui::IsWindowFocused();
+		mViewportHovered = ImGui::IsWindowHovered();
+
+		if (!ImGui::IsAnyItemActive())
+			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused && !mViewportHovered);
+		else
+			Application::Instance().GetImguiLayer()->SetBlockEvents(!mViewportFocused || !mViewportHovered);
+
+		ImVec2 viewPanelSize = ImGui::GetContentRegionAvail();
+
+		mViewportSize = { viewPanelSize.x, viewPanelSize.y };
+
+		uint32 textureID = mFramebuffer->GetColorAttachmentID();
+		ImGui::Image((void*)(uint64)textureID, ImVec2{ mViewportSize.x, mViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(gAssetsPath / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		// Gizmo smizmos
+		Entity selectedEntity = mSceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity && mGizmoType != -1 && !Input::IsKeyPressed(KeyCode::LEFT_ALT))
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+			ImGuizmo::SetRect(mViewportBounds[0].x, mViewportBounds[0].y,
+				mViewportBounds[1].x - mViewportBounds[0].x,
+				mViewportBounds[1].y - mViewportBounds[0].y);
+
+
+			//editor
+			const glm::mat4& camProj = mEditorCamera.GetProjection();
+			glm::mat4 camView = mEditorCamera.GetViewMatrix();
+
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			bool snap = Input::IsKeyPressed(KeyCode::LEFT_CONTROL);
+			float snapValue = mGizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : mGizmoType == ImGuizmo::OPERATION::SCALE ? 0.25f : 0.5f; // 45 for rotation, 0.25 for scale, 0.5 for translation
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(glm::value_ptr(camView), glm::value_ptr(camProj), (ImGuizmo::OPERATION)mGizmoType,
+				ImGuizmo::LOCAL, glm::value_ptr(transform), nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::Decompose(transform, translation, rotation, scale);
+				glm::vec3 deltaRot = rotation - tc.rotation;
+				tc.translation = translation;
+				tc.rotation += deltaRot;
+				tc.scale = scale;
+			}
+
+		}
+
+		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::Toolbar()
@@ -564,22 +661,54 @@ namespace rebirth
 
 		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
+		bool toolbarEnabled = (bool)mActiveScene;
+		ImVec4 tint = ImVec4(1, 1, 1, 1);
+		if (!toolbarEnabled)
+			tint.w = 0.5f;
 
-		Ref<Texture2D> icon = mSceneState == SceneState::EDIT ? mIconPlay : mIconStop;
 		float size = ImGui::GetWindowHeight() - 4.0f;
-		ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
-
-		if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, {1, 1}, 0))
 		{
-			if (mSceneState == SceneState::EDIT)
-				OnScenePlay();
-			else if (mSceneState == SceneState::PLAY)
-				OnSceneStop();
+			Ref<Texture2D> icon = (mSceneState == SceneState::EDIT || mSceneState == SceneState::SIMULATE) ? mIconPlay : mIconStop;
+			ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+			if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, { 1, 1 }, 0, {0, 0, 0, 0}, tint) && toolbarEnabled)
+			{
+				if (mSceneState == SceneState::EDIT || mSceneState == SceneState::SIMULATE)
+					OnScenePlay();
+				else if (mSceneState == SceneState::PLAY)
+					OnSceneStop();
+			}
 		}
+
+		ImGui::SameLine();
+
+		{
+			Ref<Texture2D> icon = (mSceneState == SceneState::EDIT || mSceneState == SceneState::PLAY) ? mIconSimulate : mIconStop;
+			//ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+			if (ImGui::ImageButton((ImTextureID)icon->GetId(), { size, size }, { 0, 0 }, { 1, 1 }, 0, {0, 0, 0, 0}, tint) && toolbarEnabled)
+			{
+				if (mSceneState == SceneState::EDIT || mSceneState == SceneState::PLAY)
+					OnSceneSimulate();
+				else if (mSceneState == SceneState::SIMULATE)
+					OnSceneStop();
+			}
+		}
+
 
 		ImGui::End(); // ##toolbar
 
 		ImGui::PopStyleColor(5);
 		ImGui::PopStyleVar(2);
 	}
+
+	void EditorLayer::Settings()
+	{
+		ImGui::Begin("Settings");
+
+		ImGui::Checkbox("Show Physics Colliders", &mShowPhysicsColliders);
+
+		ImGui::End(); // Settings
+	}
+
 }

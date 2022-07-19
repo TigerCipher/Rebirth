@@ -15,36 +15,27 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: rbpch.h
-// Date File Created: 06/15/2022 at 2:16 PM
+// File Name: Colors.h
+// Date File Created: 7/17/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <memory>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <filesystem>
-
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
-#include "rebirth/core/Common.h"
-#include "rebirth/debug/Log.h"
-#include "rebirth/debug/Profiler.h"
-
-#ifdef RB_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
+namespace rebirth
+{
+	using Color = glm::vec4;
+	class Colors
+	{
+	public:
+		static constexpr Color RED		= { 1, 0, 0, 1 };
+		static constexpr Color GREEN	= { 0, 1, 0, 1 };
+		static constexpr Color BLUE		= { 0, 0, 1, 1 };
+		static constexpr Color YELLOW	= { 1, 1, 0, 1 };
+		static constexpr Color CYAN		= { 0, 1, 1, 1 };
+		static constexpr Color MAGENTA	= { 1, 0, 1, 1 };
+	};
+}
 

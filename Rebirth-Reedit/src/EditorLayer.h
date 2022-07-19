@@ -23,6 +23,7 @@
 #pragma once
 
 #include <Rebirth.h>
+#include <rebirth/imgui/EditorConsolePanel.h>
 
 #include "ui/SceneHierarchyPanel.h"
 #include "ui/ContentBrowserPanel.h"
@@ -37,6 +38,7 @@ namespace rebirth
 		void OnAttach() override;
 		void OnDetach() override;
 		void OnUpdate(Timestep ts) override;
+		void OnOverlayRender();
 		void OnEvent(Event& e) override;
 		void OnImguiRender() override;
 	private:
@@ -45,12 +47,19 @@ namespace rebirth
 		void NewScene();
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
+		void SaveScene();
 		void SaveSceneAs();
+		void SerializeScene(Ref<Scene> scene, const std::filesystem::path& path);
 
 		void OnScenePlay();
 		void OnSceneStop();
+		void OnSceneSimulate();
 
+		void OnDuplicateEntity();
+
+		void Viewport();
 		void Toolbar();
+		void Settings();
 
 	private:
 		OrthoCameraController mCameraController;
@@ -63,6 +72,12 @@ namespace rebirth
 		Ref<VertexArray> mSquareVtxArray;
 
 		Ref<Scene> mActiveScene;
+		//Ref<Scene> mRuntimeScene;
+		Ref<Scene> mEditorScene;
+
+		std::filesystem::path mEditorScenePath;
+
+
 		Entity mSquareEntity;
 		Entity mCameraEntity;
 		Entity mSecondCamera;
@@ -86,12 +101,15 @@ namespace rebirth
 		enum class SceneState
 		{
 			EDIT = 0,
-			PLAY
+			PLAY,
+			SIMULATE
 		};
 
 		SceneState mSceneState = SceneState::EDIT;
 
 		Ref<Texture2D> mIconPlay;
 		Ref<Texture2D> mIconStop;
+		Ref<Texture2D> mIconSimulate;
+		bool mShowPhysicsColliders = false;
 	};
 }

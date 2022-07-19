@@ -211,7 +211,7 @@ namespace rebirth
 	std::string OpenGLShader::Read(const std::string& filepath)
 	{
 		RB_PROFILE_FUNC();
-		RB_CORE_TRACE("Loading shader file [{}]", filepath);
+		RB_CORE_INFO("Loading shader file [{}]", filepath);
 		std::string result;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in)
@@ -227,14 +227,14 @@ namespace rebirth
 			RB_CORE_ERROR("Failed to open shader file [{}]", filepath);
 		}
 
-		RB_CORE_TRACE("Shader file read");
+		RB_CORE_INFO("Shader file read");
 		return result;
 	}
 
 	std::unordered_map<uint32, std::string> OpenGLShader::Preprocess(const std::string& src)
 	{
 		RB_PROFILE_FUNC();
-		RB_CORE_TRACE("Preprocessing shader file");
+		RB_CORE_INFO("Preprocessing shader file");
 		std::unordered_map<uint32, std::string> sources;
 
 		const char* typeDirective = "#type";
@@ -255,7 +255,7 @@ namespace rebirth
 			sources[GetShaderType(type)] = src.substr(nextLinePos, pos - (nextLinePos == std::string::npos ? src.size() - 1 : nextLinePos));
 		}
 
-		RB_CORE_TRACE("Finished preprocessing shader file");
+		RB_CORE_INFO("Finished preprocessing shader file");
 		return sources;
 	}
 
@@ -375,19 +375,19 @@ namespace rebirth
 
 	void OpenGLShader::CreateProgram()
 	{
-		RB_CORE_TRACE("Creating glsl shader program");
+		RB_CORE_INFO("Creating glsl shader program");
 		uint32 prog = glCreateProgram();
 		std::vector<GLuint> shaderIds;
 		for (auto&& [stage, spirv] : mOpenGLSPIRV)
 		{
-			RB_CORE_TRACE("Creating and attaching {} shader", GLShaderStageToString(stage));
+			RB_CORE_INFO("Creating and attaching {} shader", GLShaderStageToString(stage));
 			GLuint id = shaderIds.emplace_back(glCreateShader(stage));
 			glShaderBinary(1, &id, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), spirv.size() * sizeof(uint32));
 			glSpecializeShader(id, "main", 0, nullptr, nullptr);
 			glAttachShader(prog, id);
 		}
 
-		RB_CORE_TRACE("Linking shader program {}", prog);
+		RB_CORE_INFO("Linking shader program {}", prog);
 		glLinkProgram(prog);
 
 		GLint isLinked = 0;
@@ -420,7 +420,7 @@ namespace rebirth
 		}
 
 
-		RB_CORE_TRACE("Shader program {} successfully compiled", mId);
+		RB_CORE_INFO("Shader program {} successfully compiled", mId);
 	}
 
 	void OpenGLShader::Reflect(uint32 stage, const std::vector<uint32>& shaderData)
@@ -428,11 +428,15 @@ namespace rebirth
 		spirv_cross::Compiler compiler(shaderData);
 		spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
-		RB_CORE_TRACE("OpenGLShader::Reflect - {} {}", GLShaderStageToString(stage), mFilepath);
-		RB_CORE_TRACE("    {} uniform buffers", resources.uniform_buffers.size());
-		RB_CORE_TRACE("    {} resources", resources.sampled_images.size());
+		std::string logMsg = R"(OpenGL::Reflect - {} {}
+	{} uniform buffers
+	{} resources
+			)";
 
-		RB_CORE_TRACE("Uniform Buffers:");
+		RB_CORE_TRACE(logMsg, GLShaderStageToString(stage), mFilepath, resources.uniform_buffers.size(), resources.sampled_images.size());
+
+		std::stringstream ss;
+		ss << "Uniform Buffers:\n";
 		for (const auto& resource : resources.uniform_buffers)
 		{
 			const auto& bufferType = compiler.get_type(resource.base_type_id);
@@ -440,11 +444,12 @@ namespace rebirth
 			uint32 binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
 			int memberCount = bufferType.member_types.size();
 
-			RB_CORE_TRACE("  {}", resource.name);
-			RB_CORE_TRACE("    Size = {}", bufferSize);
-			RB_CORE_TRACE("    Binding = {}", binding);
-			RB_CORE_TRACE("    Members = {}", memberCount);
+			ss << "\t" << resource.name;
+			ss << "\n\t\tSize = " << bufferSize;
+			ss << "\n\t\tBinding = " << binding;
+			ss << "\n\t\tMembers = " << memberCount;
 		}
+		RB_CORE_TRACE(ss.str());
 	}
 
 

@@ -15,36 +15,32 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: rbpch.h
-// Date File Created: 06/15/2022 at 2:16 PM
+// File Name: ApplicationDesc.h
+// Date File Created: 7/19/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
-
-#include <iostream>
+#include "Common.h"
 #include <string>
-#include <sstream>
-#include <utility>
-#include <algorithm>
-#include <functional>
-#include <memory>
-#include <array>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <filesystem>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+namespace rebirth
+{
+	enum WindowFlags : int16
+	{
+		WindowFlag_None = 0,
+		WindowFlag_NotDecorated = BIT(0),
+		WindowFlag_Maximized = BIT(1),
+		WindowFlag_Fullscreen = BIT(2),
+		WindowFlag_VSync = BIT(3)
+	};
 
-#include "rebirth/core/Common.h"
-#include "rebirth/debug/Log.h"
-#include "rebirth/debug/Profiler.h"
-
-#ifdef RB_PLATFORM_WINDOWS
-	#include <Windows.h>
-#endif
+	struct ApplicationDesc
+	{
+		std::string title;
+		uint32 windowWidth = 1920;
+		uint32 windowHeight = 1080;
+		int32 flags = WindowFlag_None;
+	};
+}
 

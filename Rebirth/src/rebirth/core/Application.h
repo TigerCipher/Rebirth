@@ -36,6 +36,7 @@
 #include "rebirth/renderer/VertexArray.h"
 
 #include "Timestep.h"
+#include "ApplicationDesc.h"
 
 namespace rebirth
 {
@@ -55,8 +56,7 @@ namespace rebirth
 	class Application
 	{
 	public:
-		Application(const std::string& title, uint32 windowWidth, uint32 windowHeight, CommandLineArgs cmd = CommandLineArgs());
-		//Application(const WindowProperties& props) : Application(props.title, props.width, props.height) {}
+		Application(ApplicationDesc appDesc, CommandLineArgs cmd = CommandLineArgs());
 		virtual ~Application();
 
 		void Run();

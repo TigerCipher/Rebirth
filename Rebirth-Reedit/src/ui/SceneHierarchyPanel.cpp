@@ -48,40 +48,34 @@ namespace rebirth
 	{
 		ImGui::Begin("Scene Hierarchy");
 
-		mContext->mRegistry.each([&](auto entity)
+		if (mContext)
+		{
+			mContext->mRegistry.each([&](auto entity)
+				{
+					Entity e{ entity, mContext.get() };
+					DrawEntityNode(e);
+				});
+
+
+			if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
 			{
-				Entity e{ entity, mContext.get() };
-				DrawEntityNode(e);
-			});
+				mSelectionContext = {};
+			}
 
-		//if (sDirtyCameraFlag)
-		//{
-		//	mContext->mRegistry.each([&](auto ent)
-		//		{
-		//			Entity e{ ent, mContext.get() };
-		//			if (e.HasComponent<CameraComponent>())
-		//			{
-		//				auto& cc = e.GetComponent<CameraComponent>();
-		//				cc.primary = false;
-		//			}
-		//		});
-		//}
+			// Context menu on blank space
+			if (ImGui::BeginPopupContextWindow(0, 1, false))
+			{
+				if (ImGui::MenuItem("Add Entity"))
+				{
+					Entity e = mContext->CreateEntity("New Entity");
+					RB_CORE_TRACE("Creating new entity with ID: {}", e.GetUUID());
+				}
 
-		if (ImGui::IsWindowHovered() && ImGui::IsMouseDown(0))
-		{
-			mSelectionContext = {};
+				ImGui::EndPopup();
+			}
 		}
 
-		// Context menu on blank space
-		if (ImGui::BeginPopupContextWindow(0, 1, false))
-		{
-			if (ImGui::MenuItem("Add Entity"))
-				mContext->CreateEntity("New Entity");
-
-			ImGui::EndPopup();
-		}
 		ImGui::End();
-
 
 
 		ImGui::Begin("Properties");
@@ -204,6 +198,10 @@ namespace rebirth
 	{
 		if (entity.HasComponent<TagComponent>())
 		{
+			// Draws UUID for debug purposes
+			std::string uuid = std::to_string((uint64)entity.GetUUID());
+			UIHelper::DrawTooltip(uuid.c_str());
+
 			auto& tag = entity.GetComponent<TagComponent>().tag;
 
 			char buffer[256];
@@ -224,6 +222,10 @@ namespace rebirth
 			int numComponentsAvailable = 0;
 			numComponentsAvailable += AddComponent<CameraComponent>(mSelectionContext, "Camera");
 			numComponentsAvailable += AddComponent<SpriteComponent>(mSelectionContext, "Sprite");
+			numComponentsAvailable += AddComponent<CircleComponent>(mSelectionContext, "Circle");
+			numComponentsAvailable += AddComponent<RigidBody2DComponent>(mSelectionContext, "RigidBody 2D");
+			numComponentsAvailable += AddComponent<BoxCollider2DComponent>(mSelectionContext, "Box Collider 2D");
+			numComponentsAvailable += AddComponent<CircleCollider2DComponent>(mSelectionContext, "Circle Collider 2D");
 
 			if (numComponentsAvailable == 0)
 			{
@@ -236,7 +238,7 @@ namespace rebirth
 			ImGui::EndPopup();
 		}
 		ImGui::PopItemWidth();
-		
+
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& trans)
 			{
@@ -315,7 +317,7 @@ namespace rebirth
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
 
 				// Texture
-				ImGui::Button("Texture", {100.0f, 0.0f});
+				ImGui::Button("Texture", { 100.0f, 0.0f });
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -333,6 +335,58 @@ namespace rebirth
 
 				// Tiling Factor
 				ImGui::DragFloat("Tiling Factor", &component.tilingFactor, 0.1f, 0.0f, 100.0f);
+			});
+
+		DrawComponent<CircleComponent>("Circle", entity, [](auto& component)
+			{
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+				ImGui::DragFloat("Thickness", &component.thickness, 0.025f, 0.0f, 1.0f);
+				ImGui::DragFloat("Fade", &component.fade, 0.00025f, 0.0f, 3.0f);
+			});
+
+
+		DrawComponent<RigidBody2DComponent>("RigidBody 2D", entity, [](auto& component)
+			{
+
+				const char* bodyTypeStr[] = { "Static", "Dynamic", "Kinematic" };
+				const char* currentBodyTypeStr = bodyTypeStr[(int)component.bodyType];
+				if (ImGui::BeginCombo("Body Type", currentBodyTypeStr))
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						bool isSelected = currentBodyTypeStr == bodyTypeStr[i];
+						if (ImGui::Selectable(bodyTypeStr[i], isSelected))
+						{
+							currentBodyTypeStr = bodyTypeStr[i];
+							component.bodyType = (RigidBody2DComponent::BodyType)i;
+						}
+
+						if (isSelected) ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+
+				ImGui::Checkbox("Fixed Rotation", &component.fixedRotation);
+			});
+
+		DrawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto& component)
+			{
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.offset));
+				ImGui::DragFloat2("Size", glm::value_ptr(component.size));
+				ImGui::DragFloat("Density", &component.density, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution Threshold", &component.restitutionThreshold, 0.01f, 0.0f);
+			});
+
+		DrawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto& component)
+			{
+				ImGui::DragFloat2("Offset", glm::value_ptr(component.offset));
+				ImGui::DragFloat("Radius", &component.radius, 0.1f, 0.1f);
+				ImGui::DragFloat("Density", &component.density, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
+				ImGui::DragFloat("Restitution Threshold", &component.restitutionThreshold, 0.01f, 0.0f);
 			});
 	}
 

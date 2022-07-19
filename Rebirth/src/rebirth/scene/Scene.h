@@ -26,6 +26,9 @@
 
 #include "rebirth/core/Timestep.h"
 #include "rebirth/renderer/EditorCamera.h"
+#include "rebirth/core/UUID.h"
+
+class b2World;
 
 namespace rebirth
 {
@@ -37,11 +40,24 @@ namespace rebirth
 		Scene();
 		virtual ~Scene();
 
+		static Ref<Scene> Copy(Ref<Scene> src);
+
 		Entity CreateEntity(const std::string& tag = std::string());
+		Entity CreateEntityWithUUID(UUID uuid, const std::string& tag = std::string());
+
+		void DuplicateEntity(Entity entity);
+
 		void DestroyEntity(Entity entity);
+
+		void OnRuntimeStart();
+		void OnRuntimeStop();
+
+		void OnSimulationStart();
+		void OnSimulationStop();
 
 		void OnUpdateRuntime(Timestep ts);
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
+		void OnUpdateSimulation(Timestep ts, EditorCamera& camera);
 
 		void OnViewportResize(uint32 width, uint32 height);
 
@@ -49,14 +65,27 @@ namespace rebirth
 
 		Entity GetPrimaryCameraEntity();
 
+		template<typename... Components>
+		auto GetAllEntities()
+		{
+			return mRegistry.view<Components...>();
+		}
+
 	private:
 
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
 
+		void OnPhysics2DStart();
+		void OnPhysics2DStop();
+
+		void RenderScene(EditorCamera& camera);
+
 		entt::registry mRegistry;
 		uint32 mViewportWidth = 0;
 		uint32 mViewportHeight = 0;
+
+		b2World* mPhysicsWorld = nullptr;
 
 		friend class Entity;
 		friend class SceneSerializer;

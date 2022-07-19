@@ -33,9 +33,11 @@ namespace rebirth
 	void OpenGLGraphicsAPI::Init()
 	{
 		RB_PROFILE_FUNC();
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_LINE_SMOOTH);
 
 		auto& capabilities = GraphicsAPI::GetCapabilities();
 		capabilities.version = (const char*)glGetString(GL_VERSION);
@@ -63,7 +65,18 @@ namespace rebirth
 
 	void OpenGLGraphicsAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32 count)
 	{
-		uint32 indexCount = count ? vertexArray->GetIndexBuffer()->GetCount() : count;
+		uint32 indexCount = count ? count : vertexArray->GetIndexBuffer()->GetCount();
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 	}
+
+	void OpenGLGraphicsAPI::DrawLines(const Ref<VertexArray>& vertexArray, uint32 vertexCount)
+	{
+		glDrawArrays(GL_LINES, 0, vertexCount);
+	}
+
+	void OpenGLGraphicsAPI::SetLineWidth(float width)
+	{
+		glLineWidth(width);
+	}
+
 }

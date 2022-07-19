@@ -42,8 +42,12 @@
 
 // Assert system - based on the one I wrote for Hazel - the project that inspired Rebirth
 #ifdef RB_ENABLE_ASSERTS
-#	include <filesystem>
-
+//#	ifndef REBIRTH_LOG_HEADER
+//#		include "rebirth/debug/Log.h"
+//#	endif
+//#	ifndef _FILESYSTEM_
+#		include <filesystem>
+//#	endif
 #	define RB_INTERNAL_ASSERT_IMPL(type, check, msg, ...) { if(!(check)) { RB##type##FATAL(msg, __VA_ARGS__); RB##type##FATAL("Assertion check ({}) failed at {}:{}", RB_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename().string(), __LINE__); RB_DEBUG_BREAK(); } }
 #	define RB_INTERNAL_ASSERT_WITH_FMT_MSG(type, check, msg, ...) RB_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: " msg, __VA_ARGS__)
 #	define RB_INTERNAL_ASSERT_WITH_NOFMT_MSG(type, check, msg) RB_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {}", msg)

@@ -28,6 +28,7 @@
 #include "rebirth/renderer/Renderer.h"
 #include "rebirth/util/PlatformUtil.h"
 #include "rebirth/debug/Statistics.h"
+#include "rebirth/imgui/Panels.h"
 
 // temp
 #include <glfw/glfw3.h>
@@ -36,17 +37,17 @@ namespace rebirth
 {
 	Application* Application::sInstance = nullptr;
 
-	Application::Application(const std::string& title, uint32 windowWidth, uint32 windowHeight, CommandLineArgs cmd) :
+	Application::Application(ApplicationDesc appDesc, CommandLineArgs cmd) :
 		mCommandLine(cmd)
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
-		RB_CORE_TRACE("Creating core application");
+		RB_CORE_INFO("Creating core application");
 		sInstance = this;
 		Time::Init();
-		mWindow = Window::Create({title, windowWidth, windowHeight});
+		mWindow = Window::Create(appDesc);
 		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-		//mWindow->SetVSync(false);
+		Panels::Init();
 
 
 		Renderer::Init();
@@ -61,11 +62,13 @@ namespace rebirth
 	Application::~Application()
 	{
 		RB_PROFILE_FUNC();
+		RB_CORE_INFO("Shutting down application");
 		Renderer::Shutdown();
 	}
 
 	void Application::Close()
 	{
+		RB_CORE_INFO("Closing application and exiting the run loop");
 		mRunning = false;
 	}
 
