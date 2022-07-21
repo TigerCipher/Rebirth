@@ -52,7 +52,16 @@ namespace rebirth
 	EditorConsolePanel::EditorConsolePanel()
 	{
 		RB_CORE_ASSERT(sInstance == nullptr);
+		sInstance = this;
+	}
 
+	EditorConsolePanel::~EditorConsolePanel()
+	{
+		sInstance = nullptr;
+	}
+
+	void EditorConsolePanel::OnLoad()
+	{
 		// #TODO: Need a proper asset management system
 		// Core shaders for example have to be used by all projects - Rebirth Reedit, Sandbox, games, etc.
 		// Should have it so assets can be loaded from a working directory (the project) and the core engine directory (for things like shaders, missing texture image, etc)
@@ -68,12 +77,6 @@ namespace rebirth
 		sWarnIcon = Texture2D::Create("assets/icons/warning.png");
 		sErrorIcon = Texture2D::Create("assets/icons/error.png");
 		sFatalIcon = Texture2D::Create("assets/icons/fatal.png");
-		sInstance = this;
-	}
-
-	EditorConsolePanel::~EditorConsolePanel()
-	{
-		sInstance = nullptr;
 	}
 
 	void EditorConsolePanel::OnImguiRender()
@@ -93,11 +96,11 @@ namespace rebirth
 	void EditorConsolePanel::OnEvent(Event& e)
 	{
 		//RB_CORE_WARN("Event type: {}, data: {}", (int)e.GetType(), e.ToString());
-		//if (e.GetType() == EventType::SCENE_PRE_START)
-		//{
-		//	if (mShouldClearOnPlay)
-		//		mBufferBegin = 0;
-		//}
+		if (e.GetType() == EventType::SCENE_PRE_START)
+		{
+			if (mShouldClearOnPlay)
+				mBufferBegin = 0;
+		}
 	}
 
 	void EditorConsolePanel::RenderMenu()
@@ -242,7 +245,7 @@ namespace rebirth
 
 					if (text.length() > 200)
 					{
-						size_t spacePos = text.find_first_of(' ', 24);
+						size_t spacePos = text.find_first_of(' ', 200);
 						if (spacePos != std::string::npos)
 							text.replace(spacePos, text.length() - 1, " ...");
 					}

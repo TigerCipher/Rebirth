@@ -43,12 +43,13 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
-		RB_CORE_INFO("Creating core application");
 		sInstance = this;
+		Panels::Init();
+		RB_CORE_INFO("Creating core application");
 		Time::Init();
 		mWindow = Window::Create(appDesc);
 		mWindow->SetEventCallback(std::bind(&Application::HandleEvents, this, std::placeholders::_1));
-		Panels::Init();
+		Panels::PostInit();
 
 
 		Renderer::Init();
@@ -87,7 +88,6 @@ namespace rebirth
 			Statistics::SetFrameTime(timestep);
 			accumulator += timestep;
 			mLastFrameTime = time;
-			mDispatcher.PollEvents();
 
 			if (!mMinimized)
 			{
@@ -109,6 +109,7 @@ namespace rebirth
 
 			++fps;
 			mWindow->OnUpdate();
+			mDispatcher.PollEvents();
 
 			if (accumulator >= 1.0f)
 			{

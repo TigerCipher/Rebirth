@@ -32,6 +32,7 @@ namespace rebirth
 		static Ref<EditorConsolePanel> sConsolePanel;
 
 		static void Init();
+		static void PostInit();
 	};
 }
 
