@@ -25,17 +25,18 @@
 #include "rebirth/core/Timestep.h"
 #include "rebirth/events/Event.h"
 #include "rebirth/events/MouseEvent.h"
+#include "rebirth/events/EventListener.h"
 
 namespace rebirth
 {
-	class EditorCamera : public Camera
+	class EditorCamera : public Camera, public EventListener
 	{
 	public:
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
 		void OnUpdate(Timestep ts);
-		void OnEvent(Event& e);
+		void OnEvent(Event& e) override;
 
 		void SetDistance(float distance) { mDistance = distance; }
 		float GetDistance() const { return mDistance; }

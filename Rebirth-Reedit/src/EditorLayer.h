@@ -33,7 +33,8 @@ namespace rebirth
 	class EditorLayer : public Layer
 	{
 	public:
-		EditorLayer() : Layer("EditorLayer"), mCameraController(1920.0f / 1080.0f, true) {}
+		EditorLayer() : Layer("EditorLayer") {
+		}//, mCameraController(1920.0f / 1080.0f, true) {}
 		virtual ~EditorLayer() = default;
 		void OnAttach() override;
 		void OnDetach() override;
@@ -42,8 +43,8 @@ namespace rebirth
 		void OnEvent(Event& e) override;
 		void OnImguiRender() override;
 	private:
-		bool OnKeyPressed(KeyPressedEvent& e);
-		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+		void OnKeyPressed(KeyPressedEvent& e);
+		void OnMouseButtonPressed(MouseButtonPressedEvent& e);
 		void NewScene();
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
@@ -62,7 +63,7 @@ namespace rebirth
 		void Settings();
 
 	private:
-		OrthoCameraController mCameraController;
+		//OrthoCameraController mCameraController;
 		bool mViewportFocused = false;
 		bool mViewportHovered = false;
 

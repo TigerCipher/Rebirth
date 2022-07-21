@@ -149,7 +149,8 @@ namespace rebirth
 
 	}
 
-	ImguiLayer::ImguiLayer() : Layer("ImguiLayer") {}
+	ImguiLayer::ImguiLayer() : Layer("ImguiLayer") {
+	}
 
 
 	void ImguiLayer::OnAttach()
@@ -202,8 +203,8 @@ namespace rebirth
 		if (mBlockEvents)
 		{
 			ImGuiIO& io = ImGui::GetIO();
-			e.mHandled |= e.IsInCategory(EVENT_CATEGORY_MOUSE) & io.WantCaptureMouse;
-			e.mHandled |= e.IsInCategory(EVENT_CATEGORY_KEYBOARD) & io.WantCaptureKeyboard;
+			e.handled |= e.IsInCategory(EVENT_CATEGORY_MOUSE) & io.WantCaptureMouse;
+			e.handled |= e.IsInCategory(EVENT_CATEGORY_KEYBOARD) & io.WantCaptureKeyboard;
 		}
 	}
 

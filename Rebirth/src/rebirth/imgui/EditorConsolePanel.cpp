@@ -68,7 +68,6 @@ namespace rebirth
 		sWarnIcon = Texture2D::Create("assets/icons/warning.png");
 		sErrorIcon = Texture2D::Create("assets/icons/error.png");
 		sFatalIcon = Texture2D::Create("assets/icons/fatal.png");
-
 		sInstance = this;
 	}
 
@@ -93,13 +92,12 @@ namespace rebirth
 
 	void EditorConsolePanel::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<ScenePreStartEvent>([this](ScenePreStartEvent& se)
-			{
-				if (mShouldClearOnPlay)
-					mBufferBegin = 0;
-				return false;
-			});
+		//RB_CORE_WARN("Event type: {}, data: {}", (int)e.GetType(), e.ToString());
+		//if (e.GetType() == EventType::SCENE_PRE_START)
+		//{
+		//	if (mShouldClearOnPlay)
+		//		mBufferBegin = 0;
+		//}
 	}
 
 	void EditorConsolePanel::RenderMenu()

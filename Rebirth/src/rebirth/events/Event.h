@@ -22,11 +22,8 @@
 // ------------------------------------------------------------------------------
 
 #pragma once
-#include "rbpch.h"
 
-#include "rebirth/core/Common.h"
-
-
+#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
 namespace rebirth
 {
@@ -65,55 +62,30 @@ namespace rebirth
 		EVENT_CATEGORY_SCENE =	BIT(5),
 	};
 
-	#define EVENT_CLASS_TYPE(type)	static EventType GetStaticType() { return EventType::##type; }					\
-									virtual EventType GetEventType() const override { return GetStaticType(); }		\
-									virtual const char* GetName() const override { return #type; }
-
-	#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
 	class Event
 	{
-		friend class EventDispatcher;
 	public:
+		Event(EventType type) : mType(type) {}
+
 		virtual ~Event() = default;
 
-		virtual EventType GetEventType() const = 0;
-		virtual const char* GetName() const = 0;
+		virtual void Invoke() {}
+		virtual EventType GetType() { return mType; }
+		virtual const EventType GetType() const { return mType; }
 		virtual int GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetName(); }
 
-		bool IsInCategory(const EventCategory category) const
+		bool IsInCategory(EventCategory category)
 		{
 			return GetCategoryFlags() & category;
 		}
 
-		virtual bool WasHandled() { return mHandled; }
-		virtual void SetHandled(bool handled) { mHandled = handled; }
+		virtual std::string ToString() const = 0;
 
-		bool mHandled = false;
+		bool handled = false;
+
 	protected:
-	};
-
-
-	class EventDispatcher
-	{
-	public:
-		EventDispatcher(Event& event) : mEvent(event) {}
-
-		template<typename T, typename F>
-		bool Dispatch(const F& func)
-		{
-			if(mEvent.GetEventType() == T::GetStaticType())
-			{
-				mEvent.mHandled |= func(static_cast<T&>(mEvent));
-				return true;
-			}
-
-			return false;
-		}
-
-	private:
-		Event& mEvent;
+		EventType mType;
 	};
 
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)

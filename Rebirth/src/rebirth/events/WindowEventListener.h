@@ -15,37 +15,31 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Layer.h
-// Date File Created: 06/16/2022 at 9:24 PM
+// File Name: WindowEventListener.h
+// Date File Created: 7/20/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
-
-#include "rebirth/core/Common.h"
-#include "rebirth/events/EventListener.h"
-#include "Timestep.h"
+#include "EventListener.h"
+#include "AppEvent.h"
 
 namespace rebirth
 {
-	class Layer : public EventListener
+	class WindowEventListener : public EventListener
 	{
 	public:
-		Layer(const std::string& name = "Layer");
-		virtual ~Layer() {}
+		WindowEventListener() = default;
+		virtual ~WindowEventListener() = default;
 
-		virtual void OnAttach() {}
-		virtual void OnDetach() {}
+		virtual void OnEvent(Event& evt)
+		{
+			if (evt.GetType() == EventType::WINDOW_RESIZE) OnWindowResize((WindowResizeEvent&)evt);
+			if (evt.GetType() == EventType::WINDOW_CLOSE) OnWindowClose((WindowCloseEvent&)evt);
+		}
 
-		virtual void OnUpdate(Timestep timestep) {}
-
-		virtual void OnImguiRender() {}
-
-		virtual void OnEvent(Event& e) {}
-
-	protected:
-		std::string mName;
+		virtual void OnWindowResize(WindowResizeEvent& evt) {}
+		virtual void OnWindowClose(WindowCloseEvent& evt) {}
 	};
 }
 
