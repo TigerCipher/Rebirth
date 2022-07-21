@@ -517,7 +517,6 @@ namespace rebirth
 
 		mActiveScene = Scene::Copy(mEditorScene);
 
-		// #TODO: OnEvent should have a companion DispatchEvent?
 		Application::Instance().HandleEvents(new ScenePreStartEvent(mActiveScene));
 		mActiveScene->OnRuntimeStart();
 		Application::Instance().HandleEvents(new ScenePostStartEvent(mActiveScene));
