@@ -33,6 +33,7 @@
 #include "rebirth/util/PlatformUtil.h"
 #include "rebirth/util/MathUtil.h"
 
+
 // Debug
 #include "rebirth/debug/Log.h"
 #include "rebirth/debug/Profiler.h"
@@ -75,6 +76,7 @@
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"
 #include "rebirth/imgui/Panels.h"
+#include "rebirth/imgui/ImguiUtils.h"
 
 
 // Main function

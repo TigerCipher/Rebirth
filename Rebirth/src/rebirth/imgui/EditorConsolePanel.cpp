@@ -129,9 +129,6 @@ namespace rebirth
 		// #TODO: Imgui helper methods for making label go on the left of the item
 		ImGui::SameLine(0.0f, 5.0f);
 		UI::Checkbox("Clear On PLay:", &mShouldClearOnPlay);
-		//ImGui::TextUnformatted("Clear On Play:");
-		//ImGui::SameLine();
-		//ImGui::Checkbox("##ClearOnPlay", &mShouldClearOnPlay);
 
 		//ImGui::SameLine(0.0f, 5.0f);
 		//ImGui::TextUnformatted("Collapse:");

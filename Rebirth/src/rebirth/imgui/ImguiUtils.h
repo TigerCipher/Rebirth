@@ -28,5 +28,11 @@ namespace rebirth::UI
 {
 	// ImGui::Checkbox wrapper that makes it so the label appears on the left side of the checkbox
 	bool Checkbox(const char* label, bool* value);
+
+	// ImGui::SliderFloat3 but with unreal engine style colored X, Y, Z labels
+	void DrawFloat3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f);
+
+	// Draws a (?) and displays the given desc when that (?) is hovered
+	void DrawTooltip(const char* desc);
 }
 

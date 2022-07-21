@@ -23,8 +23,6 @@
 
 #include "SceneHierarchyPanel.h"
 
-#include "util/UIHelper.h"
-
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
@@ -200,7 +198,7 @@ namespace rebirth
 		{
 			// Draws UUID for debug purposes
 			std::string uuid = std::to_string((uint64)entity.GetUUID());
-			UIHelper::DrawTooltip(uuid.c_str());
+			UI::DrawTooltip(uuid.c_str());
 
 			auto& tag = entity.GetComponent<TagComponent>().tag;
 
@@ -242,11 +240,11 @@ namespace rebirth
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& trans)
 			{
-				UIHelper::DrawFloat3Control("Translation", trans.translation);
+				UI::DrawFloat3Control("Translation", trans.translation);
 				glm::vec3 rot = glm::degrees(trans.rotation);
-				UIHelper::DrawFloat3Control("Rotation", rot);
+				UI::DrawFloat3Control("Rotation", rot);
 				trans.rotation = glm::radians(rot);
-				UIHelper::DrawFloat3Control("Scale", trans.scale, 1.0f);
+				UI::DrawFloat3Control("Scale", trans.scale, 1.0f);
 			});
 
 
