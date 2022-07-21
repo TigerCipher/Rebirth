@@ -28,6 +28,8 @@
 #include "LayerStack.h"
 #include "rebirth/events/Event.h"
 #include "rebirth/events/AppEvent.h"
+#include "rebirth/events/WindowEventListener.h"
+#include "rebirth/events/EventDispatcher.h"
 
 #include "rebirth/imgui/ImguiLayer.h"
 
@@ -53,7 +55,7 @@ namespace rebirth
 		}
 	};
 
-	class Application
+	class Application : public WindowEventListener
 	{
 	public:
 		Application(ApplicationDesc appDesc, CommandLineArgs cmd = CommandLineArgs());
@@ -62,32 +64,38 @@ namespace rebirth
 		void Run();
 		void Close();
 
-		void OnEvent(Event& e);
+		void HandleEvents(Event* e);
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
+
+		void OnWindowClose(WindowCloseEvent& e) override;
+		void OnWindowResize(WindowResizeEvent& e) override;
 
 		Window& GetWindow() const { return *mWindow; }
 		ImguiLayer* GetImguiLayer() { return mImguiLayer; }
 
 		CommandLineArgs GetCommandLineArgs() const { return mCommandLine; }
 
+		EventDispatcher& GetEventDispatcher() { return mDispatcher; }
+
 		static Application& Instance() { return *sInstance; }
 
 	private:
 
 		static Application* sInstance;
-
 		CommandLineArgs mCommandLine;
 		Scope<Window> mWindow;
+
+		EventDispatcher mDispatcher;
+
 		LayerStack mLayerStack;
 		ImguiLayer* mImguiLayer;
 		float mLastFrameTime = 0.0f;
 
 		bool mRunning = true;
 		bool mMinimized = false;
-		bool OnWindowClose(WindowCloseEvent& e);
-		bool OnWindowResize(WindowResizeEvent& e);
+
 	};
 
 	// Defined by game

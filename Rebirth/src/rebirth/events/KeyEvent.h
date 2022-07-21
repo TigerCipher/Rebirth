@@ -36,8 +36,8 @@ namespace rebirth
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_KEYBOARD | EVENT_CATEGORY_INPUT)
 	protected:
-		KeyEvent(KeyCode keycode)
-			: mKeyCode(keycode) {}
+		KeyEvent(EventType type, KeyCode keycode)
+			: Event(type), mKeyCode(keycode) {}
 
 		KeyCode mKeyCode;
 	};
@@ -46,7 +46,7 @@ namespace rebirth
 	{
 	public:
 		KeyPressedEvent(KeyCode keycode, const int repeatCount)
-			: KeyEvent(keycode), mRepeatCount(repeatCount) {}
+			: KeyEvent(EventType::KEY_PRESSED, keycode), mRepeatCount(repeatCount) {}
 
 		int GetRepeatCount() const { return mRepeatCount; }
 
@@ -57,7 +57,7 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(KEY_PRESSED)
+		//EVENT_CLASS_TYPE(KEY_PRESSED)
 	private:
 		int mRepeatCount;
 	};
@@ -66,7 +66,7 @@ namespace rebirth
 	{
 	public:
 		KeyReleasedEvent(KeyCode keycode)
-			: KeyEvent(keycode) {}
+			: KeyEvent(EventType::KEY_RELEASED, keycode) {}
 
 		std::string ToString() const override
 		{
@@ -75,6 +75,6 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(KEY_RELEASED)
+		//EVENT_CLASS_TYPE(KEY_RELEASED)
 	};
 }

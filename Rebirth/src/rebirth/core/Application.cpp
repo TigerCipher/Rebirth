@@ -38,16 +38,18 @@ namespace rebirth
 	Application* Application::sInstance = nullptr;
 
 	Application::Application(ApplicationDesc appDesc, CommandLineArgs cmd) :
-		mCommandLine(cmd)
+		mCommandLine(cmd),
+		mDispatcher("Event System")
 	{
 		RB_PROFILE_FUNC();
 		RB_CORE_ASSERT(!sInstance, "Application already exists");
-		RB_CORE_INFO("Creating core application");
 		sInstance = this;
+		Panels::Init();
+		RB_CORE_INFO("Creating core application");
 		Time::Init();
 		mWindow = Window::Create(appDesc);
-		mWindow->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-		Panels::Init();
+		mWindow->SetEventCallback(std::bind(&Application::HandleEvents, this, std::placeholders::_1));
+		Panels::PostInit();
 
 
 		Renderer::Init();
@@ -56,6 +58,7 @@ namespace rebirth
 		mImguiLayer = new ImguiLayer();
 		PushOverlay(mImguiLayer);
 
+		mDispatcher.AddListener(this);
 		RB_CORE_TRACE("Core application created");
 	}
 
@@ -80,7 +83,7 @@ namespace rebirth
 		while (mRunning)
 		{
 			RB_PROFILE_SCOPE("Run Loop");
-			float time = (float)Time::GetTime();
+			auto time = (float)Time::GetTime();
 			Timestep timestep = time - mLastFrameTime;
 			Statistics::SetFrameTime(timestep);
 			accumulator += timestep;
@@ -106,6 +109,7 @@ namespace rebirth
 
 			++fps;
 			mWindow->OnUpdate();
+			mDispatcher.PollEvents();
 
 			if (accumulator >= 1.0f)
 			{
@@ -116,19 +120,17 @@ namespace rebirth
 		}
 	}
 
-	void Application::OnEvent(Event& e)
+	void Application::HandleEvents(Event* e)
 	{
 		RB_PROFILE_FUNC();
-		EventDispatcher disp(e);
-		disp.Dispatch<WindowCloseEvent>(BIND_EVENT_FUNC(Application::OnWindowClose));
-		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(Application::OnWindowResize));
+		mDispatcher.Dispatch(e);
 
-		for (auto it = mLayerStack.rbegin(); it != mLayerStack.rend(); ++it)
-		{
-			if (e.mHandled)
-				break;
-			(*it)->OnEvent(e);
-		}
+		//for (auto it = mLayerStack.rbegin(); it != mLayerStack.rend(); ++it)
+		//{
+		//	//if (e.mHandled)
+		//	//	break;
+		//	(*it)->OnEvent(e);
+		//}
 	}
 
 	void Application::PushLayer(Layer* layer)
@@ -145,24 +147,22 @@ namespace rebirth
 		overlay->OnAttach();
 	}
 
-	bool Application::OnWindowClose(WindowCloseEvent& e)
+	void Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		mRunning = false;
-		return true;
 	}
 
-	bool Application::OnWindowResize(WindowResizeEvent& e)
+	void Application::OnWindowResize(WindowResizeEvent& e)
 	{
 		RB_PROFILE_FUNC();
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			mMinimized = true;
-			return false;
+			return;
 		}
 		mMinimized = false;
 		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 
-		return false;
 	}
 
 }

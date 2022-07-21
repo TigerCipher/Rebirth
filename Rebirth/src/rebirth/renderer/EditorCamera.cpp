@@ -63,8 +63,8 @@ namespace rebirth
 
 	void EditorCamera::OnEvent(Event& e)
 	{
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNC(EditorCamera::OnMouseScroll));
+		if (e.GetType() == EventType::MOUSE_SCROLLED)
+			OnMouseScroll((MouseScrolledEvent&)e);
 	}
 
 	glm::vec3 EditorCamera::GetUp() const

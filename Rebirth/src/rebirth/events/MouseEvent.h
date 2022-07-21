@@ -34,7 +34,7 @@ namespace rebirth
 	{
 	public:
 		MouseMovedEvent(const float x, const float y)
-			: mMouseX(x), mMouseY(y) {}
+			: Event(EventType::MOUSE_MOVED_EVENT), mMouseX(x), mMouseY(y) {}
 
 		float GetX() const { return mMouseX; }
 		float GetY() const { return mMouseY; }
@@ -46,7 +46,7 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MOUSE_MOVED_EVENT)
+		//EVENT_CLASS_TYPE(MOUSE_MOVED_EVENT)
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	private:
 		float mMouseX;
@@ -57,7 +57,7 @@ namespace rebirth
 	{
 	public:
 		MouseScrolledEvent(const float xOffset, const float yOffset)
-			: mXOffset(xOffset), mYOffset(yOffset) {}
+			: Event(EventType::MOUSE_SCROLLED), mXOffset(xOffset), mYOffset(yOffset) {}
 
 		float GetXOffset() const { return mXOffset; }
 		float GetYOffset() const { return mYOffset; }
@@ -69,7 +69,7 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MOUSE_SCROLLED)
+		//EVENT_CLASS_TYPE(MOUSE_SCROLLED)
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	private:
 		float mXOffset;
@@ -83,8 +83,8 @@ namespace rebirth
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_MOUSE | EVENT_CATEGORY_INPUT)
 	protected:
-		MouseButtonEvent(MouseButton button)
-			: mButton(button) {}
+		MouseButtonEvent(EventType type, MouseButton button)
+			: Event(type), mButton(button) {}
 
 		MouseButton mButton;
 	};
@@ -93,7 +93,7 @@ namespace rebirth
 	{
 	public:
 		MouseButtonPressedEvent(MouseButton button)
-			: MouseButtonEvent(button) {}
+			: MouseButtonEvent(EventType::MOUSE_BUTTON_PRESSED, button) {}
 
 		std::string ToString() const override
 		{
@@ -102,14 +102,14 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MOUSE_BUTTON_PRESSED)
+		//EVENT_CLASS_TYPE(MOUSE_BUTTON_PRESSED)
 	};
 
 	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(MouseButton button)
-			: MouseButtonEvent(button) {}
+			: MouseButtonEvent(EventType::MOUSE_BUTTON_RELEASED, button) {}
 
 		std::string ToString() const override
 		{
@@ -118,6 +118,6 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(MOUSE_BUTTON_RELEASED)
+		//EVENT_CLASS_TYPE(MOUSE_BUTTON_RELEASED)
 	};
 }

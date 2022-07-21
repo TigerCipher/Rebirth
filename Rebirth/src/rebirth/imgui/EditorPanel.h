@@ -25,17 +25,23 @@
 #include "rebirth/core/Common.h"
 #include "rebirth/scene/Scene.h"
 #include "rebirth/events/Event.h"
+#include "rebirth/events/EventListener.h"
+#include "rebirth/core/Application.h"
 
 namespace rebirth
 {
-	class EditorPanel
+	class EditorPanel : public EventListener
 	{
 	public:
+		EditorPanel()
+		{
+			Application::Instance().GetEventDispatcher().AddListener(this);
+		}
 		virtual ~EditorPanel() = default;
 
 		virtual void OnImguiRender() = 0;
-		virtual void OnEvent(Event& e) = 0;
 		virtual void SetContext(const Ref<Scene>& context) {}
+		virtual void OnEvent(Event& e) {}
 	};
 
 }

@@ -91,9 +91,12 @@ namespace rebirth
 	void OrthoCameraController::OnEvent(Event& e)
 	{
 		RB_PROFILE_FUNC();
-		EventDispatcher disp(e);
-		disp.Dispatch<MouseScrolledEvent>(BIND_EVENT_FUNC(OrthoCameraController::OnMouseScrolled));
-		disp.Dispatch<WindowResizeEvent>(BIND_EVENT_FUNC(OrthoCameraController::OnWindowResize));
+
+		if (e.GetType() == EventType::MOUSE_SCROLLED)
+			OnMouseScrolled((MouseScrolledEvent&)e);
+		else if (e.GetType() == EventType::WINDOW_RESIZE)
+			OnWindowResize((WindowResizeEvent&)e);
+
 	}
 
 	void OrthoCameraController::ResizeBounds(float width, float height)

@@ -33,5 +33,11 @@ namespace rebirth
 		sConsolePanel = createRef<EditorConsolePanel>();
 	}
 
+	void Panels::PostInit()
+	{
+		if (sConsolePanel)
+			sConsolePanel->OnLoad();
+	}
+
 }
 

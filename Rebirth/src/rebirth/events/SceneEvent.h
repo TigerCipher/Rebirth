@@ -37,7 +37,7 @@ namespace rebirth
 
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP | EVENT_CATEGORY_SCENE)
 	protected:
-		SceneEvent(const Ref<Scene>& scene) : mScene(scene) {}
+		SceneEvent(EventType type, const Ref<Scene>& scene) : Event(type), mScene(scene) {}
 		Ref<Scene> mScene;
 	};
 
@@ -45,7 +45,7 @@ namespace rebirth
 	{
 	public:
 		ScenePreStartEvent(const Ref<Scene>& scene)
-			: SceneEvent(scene) {}
+			: SceneEvent(EventType::SCENE_PRE_START, scene) {}
 
 		std::string ToString() const override
 		{
@@ -54,14 +54,14 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(SCENE_PRE_START)
+		//EVENT_CLASS_TYPE(SCENE_PRE_START)
 	};
 
 	class ScenePostStartEvent : public SceneEvent
 	{
 	public:
 		ScenePostStartEvent(const Ref<Scene>& scene)
-			: SceneEvent(scene) {}
+			: SceneEvent(EventType::SCENE_POST_START, scene) {}
 
 		std::string ToString() const override
 		{
@@ -70,14 +70,14 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(SCENE_POST_START)
+		//EVENT_CLASS_TYPE(SCENE_POST_START)
 	};
 
 	class ScenePreStopEvent : public SceneEvent
 	{
 	public:
 		ScenePreStopEvent(const Ref<Scene>& scene)
-			: SceneEvent(scene) {}
+			: SceneEvent(EventType::SCENE_PRE_STOP, scene) {}
 
 		std::string ToString() const override
 		{
@@ -86,14 +86,14 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(SCENE_PRE_STOP)
+		//EVENT_CLASS_TYPE(SCENE_PRE_STOP)
 	};
 
 	class ScenePostStopEvent : public SceneEvent
 	{
 	public:
 		ScenePostStopEvent(const Ref<Scene>& scene)
-			: SceneEvent(scene) {}
+			: SceneEvent(EventType::SCENE_POST_STOP, scene) {}
 
 		std::string ToString() const override
 		{
@@ -102,7 +102,7 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(SCENE_POST_STOP)
+		//EVENT_CLASS_TYPE(SCENE_POST_STOP)
 	};
 }
 

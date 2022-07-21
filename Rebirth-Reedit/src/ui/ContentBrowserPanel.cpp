@@ -61,6 +61,8 @@ namespace rebirth
 			colCount = 1;
 
 		ImGui::Columns(colCount, 0, false);
+
+		//#TODO Should store these entries in a list on panel load and have a refresh button for performance sake
 		for (auto& dirEntry : std::filesystem::directory_iterator(mCurrentDir))
 		{
 			const auto& path = dirEntry.path();

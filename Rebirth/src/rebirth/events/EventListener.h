@@ -15,37 +15,26 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Layer.h
-// Date File Created: 06/16/2022 at 9:24 PM
+// File Name: EventListener.h
+// Date File Created: 7/20/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
-
 #pragma once
 
-#include "rebirth/core/Common.h"
-#include "rebirth/events/EventListener.h"
-#include "Timestep.h"
+#include "Event.h"
 
 namespace rebirth
 {
-	class Layer : public EventListener
+
+	class EventListener
 	{
 	public:
-		Layer(const std::string& name = "Layer");
-		virtual ~Layer() {}
+		EventListener() = default;
+		virtual ~EventListener() = default;
 
-		virtual void OnAttach() {}
-		virtual void OnDetach() {}
-
-		virtual void OnUpdate(Timestep timestep) {}
-
-		virtual void OnImguiRender() {}
-
-		virtual void OnEvent(Event& e) {}
-
-	protected:
-		std::string mName;
+		virtual void OnEvent(Event& evt) = 0;
 	};
+
 }
 

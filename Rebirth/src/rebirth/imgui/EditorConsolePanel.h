@@ -33,6 +33,8 @@ namespace rebirth
 	public:
 		EditorConsolePanel();
 		virtual ~EditorConsolePanel();
+		void OnLoad();
+
 		void OnImguiRender() override;
 
 		void OnEvent(Event& e) override;

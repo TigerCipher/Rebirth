@@ -82,7 +82,7 @@ namespace rebirth
 			(spec.width != mViewportSize.x || spec.height != mViewportSize.y))
 		{
 			mFramebuffer->Resize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
-			mCameraController.ResizeBounds(mViewportSize.x, mViewportSize.y);
+			//mCameraController.ResizeBounds(mViewportSize.x, mViewportSize.y);
 			mEditorCamera.SetViewportSize(mViewportSize.x, mViewportSize.y);
 			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
 		}
@@ -104,10 +104,10 @@ namespace rebirth
 		{
 			case SceneState::EDIT:
 			{
-				if (mViewportFocused)
-				{
-					mCameraController.OnUpdate(ts);
-				}
+				//if (mViewportFocused)
+				//{
+				//	mCameraController.OnUpdate(ts);
+				//}
 				mEditorCamera.OnUpdate(ts);
 				mActiveScene->OnUpdateEditor(ts, mEditorCamera);
 				break;
@@ -213,17 +213,18 @@ namespace rebirth
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-		Panels::sConsolePanel->OnEvent(e);
-		mCameraController.OnEvent(e);
+		//Panels::sConsolePanel->OnEvent(e);
+		//mCameraController.OnEvent(e);
 
 		if (mSceneState == SceneState::EDIT)
 		{
 			mEditorCamera.OnEvent(e);
 		}
 
-		EventDispatcher disp(e);
-		disp.Dispatch<KeyPressedEvent>(BIND_EVENT_FUNC(EditorLayer::OnKeyPressed));
-		disp.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FUNC(EditorLayer::OnMouseButtonPressed));
+		if (e.GetType() == EventType::KEY_PRESSED)
+			OnKeyPressed((KeyPressedEvent&)e);
+		else if (e.GetType() == EventType::MOUSE_BUTTON_PRESSED)
+			OnMouseButtonPressed((MouseButtonPressedEvent&)e);
 	}
 
 	void EditorLayer::OnImguiRender()
@@ -314,7 +315,8 @@ namespace rebirth
 
 		mSceneHierarchyPanel.OnImguiRender();
 		mContentBrowserPanel.OnImguiRender();
-		Panels::sConsolePanel->OnImguiRender();
+		if(Panels::sConsolePanel)
+			Panels::sConsolePanel->OnImguiRender();
 
 
 		ImGui::Begin("Statistics");
@@ -373,7 +375,7 @@ namespace rebirth
 	}
 
 
-	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+	void EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
 	{
 		if (e.GetMouseButton() == MouseButton::LEFT)
 		{
@@ -381,16 +383,15 @@ namespace rebirth
 				mSceneHierarchyPanel.SetSelectedEntity(mHoveredEntity);
 		}
 
-		return false;
 	}
 
 
-	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	void EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
 		// Non-shortcut keybinds
 
 		// Shortcuts
-		if (e.GetRepeatCount() > 0) return false;
+		if (e.GetRepeatCount() > 0) return;
 
 		// modifiers
 		bool control = Input::IsKeyPressed(KeyCode::LEFT_CONTROL) || Input::IsKeyPressed(KeyCode::RIGHT_CONTROL);
@@ -440,7 +441,6 @@ namespace rebirth
 			default: break;
 		}
 
-		return false;
 	}
 
 	void EditorLayer::NewScene()
@@ -517,12 +517,9 @@ namespace rebirth
 
 		mActiveScene = Scene::Copy(mEditorScene);
 
-		// #TODO: OnEvent should have a companion DispatchEvent?
-		ScenePreStartEvent scenePreStart(mActiveScene);
-		Application::Instance().OnEvent(scenePreStart);
+		Application::Instance().HandleEvents(new ScenePreStartEvent(mActiveScene));
 		mActiveScene->OnRuntimeStart();
-		ScenePreStartEvent scenePostStart(mActiveScene);
-		Application::Instance().OnEvent(scenePostStart);
+		Application::Instance().HandleEvents(new ScenePostStartEvent(mActiveScene));
 
 		mSceneHierarchyPanel.SetContext(mActiveScene);
 	}
@@ -533,11 +530,9 @@ namespace rebirth
 
 		if (mSceneState == SceneState::PLAY)
 		{
-			ScenePreStopEvent scenePreStop(mActiveScene);
-			Application::Instance().OnEvent(scenePreStop);
+			Application::Instance().HandleEvents(new ScenePreStopEvent(mActiveScene));
 			mActiveScene->OnRuntimeStop();
-			ScenePostStopEvent scenePostStop(mActiveScene);
-			Application::Instance().OnEvent(scenePostStop);
+			Application::Instance().HandleEvents(new ScenePostStopEvent(mActiveScene));
 		}
 		else if (mSceneState == SceneState::SIMULATE)
 			mActiveScene->OnSimulationStop();

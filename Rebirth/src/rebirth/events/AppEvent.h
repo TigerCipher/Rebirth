@@ -32,7 +32,7 @@ namespace rebirth
 	class WindowResizeEvent : public Event
 	{
 	public:
-		WindowResizeEvent(uint32 width, uint32 height) : mWidth(width), mHeight(height) {}
+		WindowResizeEvent(uint32 width, uint32 height) : Event(EventType::WINDOW_RESIZE), mWidth(width), mHeight(height) {}
 
 		uint32 GetWidth() const { return mWidth; }
 		uint32 GetHeight() const { return mHeight; }
@@ -44,7 +44,7 @@ namespace rebirth
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(WINDOW_RESIZE)
+		//EVENT_CLASS_TYPE(WINDOW_RESIZE)
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
 
 	private:
@@ -55,36 +55,37 @@ namespace rebirth
 	class WindowCloseEvent : public Event
 	{
 	public:
-		WindowCloseEvent() = default;
+		WindowCloseEvent() : Event(EventType::WINDOW_CLOSE) {}
 
-		EVENT_CLASS_TYPE(WINDOW_CLOSE)
+		std::string ToString() const override { return "WindowCloseEvent"; }
+		//EVENT_CLASS_TYPE(WINDOW_CLOSE)
 		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
 	};
 
-	class TickEvent : public Event
-	{
-	public:
-		TickEvent() = default;
+	//class TickEvent : public Event
+	//{
+	//public:
+	//	TickEvent() = default;
 
-		EVENT_CLASS_TYPE(TICK)
-		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
-	};
+	//	EVENT_CLASS_TYPE(TICK)
+	//	EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
+	//};
 
-	class UpdateEvent : public Event
-	{
-	public:
-		UpdateEvent() = default;
+	//class UpdateEvent : public Event
+	//{
+	//public:
+	//	UpdateEvent() = default;
 
-		EVENT_CLASS_TYPE(UPDATE)
-		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
-	};
+	//	EVENT_CLASS_TYPE(UPDATE)
+	//	EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
+	//};
 
-	class RenderEvent : public Event
-	{
-	public:
-		RenderEvent() = default;
+	//class RenderEvent : public Event
+	//{
+	//public:
+	//	RenderEvent() = default;
 
-		EVENT_CLASS_TYPE(RENDER)
-		EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
-	};
+	//	EVENT_CLASS_TYPE(RENDER)
+	//	EVENT_CLASS_CATEGORY(EVENT_CATEGORY_APP)
+	//};
 }
