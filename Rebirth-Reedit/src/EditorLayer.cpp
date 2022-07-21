@@ -77,18 +77,18 @@ namespace rebirth
 	{
 		RB_PROFILE_FUNC();
 
-		if (FramebufferDesc spec = mFramebuffer->GetDesc();
-			mViewportSize.x > 0.0f && mViewportSize.y > 0.0f &&
-			(spec.width != mViewportSize.x || spec.height != mViewportSize.y))
 		{
-			mFramebuffer->Resize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
-			//mCameraController.ResizeBounds(mViewportSize.x, mViewportSize.y);
-			mEditorCamera.SetViewportSize(mViewportSize.x, mViewportSize.y);
-			mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+			RB_PROFILE_SCOPE("Viewport check");
+			if (FramebufferDesc spec = mFramebuffer->GetDesc();
+				mViewportSize.x > 0.0f && mViewportSize.y > 0.0f &&
+				(spec.width != mViewportSize.x || spec.height != mViewportSize.y))
+			{
+				mFramebuffer->Resize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+				//mCameraController.ResizeBounds(mViewportSize.x, mViewportSize.y);
+				mEditorCamera.SetViewportSize(mViewportSize.x, mViewportSize.y);
+				mActiveScene->OnViewportResize((uint32)mViewportSize.x, (uint32)mViewportSize.y);
+			}
 		}
-
-
-
 
 		Renderer2D::ResetStats();
 
@@ -104,44 +104,45 @@ namespace rebirth
 		{
 			case SceneState::EDIT:
 			{
-				//if (mViewportFocused)
-				//{
-				//	mCameraController.OnUpdate(ts);
-				//}
+				RB_PROFILE_SCOPE("Update EDIT");
 				mEditorCamera.OnUpdate(ts);
 				mActiveScene->OnUpdateEditor(ts, mEditorCamera);
 				break;
 			}
 			case SceneState::PLAY:
 			{
+				RB_PROFILE_SCOPE("Update PLAY");
 				mActiveScene->OnUpdateRuntime(ts);
 				break;
 			}
 			case SceneState::SIMULATE:
 			{
+				RB_PROFILE_SCOPE("Update STOP");
 				mActiveScene->OnUpdateSimulation(ts, mEditorCamera);
 				break;
 			}
 		}
 
 
-
-		auto [mx, my] = ImGui::GetMousePos();
-		mx -= mViewportBounds[0].x;
-		my -= mViewportBounds[0].y;
-
-		glm::vec2 viewportSize = mViewportBounds[1] - mViewportBounds[0];
-		my = viewportSize.y - my;
-
-		int mouseX = (int)mx;
-		int mouseY = (int)my;
-
-		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
-			int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
-			if (pixelData == -1)
-				mHoveredEntity = Entity();
-			else mHoveredEntity = Entity((entt::entity)pixelData, mActiveScene.get());
+			RB_PROFILE_SCOPE("Mouse Picking");
+			auto [mx, my] = ImGui::GetMousePos();
+			mx -= mViewportBounds[0].x;
+			my -= mViewportBounds[0].y;
+
+			glm::vec2 viewportSize = mViewportBounds[1] - mViewportBounds[0];
+			my = viewportSize.y - my;
+
+			int mouseX = (int)mx;
+			int mouseY = (int)my;
+
+			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+			{
+				int pixelData = mFramebuffer->ReadPixel(1, mouseX, mouseY);
+				if (pixelData == -1)
+					mHoveredEntity = Entity();
+				else mHoveredEntity = Entity((entt::entity)pixelData, mActiveScene.get());
+			}
 		}
 
 		OnOverlayRender();
@@ -151,6 +152,7 @@ namespace rebirth
 
 	void EditorLayer::OnOverlayRender()
 	{
+		RB_PROFILE_FUNC();
 		if (mSceneState == SceneState::PLAY)
 		{
 			Entity cam = mActiveScene->GetPrimaryCameraEntity();

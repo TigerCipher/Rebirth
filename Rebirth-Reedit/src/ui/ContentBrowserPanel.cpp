@@ -41,6 +41,7 @@ namespace rebirth
 
 	void ContentBrowserPanel::OnImguiRender()
 	{
+		RB_PROFILE_FUNC();
 		ImGui::Begin("Content Browser");
 
 		if (mCurrentDir != gAssetsPath)
@@ -66,8 +67,8 @@ namespace rebirth
 		for (auto& dirEntry : std::filesystem::directory_iterator(mCurrentDir))
 		{
 			const auto& path = dirEntry.path();
-			auto relPath = std::filesystem::relative(path, gAssetsPath);
-			std::string filenameStr = relPath.filename().string();
+			//auto relPath = std::filesystem::relative(path, gAssetsPath);
+			std::string filenameStr = path.filename().string();
 
 			ImGui::PushID(filenameStr.c_str());
 			Ref<Texture2D> icon = dirEntry.is_directory() ? mDirectoryIcon : mFileIcon;
@@ -89,6 +90,7 @@ namespace rebirth
 
 			if (ImGui::BeginDragDropSource())
 			{
+				auto relPath = std::filesystem::relative(path, gAssetsPath);
 				const wchar_t* itemPath = relPath.c_str();
 				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
 				ImGui::Image((ImTextureID)icon->GetId(), { 64, 64 }, { 0, 1 }, { 1, 0 });
