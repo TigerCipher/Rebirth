@@ -29,6 +29,7 @@
 #include "rebirth/util/PlatformUtil.h"
 #include "rebirth/debug/Statistics.h"
 #include "rebirth/imgui/Panels.h"
+#include "Assets.h"
 
 // temp
 #include <glfw/glfw3.h>
@@ -49,6 +50,7 @@ namespace rebirth
 		Time::Init();
 		mWindow = Window::Create(appDesc);
 		mWindow->SetEventCallback(std::bind(&Application::HandleEvents, this, std::placeholders::_1));
+		Assets::Init();
 		Panels::PostInit();
 
 

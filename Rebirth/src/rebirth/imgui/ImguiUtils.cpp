@@ -23,6 +23,7 @@
 #include "rbpch.h"
 #include "ImguiUtils.h"
 #include "rebirth/util/StringUtil.h"
+#include "rebirth/renderer/Texture.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -44,11 +45,11 @@ namespace rebirth::UI
 
 	void DrawFloat3Control(const std::string& label, glm::vec3& values, float resetValue /*= 0.0f*/)
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		auto boldFont = io.Fonts->Fonts[0];
 
 		if (ImGui::BeginTable(label.c_str(), 2))
 		{
+			ImGuiIO& io = ImGui::GetIO();
+			auto boldFont = io.Fonts->Fonts[0];
 			//ImGui::Columns(2);
 			//ImGui::SetColumnWidth(0, columnWidth);
 			ImGui::TableSetupColumn("col1", ImGuiTableColumnFlags_WidthFixed, gColumnWidth);
@@ -176,6 +177,29 @@ namespace rebirth::UI
 	void PopTextAlign()
 	{
 		gAlignment = TextAlign_LEFT;
+	}
+
+	void Image(const Ref<Texture2D>& texture, const glm::vec2& size, glm::vec4 tintColor /*= { 1, 1, 1, 1 }*/)
+	{
+		ImVec2 s = { size.x, size.y };
+		ImVec4 c = { tintColor.r, tintColor.g, tintColor.b, tintColor.a };
+		ImGui::Image((ImTextureID)(uint64)texture->GetId(), s, { 0, 1 }, { 1, 0 }, c);
+	}
+
+	bool ImageButton(const Ref<Texture2D>& texture, const glm::vec2& size, glm::vec4 tintColor /*= { 1, 1, 1, 1 }*/)
+	{
+		ImVec2 s = { size.x, size.y };
+		ImVec4 c = { tintColor.r, tintColor.g, tintColor.b, tintColor.a };
+		return ImGui::ImageButton((ImTextureID)(uint64)texture->GetId(), s, { 0, 1 }, { 1, 0 }, -1, { 0, 0, 0, 0 }, c);
+	}
+
+	bool ColorEdit(const char* label, glm::vec4& color)
+	{
+		ImGui::TextUnformatted(label);
+		ImGui::SameLine();
+
+		std::string temp = fmt::format("##{}", ReplaceAll(label, " ", ""));
+		return ImGui::ColorEdit4(temp.c_str(), glm::value_ptr(color));
 	}
 
 }

@@ -31,6 +31,8 @@ namespace rebirth
 		TextAlign_LEFT,
 		TextAlign_RIGHT
 	};
+
+	class Texture2D;
 }
 namespace rebirth::UI
 {
@@ -44,6 +46,11 @@ namespace rebirth::UI
 	void DrawTooltip(const char* desc);
 
 	bool DrawFloatControl(const std::string& label, float* value, float step = 0.01f, float minValue = -0.0f, float maxValue = 0.0f);
+
+	void Image(const Ref<Texture2D>& texture, const glm::vec2& size, glm::vec4 tintColor = { 1, 1, 1, 1 });
+	bool ImageButton(const Ref<Texture2D>& texture, const glm::vec2& size, glm::vec4 tintColor = { 1, 1, 1, 1 });
+
+	bool ColorEdit(const char* label, glm::vec4& color);
 
 	void PushColumnWidth(float columnWidth);
 	void PushTextAlign(TextAlign alignment);

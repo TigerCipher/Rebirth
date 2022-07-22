@@ -312,11 +312,12 @@ namespace rebirth
 		DrawComponent<SpriteComponent>("Sprite", entity, [](auto& component)
 			{
 				// Tint Color
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+				UI::ColorEdit("Color", component.color);
 
 				// Texture
 				// #TODO Maybe make the texture be displayed, and that is what the user drags to?
-				ImGui::Button("Texture", { 100.0f, 0.0f });
+				Ref<Texture2D> tex = component.texture ? component.texture : Assets::GetDefaultTexture();
+				ImGui::Image((ImTextureID)(uint64)tex->GetId(), { 100, 100 }, {0, 1}, {1, 0});
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -331,6 +332,7 @@ namespace rebirth
 					}
 					ImGui::EndDragDropTarget();
 				}
+				ImGui::TextUnformatted(tex->GetPath().c_str());
 
 				// Tiling Factor
 				UI::DrawFloatControl("Tiling Factor", &component.tilingFactor, 0.01f, 0.0f, 100.0f);

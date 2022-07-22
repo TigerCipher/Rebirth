@@ -28,6 +28,7 @@
 #include "rebirth/core/Layer.h"
 #include "rebirth/core/Timestep.h"
 #include "rebirth/core/OrthoCameraController.h"
+#include "rebirth/core/Assets.h"
 
 // Util
 #include "rebirth/util/PlatformUtil.h"
