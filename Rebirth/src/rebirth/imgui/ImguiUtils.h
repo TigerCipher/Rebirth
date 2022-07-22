@@ -24,15 +24,31 @@
 
 //#include <imgui.h>
 
+namespace rebirth
+{
+	enum TextAlign
+	{
+		TextAlign_LEFT,
+		TextAlign_RIGHT
+	};
+}
 namespace rebirth::UI
 {
 	// ImGui::Checkbox wrapper that makes it so the label appears on the left side of the checkbox
 	bool Checkbox(const char* label, bool* value);
 
 	// ImGui::SliderFloat3 but with unreal engine style colored X, Y, Z labels
-	void DrawFloat3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f);
+	void DrawFloat3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f);
 
 	// Draws a (?) and displays the given desc when that (?) is hovered
 	void DrawTooltip(const char* desc);
+
+	bool DrawFloatControl(const std::string& label, float* value, float step = 0.01f, float minValue = -0.0f, float maxValue = 0.0f);
+
+	void PushColumnWidth(float columnWidth);
+	void PushTextAlign(TextAlign alignment);
+
+	void PopColumnWidth();
+	void PopTextAlign();
 }
 
