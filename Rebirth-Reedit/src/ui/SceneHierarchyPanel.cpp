@@ -23,8 +23,6 @@
 
 #include "SceneHierarchyPanel.h"
 
-#include "util/UIHelper.h"
-
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
@@ -200,7 +198,7 @@ namespace rebirth
 		{
 			// Draws UUID for debug purposes
 			std::string uuid = std::to_string((uint64)entity.GetUUID());
-			UIHelper::DrawTooltip(uuid.c_str());
+			UI::DrawTooltip(uuid.c_str());
 
 			auto& tag = entity.GetComponent<TagComponent>().tag;
 
@@ -242,11 +240,11 @@ namespace rebirth
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& trans)
 			{
-				UIHelper::DrawFloat3Control("Translation", trans.translation);
+				UI::DrawFloat3Control("Translation", trans.translation);
 				glm::vec3 rot = glm::degrees(trans.rotation);
-				UIHelper::DrawFloat3Control("Rotation", rot);
+				UI::DrawFloat3Control("Rotation", rot);
 				trans.rotation = glm::radians(rot);
-				UIHelper::DrawFloat3Control("Scale", trans.scale, 1.0f);
+				UI::DrawFloat3Control("Scale", trans.scale, 1.0f);
 			});
 
 
@@ -281,43 +279,45 @@ namespace rebirth
 				if (cam.GetProjectionType() == SceneCamera::ProjectionType::PERSPECTIVE)
 				{
 					float fov = glm::degrees(cam.GetPerspectiveFoV());
-					if (ImGui::DragFloat("FOV", &fov))
+					if (UI::DrawFloatControl("FOV", &fov))
 						cam.SetPerspectiveFoV(glm::radians(fov));
 
 					float nearClip = cam.GetPerspectiveNearClip();
-					if (ImGui::DragFloat("Near Clip", &nearClip))
+					if (UI::DrawFloatControl("Near Clip", &nearClip))
 						cam.SetPerspectiveNearClip(nearClip);
 
 					float farClip = cam.GetPerspectiveFarClip();
-					if (ImGui::DragFloat("Far Clip", &farClip))
+					if (UI::DrawFloatControl("Far Clip", &farClip))
 						cam.SetPerspectiveFarClip(farClip);
 				}
 
 				if (cam.GetProjectionType() == SceneCamera::ProjectionType::ORTHOGRAPHIC)
 				{
 					float size = cam.GetOrthographicSize();
-					if (ImGui::DragFloat("Size", &size))
+					if (UI::DrawFloatControl("Size", &size))
 						cam.SetOrthographicSize(size);
 
 					float nearClip = cam.GetOrthographicNearClip();
-					if (ImGui::DragFloat("Near Clip", &nearClip))
+					if (UI::DrawFloatControl("Near Clip", &nearClip))
 						cam.SetOrthographicNearClip(nearClip);
 
 					float farClip = cam.GetOrthographicFarClip();
-					if (ImGui::DragFloat("Far Clip", &farClip))
+					if (UI::DrawFloatControl("Far Clip", &farClip))
 						cam.SetOrthographicFarClip(farClip);
 
-					ImGui::Checkbox("Fixed Aspect Ratio", &camComp.fixedAspectRatio);
+					UI::Checkbox("Fixed Aspect Ratio", &camComp.fixedAspectRatio);
 				}
 			});
 
 		DrawComponent<SpriteComponent>("Sprite", entity, [](auto& component)
 			{
 				// Tint Color
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+				UI::ColorEdit("Color", component.color);
 
 				// Texture
-				ImGui::Button("Texture", { 100.0f, 0.0f });
+				// #TODO Maybe make the texture be displayed, and that is what the user drags to?
+				Ref<Texture2D> tex = component.texture ? component.texture : Assets::GetDefaultTexture();
+				ImGui::Image((ImTextureID)(uint64)tex->GetId(), { 100, 100 }, {0, 1}, {1, 0});
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
@@ -332,16 +332,17 @@ namespace rebirth
 					}
 					ImGui::EndDragDropTarget();
 				}
+				ImGui::TextUnformatted(tex->GetPath().c_str());
 
 				// Tiling Factor
-				ImGui::DragFloat("Tiling Factor", &component.tilingFactor, 0.1f, 0.0f, 100.0f);
+				UI::DrawFloatControl("Tiling Factor", &component.tilingFactor, 0.01f, 0.0f, 100.0f);
 			});
 
 		DrawComponent<CircleComponent>("Circle", entity, [](auto& component)
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
-				ImGui::DragFloat("Thickness", &component.thickness, 0.025f, 0.0f, 1.0f);
-				ImGui::DragFloat("Fade", &component.fade, 0.00025f, 0.0f, 3.0f);
+				UI::ColorEdit("Color", component.color);
+				UI::DrawFloatControl("Thickness", &component.thickness, 0.025f, 0.0f, 1.0f);
+				UI::DrawFloatControl("Fade", &component.fade, 0.00025f, 0.0f, 3.0f);
 			});
 
 
@@ -350,7 +351,7 @@ namespace rebirth
 
 				const char* bodyTypeStr[] = { "Static", "Dynamic", "Kinematic" };
 				const char* currentBodyTypeStr = bodyTypeStr[(int)component.bodyType];
-				if (ImGui::BeginCombo("Body Type", currentBodyTypeStr))
+				if (UI::Combobox("Body Type", currentBodyTypeStr))
 				{
 					for (int i = 0; i < 3; i++)
 					{
@@ -371,22 +372,30 @@ namespace rebirth
 
 		DrawComponent<BoxCollider2DComponent>("Box Collider 2D", entity, [](auto& component)
 			{
+				UI::PushColumnWidth(200.0f);
+				UI::PushTextAlign(TextAlign_RIGHT);
 				ImGui::DragFloat2("Offset", glm::value_ptr(component.offset));
 				ImGui::DragFloat2("Size", glm::value_ptr(component.size));
-				ImGui::DragFloat("Density", &component.density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution Threshold", &component.restitutionThreshold, 0.01f, 0.0f);
+				UI::DrawFloatControl("Density", &component.density, 0.01f, 0.0f, 1.0f);
+				UI::DrawFloatControl("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
+				UI::DrawFloatControl("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
+				UI::DrawFloatControl("Restitution Threshold", &component.restitutionThreshold, 0.01f);
+				UI::PopColumnWidth();
+				UI::PopTextAlign();
 			});
 
 		DrawComponent<CircleCollider2DComponent>("Circle Collider 2D", entity, [](auto& component)
 			{
+				UI::PushColumnWidth(200.0f);
+				UI::PushTextAlign(TextAlign_RIGHT);
 				ImGui::DragFloat2("Offset", glm::value_ptr(component.offset));
-				ImGui::DragFloat("Radius", &component.radius, 0.1f, 0.1f);
-				ImGui::DragFloat("Density", &component.density, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
-				ImGui::DragFloat("Restitution Threshold", &component.restitutionThreshold, 0.01f, 0.0f);
+				UI::DrawFloatControl("Radius", &component.radius, 0.1f, 0.1f);
+				UI::DrawFloatControl("Density", &component.density, 0.01f, 0.0f, 1.0f);
+				UI::DrawFloatControl("Friction", &component.friction, 0.01f, 0.0f, 1.0f);
+				UI::DrawFloatControl("Restitution", &component.restitution, 0.01f, 0.0f, 1.0f);
+				UI::DrawFloatControl("Restitution Threshold", &component.restitutionThreshold, 0.01f, 0.0f);
+				UI::PopColumnWidth();
+				UI::PopTextAlign();
 			});
 	}
 

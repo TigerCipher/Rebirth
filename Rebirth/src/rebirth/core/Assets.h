@@ -15,21 +15,25 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: UIHelper.h
-// Date File Created: 6/28/2022
+// File Name: Assets.h
+// Date File Created: 7/21/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
+#include "rebirth/renderer/Texture.h"
 
 namespace rebirth
 {
-	class UIHelper
+	class Assets
 	{
 	public:
-		static void DrawFloat3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f);
+		static void Init();
+		static const Ref<Texture2D>& GetDefaultTexture() { return sDefaultTexture; }
 
-		static void DrawTooltip(const char* desc);
+	private:
+		static Ref<Texture2D> sDefaultTexture;
 	};
 }
+

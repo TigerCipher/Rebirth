@@ -285,6 +285,7 @@ namespace rebirth
 
 	void Scene::OnUpdateSimulation(Timestep ts, EditorCamera& camera)
 	{
+		RB_PROFILE_FUNC();
 		// Physics
 		{
 			const int32 velocityIterations = 6;
@@ -416,6 +417,7 @@ namespace rebirth
 
 	void Scene::RenderScene(EditorCamera& camera)
 	{
+		RB_PROFILE_FUNC();
 		Renderer2D::BeginScene(camera);
 
 		// Draw sprites

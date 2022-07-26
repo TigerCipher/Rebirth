@@ -28,10 +28,12 @@
 #include "rebirth/core/Layer.h"
 #include "rebirth/core/Timestep.h"
 #include "rebirth/core/OrthoCameraController.h"
+#include "rebirth/core/Assets.h"
 
 // Util
 #include "rebirth/util/PlatformUtil.h"
 #include "rebirth/util/MathUtil.h"
+
 
 // Debug
 #include "rebirth/debug/Log.h"
@@ -75,6 +77,7 @@
 // GUI
 #include "rebirth/imgui/ImguiLayer.h"
 #include "rebirth/imgui/Panels.h"
+#include "rebirth/imgui/ImguiUtils.h"
 
 
 // Main function

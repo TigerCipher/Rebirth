@@ -26,6 +26,8 @@
 #include "rebirth/renderer/Texture.h"
 #include "rebirth/events/SceneEvent.h"
 
+#include "ImguiUtils.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
 
@@ -126,9 +128,7 @@ namespace rebirth
 
 		// #TODO: Imgui helper methods for making label go on the left of the item
 		ImGui::SameLine(0.0f, 5.0f);
-		ImGui::TextUnformatted("Clear On Play:");
-		ImGui::SameLine();
-		ImGui::Checkbox("##ClearOnPlay", &mShouldClearOnPlay);
+		UI::Checkbox("Clear On PLay:", &mShouldClearOnPlay);
 
 		//ImGui::SameLine(0.0f, 5.0f);
 		//ImGui::TextUnformatted("Collapse:");
