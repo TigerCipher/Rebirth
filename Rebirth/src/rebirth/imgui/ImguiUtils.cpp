@@ -34,6 +34,14 @@ namespace rebirth::UI
 	static float gColumnWidth = 120.0f;
 	static TextAlign gAlignment = TextAlign_LEFT;
 
+	const char* SetLabel(const char* label)
+	{
+		ImGui::TextUnformatted(label);
+		ImGui::SameLine();
+		std::string ret = fmt::format("##{}", ReplaceAll(label, " ", ""));
+		return ret.c_str();
+	}
+
 	bool Checkbox(const char* label, bool* value)
 	{
 		ImGui::TextUnformatted(label);
@@ -195,11 +203,14 @@ namespace rebirth::UI
 
 	bool ColorEdit(const char* label, glm::vec4& color)
 	{
-		ImGui::TextUnformatted(label);
-		ImGui::SameLine();
 
-		std::string temp = fmt::format("##{}", ReplaceAll(label, " ", ""));
-		return ImGui::ColorEdit4(temp.c_str(), glm::value_ptr(color));
+		return ImGui::ColorEdit4(SetLabel(label), glm::value_ptr(color));
+	}
+
+	bool Combobox(const char* label, const char* previewValue)
+	{
+		// Doesn't seem to work, combo drop down won't activate
+		return ImGui::BeginCombo(SetLabel(label), previewValue);
 	}
 
 }

@@ -52,6 +52,8 @@ namespace rebirth::UI
 
 	bool ColorEdit(const char* label, glm::vec4& color);
 
+	bool Combobox(const char* label, const char* previewValue);
+
 	void PushColumnWidth(float columnWidth);
 	void PushTextAlign(TextAlign alignment);
 

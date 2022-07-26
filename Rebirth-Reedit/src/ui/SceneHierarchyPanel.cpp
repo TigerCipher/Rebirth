@@ -340,7 +340,7 @@ namespace rebirth
 
 		DrawComponent<CircleComponent>("Circle", entity, [](auto& component)
 			{
-				ImGui::ColorEdit4("Color", glm::value_ptr(component.color));
+				UI::ColorEdit("Color", component.color);
 				UI::DrawFloatControl("Thickness", &component.thickness, 0.025f, 0.0f, 1.0f);
 				UI::DrawFloatControl("Fade", &component.fade, 0.00025f, 0.0f, 3.0f);
 			});
@@ -351,7 +351,7 @@ namespace rebirth
 
 				const char* bodyTypeStr[] = { "Static", "Dynamic", "Kinematic" };
 				const char* currentBodyTypeStr = bodyTypeStr[(int)component.bodyType];
-				if (ImGui::BeginCombo("Body Type", currentBodyTypeStr))
+				if (UI::Combobox("Body Type", currentBodyTypeStr))
 				{
 					for (int i = 0; i < 3; i++)
 					{
