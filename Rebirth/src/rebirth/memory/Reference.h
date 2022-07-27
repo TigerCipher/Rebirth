@@ -23,6 +23,7 @@
 #pragma once
 
 #include "rebirth/core/Common.h"
+#include "rebirth/debug/Log.h"
 
 namespace rebirth
 {
@@ -105,6 +106,7 @@ namespace rebirth
 		{
 			DecRef();
 			mInstance = other.mInstance;
+			other.mInstance = nullptr;
 			return *this;
 		}
 
@@ -112,7 +114,7 @@ namespace rebirth
 		const T* operator->() const { return mInstance; }
 
 		T& operator*() { return *mInstance; }
-		const T& operator() const { return *mInstance; }
+		const T& operator*() const { return *mInstance; }
 
 		bool operator==(const Reference<T>& other) const { return mInstance == other.mInstance; }
 
@@ -125,7 +127,17 @@ namespace rebirth
 		T* Raw() { return mInstance; }
 		const T* Raw() const { return mInstance; }
 
+		void Release(T* instance = nullptr)
+		{
+			DecRef();
+			mInstance = instance;
+		}
 
+		template<typename... Args>
+		static Reference<T> Create(Args&&... args)
+		{
+			return Reference<T>(new T(std::forward<Args>(args)...));
+		}
 	private:
 
 		void IncRef() const
@@ -150,4 +162,11 @@ namespace rebirth
 
 		T* mInstance = nullptr;
 	};
+
+
+	template <typename T, typename... Args>
+	constexpr Reference<T> createReference(Args&& ...args)
+	{
+		return Reference<T>::Create(std::forward<Args>(args)...);
+	}
 }

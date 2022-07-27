@@ -42,6 +42,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "rebirth/core/Common.h"
+#include "rebirth/memory/Reference.h"
 #include "rebirth/debug/Log.h"
 #include "rebirth/debug/Profiler.h"
 

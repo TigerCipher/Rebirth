@@ -31,8 +31,6 @@
 #include "rebirth/imgui/Panels.h"
 #include "Assets.h"
 
-// temp
-#include <glfw/glfw3.h>
 
 namespace rebirth
 {
@@ -62,6 +60,7 @@ namespace rebirth
 
 		mDispatcher.AddListener(this);
 		RB_CORE_TRACE("Core application created");
+
 	}
 
 	Application::~Application()
