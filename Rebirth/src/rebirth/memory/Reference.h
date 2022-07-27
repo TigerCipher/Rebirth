@@ -54,9 +54,77 @@ namespace rebirth
 			static_assert(std::is_base_of<RefCount, T>::value, "Class must be a child of RefCount");
 			IncRef();
 		}
+		Reference(const Reference<T>& other) : mInstance(other.mInstance)
+		{
+			IncRef();
+		}
+		template<typename T2>
+		Reference(const Reference<T2>& other)
+		{
+			mInstance = (T*)other.mInstance;
+			IncRef();
+		}
+		template<typename T2>
+		Reference(Reference<T2>&& other)
+		{
+			mInstance = (T*)other.mInstance;
+			other.mInstance = nullptr;
+		}
+
+		~Reference()
+		{
+			DecRef();
+		}
+
+		Reference& operator=(std::nullptr_t)
+		{
+			DecRef();
+			mInstance = nullptr;
+			return *this;
+		}
+
+		Reference& operator=(const Reference<T>& other)
+		{
+			other.IncRef();
+			DecRef();
+			mInstance = other.mInstance;
+			return *this;
+		}
+
+		template<typename T2>
+		Reference& operator=(const Reference<T2>& other)
+		{
+			other.IncRef();
+			DecRef();
+			mInstance = other.mInstance;
+			return *this;
+		}
+
+		template<typename T2>
+		Reference& operator=(Reference<T2>&& other)
+		{
+			DecRef();
+			mInstance = other.mInstance;
+			return *this;
+		}
 
 		T* operator->() { return mInstance; }
 		const T* operator->() const { return mInstance; }
+
+		T& operator*() { return *mInstance; }
+		const T& operator() const { return *mInstance; }
+
+		bool operator==(const Reference<T>& other) const { return mInstance == other.mInstance; }
+
+		operator bool() { return mInstance != nullptr; }
+		operator bool() const { return mInstance != nullptr; }
+
+		template<typename T2>
+		Reference<T2> As() const { return Reference<T2>(*this); }
+
+		T* Raw() { return mInstance; }
+		const T* Raw() const { return mInstance; }
+
 
 	private:
 
