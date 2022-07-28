@@ -45,7 +45,7 @@ namespace rebirth
 		std::filesystem::path path = "";
 		bool loaded = false;
 
-		bool IsValid() { return handle && type != AssetType_None; }
+		bool IsValid() const { return handle && type != AssetType_None; }
 	};
 
 	class Asset : public RefCount
@@ -55,11 +55,11 @@ namespace rebirth
 
 		virtual ~Asset() = default;
 
-		const AssetType GetType() const { return mType; }
-		UUID GetHandle() { return mHandle; }
-		AssetFlag GetFlags() { return mFlags; }
+		AssetType GetType() const { return mType; }
+		UUID GetHandle() const { return mHandle; }
+		AssetFlag GetFlags() const { return mFlags; }
 
-		bool IsValid() { return mHandle != 0; }
+		bool IsValid() const { return mHandle != 0; }
 
 	protected:
 		UUID mHandle = 0;

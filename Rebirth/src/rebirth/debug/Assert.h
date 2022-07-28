@@ -40,8 +40,6 @@
 #endif
 
 
-
-
 // Assert system - based on the one I wrote for Hazel - the project that inspired Rebirth
 #ifdef RB_ENABLE_ASSERTS
 #	define RB_INTERNAL_ASSERT_IMPL(type, check, msg, ...) { if(!(check)) { RB##type##FATAL(msg, __VA_ARGS__); RB##type##FATAL("Assertion check ({}) failed at {}:{}", RB_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename().string(), __LINE__); RB_DEBUG_BREAK(); } }
@@ -52,11 +50,10 @@
 #	define RB_INTERNAL_ASSERT_GET_MACRO_NAME(arg1, arg2, arg3, macro, ...) macro
 #	define RB_INTERNAL_ASSERT_GET_MACRO(...) RB_EXPAND_MACRO( RB_INTERNAL_ASSERT_GET_MACRO_NAME(__VA_ARGS__, RB_INTERNAL_ASSERT_WITH_FMT_MSG, RB_INTERNAL_ASSERT_WITH_NOFMT_MSG, RB_INTERNAL_ASSERT_WITH_NO_MSG) )
 
-	// Accepts just the check, a check and a message, or a check, a formatted message, and arguments
+// Accepts just the check, a check and a message, or a check, a formatted message, and arguments
 #	define RB_ASSERT(...) RB_EXPAND_MACRO( RB_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CLIENT_, __VA_ARGS__) )
 #	define RB_CORE_ASSERT(...) RB_EXPAND_MACRO( RB_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__)(_CORE_, __VA_ARGS__) )
 #else
 #	define RB_ASSERT(...)
 #	define RB_CORE_ASSERT(...)
 #endif
-

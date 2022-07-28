@@ -48,11 +48,9 @@ namespace rebirth
 		mEditorScene = createRef<Scene>();
 		mActiveScene = mEditorScene;
 
-		auto cmd = Application::Instance().GetCommandLineArgs();
-		if (cmd.count > 1)
+		if (const auto cmd = Application::Instance().GetCommandLineArgs(); cmd.count > 1)
 		{
-			auto scenePath = cmd[1];
-			if (std::filesystem::exists(scenePath))
+			if (const auto scenePath = cmd[1]; std::filesystem::exists(scenePath))
 			{
 				SceneSerializer serializer(mActiveScene);
 				serializer.DeserializeFromYaml(scenePath);

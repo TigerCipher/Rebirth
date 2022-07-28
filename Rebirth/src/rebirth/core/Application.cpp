@@ -84,7 +84,7 @@ namespace rebirth
 		while (mRunning)
 		{
 			RB_PROFILE_SCOPE("Run Loop");
-			auto time = (float)Time::GetTime();
+			const auto time = (float)Time::GetTime();
 			Timestep timestep = time - mLastFrameTime;
 			Statistics::SetFrameTime(timestep);
 			accumulator += timestep;
