@@ -26,43 +26,29 @@
 namespace rebirth
 {
 
-	static std::filesystem::path GetKey(const std::filesystem::path& path)
+	bool AssetRegistry::Contains(const UUID handle) const
 	{
-		auto key = path;
-		if (key.empty())
-			key = path.lexically_normal();
-		return key;
+		return mRegistry.find(handle) != mRegistry.end();
 	}
 
-	bool AssetRegistry::Contains(const std::filesystem::path& path) const
+	const AssetMetadata& AssetRegistry::Get(const UUID handle) const
 	{
-		const auto key = GetKey(path);
-		return mRegistry.find(key) != mRegistry.end();
+		return mRegistry.at(handle);
 	}
 
-	const AssetMetadata& AssetRegistry::Get(const std::filesystem::path& path) const
+	size_t AssetRegistry::Remove(const UUID handle)
 	{
-		const auto key = GetKey(path);
-		return mRegistry.at(key);
+		return mRegistry.erase(handle);
 	}
 
-	size_t AssetRegistry::Remove(const std::filesystem::path& path)
+	AssetMetadata& AssetRegistry::Get(const UUID handle)
 	{
-		const auto key = GetKey(path);
-		return mRegistry.erase(key);
+		return mRegistry.at(handle);
 	}
 
-	AssetMetadata& AssetRegistry::Get(const std::filesystem::path& path)
+	AssetMetadata& AssetRegistry::operator[](const UUID handle)
 	{
-		const auto key = GetKey(path);
-		return mRegistry.at(key);
-	}
-
-	AssetMetadata& AssetRegistry::operator[](const std::filesystem::path& path)
-	{
-		RB_CORE_ASSERT(!path.string().empty(), "Filepath cannot be empty");
-		const auto key = GetKey(path);
-		return mRegistry[key];
+		return mRegistry[handle];
 	}
 }
 

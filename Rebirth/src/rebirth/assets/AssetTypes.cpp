@@ -35,6 +35,7 @@ namespace rebirth
 		if (type == "Audio") return AssetType_Audio;
 		if (type == "Script") return AssetType_Script;
 		if (type == "Light") return AssetType_Light;
+		if (type == "Scene") return AssetType_Scene;
 
 		return AssetType_None;
 	}
@@ -50,9 +51,21 @@ namespace rebirth
 			case AssetType_Audio: return "Audio";
 			case AssetType_Light: return "Light";
 			case AssetType_Script: return "Script";
+			case AssetType_Scene: return "Scene";
 			default: return "None";
 		}
 	}
 
+	AssetType AssetTypeFromExt(const std::string& ext)
+	{
+		if (ext == "png") return AssetType_Texture;
+		if (ext == "jpg") return AssetType_Texture;
+		if (ext == "jpeg") return AssetType_Texture;
+		if (ext == "rebirth") return AssetType_Scene;
+		if (ext == "cs") return AssetType_Script;
+		if (ext == "atlas") return AssetType_Atlas;
+
+		return AssetType_None;
+	}
 }
 

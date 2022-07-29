@@ -75,4 +75,23 @@ namespace rebirth
 		return nullptr;
 	}
 
+	Reference<Texture2D> Texture2D::Create(const std::string& path, int temp)
+	{
+		switch (Renderer::GetAPI())
+		{
+			case GraphicsAPI::API::NONE:
+			{
+				RB_CORE_ASSERT(false, "Must use a graphics API");
+				return nullptr;
+			}
+
+			case GraphicsAPI::API::OPENGL:
+			{
+				return createReference<OpenGLTexture2D>(path);
+			}
+		}
+
+		RB_CORE_ASSERT(false, "Unknown graphics API");
+		return nullptr;
+	}
 }

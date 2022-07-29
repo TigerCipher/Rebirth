@@ -28,16 +28,18 @@ namespace rebirth
 	{
 		AssetType_None = 0,
 		AssetType_Texture,
+		AssetType_Scene,
 
 		// These are planned future types
 		AssetType_Atlas,
 		AssetType_PhysicsMaterial,
 		AssetType_Audio,
 		AssetType_Light,
-		AssetType_Script
+		AssetType_Script,
 	};
 
 	AssetType AssetTypeFromString(const std::string& type);
 	const char* AssetTypeToString(AssetType type);
+	AssetType AssetTypeFromExt(const std::string& ext);
 }
 

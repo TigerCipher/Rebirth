@@ -25,7 +25,8 @@
 #include <rebirth/core/EntryPoint.h>
 
 //#include "SampleLayer.h"
-#include "Sandbox2D.h"
+//#include "Sandbox2D.h"
+#include "AssetLayer.h"
 
 
 class Sandbox final : public rebirth::Application
@@ -34,9 +35,10 @@ public:
 	Sandbox(rebirth::CommandLineArgs args) : Application({"Sandbox", 1920, 1080}, args)
 	{
 		//PushLayer(new SampleLayer());
-		PushLayer(new Sandbox2D());
+		PushLayer(new rebirth::AssetLayer());
 	}
-	~Sandbox() override = default;
+
+	virtual ~Sandbox() = default;
 
 };
 

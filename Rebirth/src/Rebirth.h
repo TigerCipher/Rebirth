@@ -33,6 +33,8 @@
 // Util
 #include "rebirth/util/PlatformUtil.h"
 #include "rebirth/util/MathUtil.h"
+#include "rebirth/util/File.h"
+#include "rebirth/util/StringUtil.h"
 
 
 // Debug
@@ -63,7 +65,7 @@
 #include "rebirth/renderer/VertexArray.h"
 #include "rebirth/renderer/OrthoCamera.h"
 #include "rebirth/renderer/Framebuffer.h"
-#include "rebirth/renderer/EditorCamera.h"
+#include "rebirth/renderer/EditorCamera.h" // might move this out of here
 
 
 // Scene
@@ -78,6 +80,12 @@
 #include "rebirth/imgui/ImguiLayer.h"
 #include "rebirth/imgui/Panels.h"
 #include "rebirth/imgui/ImguiUtils.h"
+
+// Assets
+#include "rebirth/assets/Asset.h"
+#include "rebirth/assets/AssetLoader.h"
+#include "rebirth/assets/AssetRegistry.h"
+#include "rebirth/assets/AssetManager.h"
 
 
 // Main function

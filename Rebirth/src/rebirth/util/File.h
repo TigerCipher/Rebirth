@@ -15,39 +15,19 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: Texture.h
-// Date File Created: 6/22/2022
+// File Name: File.h
+// Date File Created: 7/29/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
-#include "rebirth/assets/Asset.h"
 
-namespace rebirth
-{
-	class Texture : public Asset
-	{
-	public:
-		virtual ~Texture() = default;
+namespace fs = std::filesystem;
 
-		virtual void Bind(uint32 slot = 0) const = 0;
-		virtual void SetData(void* data, uint32 size) = 0;
-		virtual int GetWidth() const = 0;
-		virtual int GetHeight() const = 0;
-		virtual uint32 GetId() const = 0;
-		virtual const std::string& GetPath() const = 0;
-		virtual bool IsLoaded() const = 0;
-		virtual bool operator==(const Texture& other) const = 0;
-	};
+namespace rebirth::file {
 
-	class Texture2D : public Texture
-	{
-	public:
-		virtual ~Texture2D() = default;
+	bool Exists(const fs::path& path);
 
-		static Ref<Texture2D> Create(const std::string& path);
-		static Ref<Texture2D> Create(uint32 width, uint32 height);
-		static Reference<Texture2D> Create(const std::string& path, int temp);
-
-	};
+	std::string GetFileExtension(const fs::path& path);
 }
+

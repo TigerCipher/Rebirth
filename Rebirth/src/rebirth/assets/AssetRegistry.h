@@ -33,13 +33,13 @@ namespace rebirth
 		AssetRegistry() = default;
 		~AssetRegistry() = default;
 
-		bool Contains(const std::filesystem::path& path) const;
+		bool Contains(const UUID handle) const;
 
-		AssetMetadata& Get(const std::filesystem::path& path);
-		const AssetMetadata& Get(const std::filesystem::path& path) const;
-		AssetMetadata& operator[](const std::filesystem::path& path);
+		AssetMetadata& Get(const UUID handle);
+		const AssetMetadata& Get(const UUID handle) const;
+		AssetMetadata& operator[](const UUID handle);
 
-		size_t Remove(const std::filesystem::path& path);
+		size_t Remove(const UUID handle);
 
 		void Clear() { mRegistry.clear(); }
 
@@ -50,7 +50,7 @@ namespace rebirth
 		auto cbegin() const { return mRegistry.cbegin(); }
 		auto cend() const { return mRegistry.cend(); }
 	private:
-		std::unordered_map<std::filesystem::path, AssetMetadata> mRegistry;
+		std::unordered_map<UUID, AssetMetadata> mRegistry;
 	};
 }
 

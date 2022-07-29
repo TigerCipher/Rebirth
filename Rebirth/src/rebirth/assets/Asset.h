@@ -61,12 +61,11 @@ namespace rebirth
 
 		bool IsValid() const { return mHandle != 0; }
 
+		void SetHandle(UUID handle) { mHandle = handle; }
+		void SetFlags(AssetFlag flags) { mFlags = flags; }
 	protected:
 		UUID mHandle = 0;
 		AssetType mType;
 		AssetFlag mFlags = AssetFlag_None;
-	private:
-		void SetHandle(UUID handle) { mHandle = handle; }
-		void SetFlags(AssetFlag flags) { mFlags = flags; }
 	};
 }
