@@ -2,19 +2,20 @@
 VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 IncludeDir = {}
-IncludeDir["spdlog"] = "%{wks.location}/vendor/deps/spdlog/include"
 IncludeDir["Box2D"] = "%{wks.location}/vendor/deps/box2d/include"
-IncludeDir["GLFW"] = "%{wks.location}/vendor/deps/glfw/include"
-IncludeDir["Glad"] = "%{wks.location}/vendor/deps/Glad/include"
-IncludeDir["ImGui"] = "%{wks.location}/vendor/deps/imgui"
-IncludeDir["glm"] = "%{wks.location}/vendor/deps/glm"
-IncludeDir["stb_image"] = "%{wks.location}/vendor/deps/stb_image"
 IncludeDir["entt"] = "%{wks.location}/vendor/deps/entt/include"
-IncludeDir["yaml_cpp"] = "%{wks.location}/vendor/deps/yaml-cpp/include"
+IncludeDir["Glad"] = "%{wks.location}/vendor/deps/Glad/include"
+IncludeDir["GLFW"] = "%{wks.location}/vendor/deps/glfw/include"
+IncludeDir["glm"] = "%{wks.location}/vendor/deps/glm"
+IncludeDir["ImGui"] = "%{wks.location}/vendor/deps/imgui"
 IncludeDir["ImGuizmo"] = "%{wks.location}/vendor/deps/ImGuizmo"
+IncludeDir["lz4"] = "%{wks.location}/vendor/deps/lz4"
 IncludeDir["shaderc"] = "%{wks.location}/vendor/deps/shaderc/include"
+IncludeDir["spdlog"] = "%{wks.location}/vendor/deps/spdlog/include"
 IncludeDir["SPIRV_Cross"] = "%{wks.location}/vendor/deps/SPIRV-Cross"
+IncludeDir["stb_image"] = "%{wks.location}/vendor/deps/stb_image"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
+IncludeDir["yaml_cpp"] = "%{wks.location}/vendor/deps/yaml-cpp/include"
 
 LibraryDir = {}
 

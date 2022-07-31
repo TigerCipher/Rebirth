@@ -16,7 +16,9 @@ project "Rebirth"
 		"src/**.h",
 		"src/**.cpp",
 		"%{wks.location}/vendor/deps/stb_image/stb_image.cpp",
-		"%{wks.location}/vendor/deps/ImGuizmo/ImGuizmo.cpp"
+		"%{wks.location}/vendor/deps/ImGuizmo/ImGuizmo.cpp",
+		"%{wks.location}/vendor/deps/lz4/lz4.c",
+		"%{wks.location}/vendor/deps/lz4/lz4hc.c",
 	}
 
 	includedirs
@@ -33,6 +35,7 @@ project "Rebirth"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.VulkanSDK}",
+		"%{IncludeDir.lz4}",
 	}
 
 	links
@@ -51,6 +54,8 @@ project "Rebirth"
 		"GLFW_INCLUDE_NONE"
 	}
 	filter "files:../vendor/deps/ImGuizmo/**.cpp"
+		flags {"NoPCH"}
+	filter "files:../vendor/deps/lz4/**.c"
 		flags {"NoPCH"}
 
 	filter "system:windows"

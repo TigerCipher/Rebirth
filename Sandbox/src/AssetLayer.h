@@ -23,6 +23,7 @@
 #pragma once
 
 #include <Rebirth.h>
+#include <rebirth/assets/RbaFile.h>
 
 #include <imgui/imgui.h>
 
@@ -56,6 +57,11 @@ namespace rebirth
 
 			const UUID testTexture = AssetManager::ImportAsset("assets/textures/default.png");
 			mTexture = AssetManager::GetAsset<Texture2D>(testTexture);
+
+			std::string virtualDir = "assets/";
+			RbaFile rbaFile("test.rba");
+			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 256000, true);
+			rbaFile.ExtractRbaFile("exported_assets/");
 
 		}
 		void OnDetach() override{}

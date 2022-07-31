@@ -40,7 +40,7 @@ namespace rebirth
 		if (auto& meta = GetMetadata(path); meta.IsValid())
 			return meta.handle;
 
-		const std::string extension = file::GetFileExtension(path);
+		const std::string extension = file::GetFileExtensionFromPath(path);
 		const AssetType type = AssetTypeFromExt(extension);
 
 		if (type == AssetType_None)

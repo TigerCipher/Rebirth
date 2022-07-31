@@ -26,8 +26,18 @@ namespace fs = std::filesystem;
 
 namespace rebirth::file {
 
+	inline bool IsSlash(const char c)
+	{
+		return c == '\\' || c == '/';
+	}
+
 	bool Exists(const fs::path& path);
 
-	std::string GetFileExtension(const fs::path& path);
+	std::string GetFileName(const std::string& filePath);
+	std::string GetFileNameWithoutExtension(const std::string& filePath);
+	std::string GetFileExtensionFromString(const std::string& filePath);
+	std::string GetFileExtensionFromPath(const fs::path& path);
+	std::string GetDirectoryPath(const std::string& filePath);
+	void FixPath(std::string& path);
 }
 
