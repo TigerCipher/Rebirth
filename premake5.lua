@@ -39,6 +39,7 @@ group "Dependencies"
 	include "vendor/deps/imgui"
 	include "vendor/deps/yaml-cpp"
 	include "vendor/deps/box2d"
+	include "vendor/deps/zlib"
 group ""
 
 include "Rebirth"

@@ -26,7 +26,9 @@
 #include "rebirth/util/File.h"
 
 #include <lz4hc.h>
+#include <zlib.h>
 
+#define ENABLE_COMPRESSION 0
 
 namespace rebirth
 {
@@ -44,13 +46,13 @@ namespace rebirth
 		file::FixPath(virtualDir);
 
 		header.numEntries = 0;
-		header.rbaVersion = (char)mRbaFileVersion;
+		header.rbaVersion = (uint8)mRbaFileVersion;
 		header.contentVersion = contentVersion;
 
 		std::vector<char> dataBuffer;
 		std::vector<RbaFileEntry> fileEntries;
 
-		uint32 compressBias = minCompressBias > mMinCompressionFileSize ? minCompressBias : mMinCompressionFileSize;
+		uint32 compressBias = minCompressBias > 0 ? minCompressBias : mMinCompressionFileSize;
 
 		for (auto& dirEntry : std::filesystem::recursive_directory_iterator(srcDir))
 		{
@@ -81,16 +83,17 @@ namespace rebirth
 			std::vector<char> fileData;
 			fileData.resize(rbaFileEntry.uncompressedSize);
 			filestream.read(fileData.data(), rbaFileEntry.uncompressedSize);
-
+#if ENABLE_COMPRESSION
 			if (rbaFileEntry.compressed)
 			{
-				std::vector<char> compressedData;
-				if (bool res = Compress(fileData.data(), fileData.size(), hq, compressedData); !res) return res;
-				rbaFileEntry.compressedSize = (uint32)compressedData.size();
+				std::vector<Bytef> compressedData;
+				if (bool res = Compress(fileData.data(), fileData.size(), hq, compressedData, (unsigned long&)rbaFileEntry.compressedSize); !res) return res;
+				//rbaFileEntry.compressedSize = (uint32)compressedData.size();
 				dataBuffer.insert(dataBuffer.end(), compressedData.data(), compressedData.data() + compressedData.size());
-				RB_CORE_INFO("Compressed File [{}]. Uncompressed Size = {}, Compressed Size = {}", rbaFileEntry.filepath, rbaFileEntry.uncompressedSize, rbaFileEntry.compressedSize);
+				RB_CORE_WARN("Compressed File [{}]. Uncompressed Size = {}, Compressed Size = {} -- {}", rbaFileEntry.filepath, rbaFileEntry.uncompressedSize, rbaFileEntry.compressedSize, compressedData.size());
 			}
 			else
+#endif
 			{
 				rbaFileEntry.compressedSize = rbaFileEntry.uncompressedSize;
 				dataBuffer.insert(dataBuffer.end(), fileData.begin(), fileData.end());
@@ -142,64 +145,61 @@ namespace rebirth
 		for (int i = 0; i < header.numEntries; i++)
 		{
 			RbaFileEntry& entry = pEntries[i];
-			//pakFile.seekg(entry.Offset);
+			//rbaFileStream.seekg(entry.Offset);
 			std::vector<char> buffer;
+#if ENABLE_COMPRESSION
 			if (entry.compressed)
 			{
-				std::vector<char> compressedBuffer(entry.compressedSize);
+				std::vector<uint8> compressedBuffer(entry.compressedSize);
 				rbaFileStream.read(buffer.data(), buffer.size());
-				if (!Decompress(compressedBuffer.data(), compressedBuffer.size(), entry.uncompressedSize, buffer))
+				if (!Decompress(compressedBuffer.data(), compressedBuffer.size(), (unsigned long*)&entry.uncompressedSize, buffer))
 				{
-					RB_CORE_ERROR("Failed to decompress file {}", rbaFile);
+					RB_CORE_ERROR("Failed to decompress file {}. Uncompressed Size: {} -- {}, Compressed Size: {}",
+						entry.filepath, entry.uncompressedSize, buffer.size(), entry.compressedSize);
+					delete[] pEntries;
 					return false;
 				}
 			}
 			else
+#endif
 			{
 				buffer.resize(entry.uncompressedSize);
 				rbaFileStream.read(buffer.data(), buffer.size());
 			}
-			//CreateDirectoryA((outputPath + Paths::GetDirectoryPath(entry.filepath)).c_str(), nullptr);
 			std::filesystem::create_directories(destDir + file::GetDirectoryPath(entry.filepath));
 			std::ofstream outputStream(destDir + entry.filepath, std::ios::binary);
 			if (outputStream.fail())
 			{
 				RB_CORE_ERROR("Failed to create file {}", destDir + entry.filepath);
+				delete[] pEntries;
 				return false;
 			}
 
 			RB_CORE_INFO("Extracting [{}] to [{}]", entry.filepath, destDir + entry.filepath);
 			outputStream.write(buffer.data(), buffer.size());
 		}
+		delete[] pEntries;
 		return true;
 	}
 
-	bool RbaFile::Compress(void* inData, const size_t inDataSize, const bool hc, std::vector<char>& outData)
+	// TODO #FIXME: Compression seems to work fine? But decompression is broken as hell. For now, these shall be disabled
+
+	bool RbaFile::Compress(const char* inData, const size_t inDataSize, const bool hc, std::vector<uint8>& outData, unsigned long& compressedSize)
 	{
-		const int maxDstSize = LZ4_compressBound((int)inDataSize);
-		outData.resize((size_t)maxDstSize);
-
-		if (hc)
-		{
-			const int compressDataSize = LZ4_compress_HC((const char*)inData, outData.data(), (int)inDataSize, maxDstSize, LZ4HC_CLEVEL_MAX);
-			if (compressDataSize < 0) return false;
-			outData.resize((size_t)compressDataSize);
-		}
-		else
-		{
-			const int compressDataSize = LZ4_compress_default((const char*)inData, outData.data(), (int)inDataSize, maxDstSize);
-			if (compressDataSize < 0) return false;
-			outData.resize((size_t)compressDataSize);
-		}
-
-		return true;
+		compressedSize = compressBound(inDataSize);
+		outData.resize(compressedSize);
+		int ret = compress(outData.data(), &compressedSize, (uint8*)inData, inDataSize);
+		//Z_MEM_ERROR = -4
+		//Z_BUF_ERROR = -5
+		//Z_DATA_ERROR = -3
+		return ret == Z_OK;
 	}
 
-	bool RbaFile::Decompress(const void* inData, size_t compressedSize, size_t uncompressedSize,
+	bool RbaFile::Decompress(const uint8* inData, size_t compressedSize, unsigned long* uncompressedSize,
 		std::vector<char>& outData)
 	{
-		outData.resize(uncompressedSize);
-		const int decompressedSize = LZ4_decompress_safe((const char*)inData, outData.data(), (int)compressedSize, (int)uncompressedSize);
-		return decompressedSize > 0;
+		outData.resize(*uncompressedSize + 10000);
+		int ret = uncompress((uint8*)outData.data(), uncompressedSize, inData, compressedSize);
+		return ret == Z_OK;
 	}
 }

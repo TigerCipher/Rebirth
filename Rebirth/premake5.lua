@@ -17,8 +17,7 @@ project "Rebirth"
 		"src/**.cpp",
 		"%{wks.location}/vendor/deps/stb_image/stb_image.cpp",
 		"%{wks.location}/vendor/deps/ImGuizmo/ImGuizmo.cpp",
-		"%{wks.location}/vendor/deps/lz4/lz4.c",
-		"%{wks.location}/vendor/deps/lz4/lz4hc.c",
+		"%{wks.location}/vendor/deps/lz4/*.c",
 	}
 
 	includedirs
@@ -36,6 +35,7 @@ project "Rebirth"
 		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.VulkanSDK}",
 		"%{IncludeDir.lz4}",
+		"%{IncludeDir.zlib}",
 	}
 
 	links
@@ -45,6 +45,7 @@ project "Rebirth"
 		"Glad",
 		"ImGui",
 		"yaml-cpp",
+		"zlib",
 		"opengl32.lib"
 	}
 

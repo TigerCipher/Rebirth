@@ -16,6 +16,7 @@ IncludeDir["SPIRV_Cross"] = "%{wks.location}/vendor/deps/SPIRV-Cross"
 IncludeDir["stb_image"] = "%{wks.location}/vendor/deps/stb_image"
 IncludeDir["VulkanSDK"] = "%{VULKAN_SDK}/Include"
 IncludeDir["yaml_cpp"] = "%{wks.location}/vendor/deps/yaml-cpp/include"
+IncludeDir["zlib"] = "%{wks.location}/vendor/deps/zlib"
 
 LibraryDir = {}
 

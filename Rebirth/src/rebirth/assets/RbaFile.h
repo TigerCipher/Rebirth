@@ -60,8 +60,8 @@ namespace rebirth
 
 	private:
 
-		bool Compress(void* inData, size_t inDataSize, bool hc, std::vector<char>& outData);
-		bool Decompress(const void* inData, size_t compressedSize, size_t uncompressedSize, std::vector<char>& outData);
+		bool Compress(const char* inData, size_t inDataSize, bool hc, std::vector<uint8>& outData, unsigned long& compressedSize);
+		bool Decompress(const uint8* inData, size_t compressedSize, unsigned long* uncompressedSize, std::vector<char>& outData);
 
 		std::string mFilepath;
 		uint32 mMinCompressionFileSize = 524288;
