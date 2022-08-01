@@ -43,32 +43,30 @@ namespace rebirth
 		{
 			char filepath[256]{};
 			bool compressed = false;
-			uint32 uncompressedSize = 0;
-			uint32 compressedSize = 0;
+			ulong uncompressedSize = 0;
+			ulong compressedSize = 0;
 			uint32 offset = 0;
 		};
 
 	public:
 
 		RbaFile(const std::string& filepath, const uint32 rbaFileVersion = RBA_NEWEST_VERSION, const uint32 minCompressionSize = 524288) :
-			mFilepath(filepath), mRbaFileVersion(rbaFileVersion), mMinCompressionFileSize(minCompressionSize) {}
+			mFilepath(filepath), mMinCompressionFileSize(minCompressionSize), mRbaFileVersion(rbaFileVersion) {}
 
 		bool CreateRbaFile(const std::string& srcDir, std::string& virtualDir,
-			uint8 contentVersion, bool compress, uint32 minCompressBias, bool hq = true);
+			uint8 contentVersion, bool compress, uint32 minCompressBias);
 
 		bool ExtractRbaFile(const std::string& destDir);
 
-		static void TestCompressDecompress();
-		static void TestCompressNoFile();
 
 	private:
 
-		bool Compress(const char* inData, size_t inDataSize, bool hc, std::vector<uint8>& outData, unsigned long& compressedSize);
-		bool Decompress(const uint8* inData, size_t compressedSize, unsigned long* uncompressedSize, std::vector<char>& outData);
+		bool Compress(const byte* srcData, ulong srcDataSize, std::vector<byte>& destData, ulong* compressedSize);
+		bool Decompress(const byte* srcData, ulong compressedSize, ulong* uncompressedSize, std::vector<byte>& destData);
 
 		std::string mFilepath;
 		uint32 mMinCompressionFileSize = 524288;
-		uint32 mRbaFileVersion = RBA_NEWEST_VERSION;
+		uint8 mRbaFileVersion = RBA_NEWEST_VERSION;
 		
 	};
 }

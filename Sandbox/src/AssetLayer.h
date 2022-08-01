@@ -60,10 +60,8 @@ namespace rebirth
 
 			std::string virtualDir = "assets/";
 			RbaFile rbaFile("test.rba");
-			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 512000, true);
+			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
 			rbaFile.ExtractRbaFile("exported_assets/");
-			RbaFile::TestCompressDecompress();
-			//RbaFile::TestCompressNoFile();
 
 		}
 		void OnDetach() override{}
@@ -76,6 +74,7 @@ namespace rebirth
 		{
 			ImGui::Begin("Test");
 
+			//UI::Image(mTexture, { 512, 512 });
 			ImGui::Image(reinterpret_cast<ImTextureID>(mTexture->GetId()), { 512, 512 }, { 0, 1 }, { 1, 0 });
 
 			ImGui::End();

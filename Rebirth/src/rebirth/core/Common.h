@@ -56,6 +56,8 @@ namespace rebirth
 	using int64 = int64_t;
 
 	using byte = unsigned char;
+
+	using ulong = unsigned long;
 }
 
 // Smart Pointers (might move)
