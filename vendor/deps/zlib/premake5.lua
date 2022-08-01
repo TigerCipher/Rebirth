@@ -1,5 +1,5 @@
 project "zlib"
-kind "StaticLib"
+kind "SharedLib"
 language "C"
 staticruntime "on"
 systemversion "latest"
@@ -11,6 +11,11 @@ files
 {
     "*.c",
     "*.h"
+}
+
+defines
+{
+    "ZLIB_DLL"
 }
 
 filter "system:windows"

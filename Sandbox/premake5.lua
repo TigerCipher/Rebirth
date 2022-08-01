@@ -42,7 +42,7 @@ project "Sandbox"
 		postbuildcommands
 		{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-		--	"{COPY} \"%{IncludeDir.zlib}/bin/Debug-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
+			"{COPY} \"%{IncludeDir.zlib}/bin/Debug-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
 		}
 
 	filter "configurations:Release"
@@ -52,7 +52,7 @@ project "Sandbox"
 		postbuildcommands
 		{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
---			"{COPY} \"%{IncludeDir.zlib}/bin/Release-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
+			"{COPY} \"%{IncludeDir.zlib}/bin/Release-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
 		}
 
 	filter "configurations:Dist"
