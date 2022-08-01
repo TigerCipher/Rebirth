@@ -1,5 +1,5 @@
 project "zlib"
-kind "StaticLib"
+kind "SharedLib"
 language "C"
 staticruntime "on"
 systemversion "latest"
@@ -12,6 +12,12 @@ files
     "*.c",
     "*.h"
 }
+
+filter "system:windows"
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
 
 filter "configurations:Release"
     runtime "Release"

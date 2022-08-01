@@ -34,7 +34,6 @@ project "Rebirth"
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.VulkanSDK}",
-		"%{IncludeDir.lz4}",
 		"%{IncludeDir.zlib}",
 	}
 

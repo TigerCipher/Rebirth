@@ -25,7 +25,6 @@
 
 #include "rebirth/util/File.h"
 
-#include <lz4hc.h>
 #include <zlib.h>
 
 #define ENABLE_COMPRESSION 1
