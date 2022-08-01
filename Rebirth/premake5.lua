@@ -16,8 +16,7 @@ project "Rebirth"
 		"src/**.h",
 		"src/**.cpp",
 		"%{wks.location}/vendor/deps/stb_image/stb_image.cpp",
-		"%{wks.location}/vendor/deps/ImGuizmo/ImGuizmo.cpp",
-		"%{wks.location}/vendor/deps/lz4/*.c",
+		"%{wks.location}/vendor/deps/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	includedirs

@@ -136,7 +136,6 @@ namespace rebirth
 			case RigidBody2DComponent::BodyType::STATIC: return "Static";
 			case RigidBody2DComponent::BodyType::DYNAMIC: return "Dynamic";
 			case RigidBody2DComponent::BodyType::KINEMATIC: return "Kinematic";
-			default: break;
 		}
 
 		RB_CORE_ASSERT(false, "Unknown rigid body type");
@@ -448,7 +447,7 @@ namespace rebirth
 
 	void SceneSerializer::SerializeToBinary(const std::string& filepath)
 	{
-		RB_CORE_ASSERT(false, "Not yet implemented");
+		throw std::logic_error("Method not yet implemented");
 	}
 
 	bool SceneSerializer::DeserializeFromYaml(const std::string& filepath)

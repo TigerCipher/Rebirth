@@ -1,5 +1,5 @@
 project "zlib"
-kind "SharedLib"
+kind "StaticLib"
 language "C"
 staticruntime "on"
 systemversion "latest"

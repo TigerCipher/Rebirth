@@ -43,13 +43,20 @@ project "Rebirth-Reedit"
 
 		postbuildcommands
 		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\""
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
+	--		"{COPY} \"%{IncludeDir.zlib}/bin/Debug-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
 		}
 
 	filter "configurations:Release"
 		defines "RB_RELEASE"
 		optimize "on"
 		runtime "Release"
+
+		postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
+	--		"{COPY} \"%{IncludeDir.zlib}/bin/Release-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
+		}
 
 	filter "configurations:Dist"
 		defines "RB_DIST"

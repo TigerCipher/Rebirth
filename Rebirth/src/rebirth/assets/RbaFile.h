@@ -50,11 +50,11 @@ namespace rebirth
 
 	public:
 
-		RbaFile(const std::string& filepath, const uint32 rbaFileVersion = RBA_NEWEST_VERSION, const uint32 minCompressionSize = 524288) :
-			mFilepath(filepath), mMinCompressionFileSize(minCompressionSize), mRbaFileVersion(rbaFileVersion) {}
+		RbaFile(const std::string& filepath, const uint8 rbaFileVersion = RBA_NEWEST_VERSION) :
+			mFilepath(filepath), mRbaFileVersion(rbaFileVersion) {}
 
 		bool CreateRbaFile(const std::string& srcDir, std::string& virtualDir,
-			uint8 contentVersion, bool compress, uint32 minCompressBias);
+			uint8 contentVersion, bool compress = true, uint32 minCompressBias = 0);
 
 		bool ExtractRbaFile(const std::string& destDir);
 
