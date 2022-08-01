@@ -28,7 +28,7 @@
 #include <lz4hc.h>
 #include <zlib.h>
 
-#define ENABLE_COMPRESSION 0
+#define ENABLE_COMPRESSION 1
 
 namespace rebirth
 {
@@ -146,19 +146,20 @@ namespace rebirth
 		{
 			RbaFileEntry& entry = pEntries[i];
 			//rbaFileStream.seekg(entry.Offset);
-			std::vector<char> buffer;
+			std::vector<char> buffer(entry.uncompressedSize);
 #if ENABLE_COMPRESSION
 			if (entry.compressed)
 			{
-				std::vector<uint8> compressedBuffer(entry.compressedSize);
-				rbaFileStream.read(buffer.data(), buffer.size());
-				if (!Decompress(compressedBuffer.data(), compressedBuffer.size(), (unsigned long*)&entry.uncompressedSize, buffer))
+				std::vector<char> compressedBuffer(entry.compressedSize);
+				rbaFileStream.read(compressedBuffer.data(), compressedBuffer.size());
+				if (!Decompress((uint8*)compressedBuffer.data(), compressedBuffer.size(), (unsigned long*)&entry.uncompressedSize, buffer))
 				{
 					RB_CORE_ERROR("Failed to decompress file {}. Uncompressed Size: {} -- {}, Compressed Size: {}",
 						entry.filepath, entry.uncompressedSize, buffer.size(), entry.compressedSize);
 					delete[] pEntries;
 					return false;
 				}
+				//rbaFileStream.read(buffer.data(), buffer.size());
 			}
 			else
 #endif
@@ -182,6 +183,141 @@ namespace rebirth
 		return true;
 	}
 
+	void RbaFile::TestCompressDecompress()
+	{
+		unsigned long uncompressedSize = 15000000;
+		std::vector<char> origData;
+		origData.resize(uncompressedSize);
+		int i = 1;
+		for(auto& d : origData)
+		{
+			d = (char)i++;
+		}
+
+		std::ofstream outFile("testcompression.txt", std::ios::binary);
+		if(outFile.fail())
+		{
+			RB_CORE_ERROR("Failed to write outfile");
+			return;
+		}
+
+		outFile.write(origData.data(), origData.size());
+		outFile.close();
+
+		RB_CORE_WARN("Orig data size: {}", origData.size());
+
+		std::vector<uint8> compressedData;
+		unsigned long compressedSize = compressBound(origData.size());
+		RB_CORE_WARN("Compress Bound: {}", compressedSize);
+		compressedData.resize(compressedSize);
+		int err;
+		err = compress(compressedData.data(), &compressedSize, (uint8*)origData.data(), uncompressedSize);
+		if(err != Z_OK)
+		{
+			RB_CORE_ERROR("Failed to compress error code {}", err);
+			return;
+		}
+
+		RB_CORE_WARN("New compressed size: {} .... compressed data size: {}", compressedSize, compressedData.size());
+
+		std::ofstream outCompr("compressed_testcompression.txt", std::ios::binary);
+
+		outCompr.write((char*)compressedData.data(), compressedSize);
+		outCompr.close();
+
+		std::ifstream inCompr("compressed_testcompression.txt", std::ios::binary);
+
+		std::vector<char> decompressedData;
+		decompressedData.resize(compressedSize);
+		inCompr.read(decompressedData.data(), decompressedData.size());
+		inCompr.close();
+
+		RB_CORE_WARN("Uncompressed Size: {}, Decompressed Data size: {}", uncompressedSize, decompressedData.size());
+		std::vector<char> uncompressedData;
+		uncompressedData.resize(uncompressedSize);
+		err = uncompress((uint8*)uncompressedData.data(), &uncompressedSize, (uint8*)decompressedData.data(), decompressedData.size());
+
+		if(err != Z_OK)
+		{
+			RB_CORE_ERROR("Failed to decompress error code {}", err);
+			return;
+		}
+
+		RB_CORE_WARN("Uncompressed size: {}, Uncompressed Data size: {}", uncompressedSize, uncompressedData.size());
+
+		std::ofstream newlyuncompressed("new_compressiontest.txt", std::ios::binary);
+		newlyuncompressed.write(uncompressedData.data(), uncompressedSize);
+		newlyuncompressed.close();
+
+	}
+
+	void RbaFile::TestCompressNoFile()
+	{
+		constexpr unsigned long ucs = 15000000;
+		unsigned long uncompressedSize = ucs;
+		std::vector<char> origData(ucs);
+		//char* origData = new char[ucs];
+		for(int i = 0; i < ucs; i++)
+		{
+			origData[i] = 'A';
+		}
+
+		std::ofstream origFile("original.txt", std::ios::binary);
+		origFile.write(origData.data(), origData.size());
+		origFile.close();
+
+		// Compression
+		unsigned long compressedSize = compressBound(uncompressedSize);
+		RB_CORE_WARN("Compress Bound: {}", compressedSize);
+		std::vector<char> compressedData(compressedSize);
+		//char* compressedData = new char[compressedSize];
+		int err;
+		err = compress((uint8*)compressedData.data(), &compressedSize, (uint8*)origData.data(), uncompressedSize);
+		if (err != Z_OK)
+		{
+			RB_CORE_ERROR("Failed to compress error code {}", err);
+			//delete[] origData;
+			//delete[] compressedData;
+			return;
+		}
+
+		std::ofstream compressedFile("compressed.txt", std::ios::binary);
+		compressedFile.write(compressedData.data(), compressedSize);
+		compressedFile.close();
+
+		RB_CORE_WARN("New compressed size: {} .... compressed data size: {}", compressedSize, compressedData.size());
+
+		// Read from compressed file - srcData
+		std::vector<char> srcData(compressedSize);
+		std::ifstream compressedFileReader("compressed.txt", std::ios::binary);
+		compressedFileReader.read(srcData.data(), srcData.size());
+		compressedFileReader.close();
+
+		// Decompression
+		std::vector<char> uncompressedData(ucs);
+		//char* uncompressedData = new char[ucs];
+		err = uncompress((uint8*)uncompressedData.data(), &uncompressedSize, (uint8*)srcData.data(), srcData.size());
+
+		if (err != Z_OK)
+		{
+			RB_CORE_ERROR("Failed to decompress error code {}", err);
+			//delete[] uncompressedData;
+			//delete[] origData;
+			//delete[] compressedData;
+			return;
+		}
+
+		RB_CORE_WARN("Uncompressed Size: {}, data size: {}", uncompressedSize, uncompressedData.size());
+
+		std::ofstream uncompressedFile("uncompressed.txt", std::ios::binary);
+		uncompressedFile.write(uncompressedData.data(), uncompressedData.size());
+		uncompressedFile.close();
+
+		//delete[] uncompressedData;
+		//delete[] origData;
+		//delete[] compressedData;
+	}
+
 	// TODO #FIXME: Compression seems to work fine? But decompression is broken as hell. For now, these shall be disabled
 
 	bool RbaFile::Compress(const char* inData, const size_t inDataSize, const bool hc, std::vector<uint8>& outData, unsigned long& compressedSize)
@@ -198,7 +334,8 @@ namespace rebirth
 	bool RbaFile::Decompress(const uint8* inData, size_t compressedSize, unsigned long* uncompressedSize,
 		std::vector<char>& outData)
 	{
-		outData.resize(*uncompressedSize + 10000);
+		RB_CORE_WARN("Uncomp size: {}.... Compr size: {}", *uncompressedSize, compressedSize);
+		//outData.resize(*uncompressedSize);
 		int ret = uncompress((uint8*)outData.data(), uncompressedSize, inData, compressedSize);
 		return ret == Z_OK;
 	}

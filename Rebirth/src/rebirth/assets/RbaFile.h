@@ -58,6 +58,9 @@ namespace rebirth
 
 		bool ExtractRbaFile(const std::string& destDir);
 
+		static void TestCompressDecompress();
+		static void TestCompressNoFile();
+
 	private:
 
 		bool Compress(const char* inData, size_t inDataSize, bool hc, std::vector<uint8>& outData, unsigned long& compressedSize);

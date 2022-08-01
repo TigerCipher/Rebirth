@@ -61,7 +61,9 @@ namespace rebirth
 			std::string virtualDir = "assets/";
 			RbaFile rbaFile("test.rba");
 			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 512000, true);
-			//rbaFile.ExtractRbaFile("exported_assets/");
+			rbaFile.ExtractRbaFile("exported_assets/");
+			RbaFile::TestCompressDecompress();
+			//RbaFile::TestCompressNoFile();
 
 		}
 		void OnDetach() override{}
