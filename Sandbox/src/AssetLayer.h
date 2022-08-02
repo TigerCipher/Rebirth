@@ -23,7 +23,7 @@
 #pragma once
 
 #include <Rebirth.h>
-#include <rebirth/assets/RbaFile.h>
+#include <rebirth/filesystem/RbaFile.h>
 
 #include <imgui/imgui.h>
 

@@ -39,6 +39,9 @@ namespace rebirth
 			uint8 numEntries = 0;
 		};
 
+		// #TODO: Might be a good idea to make this be the asset metadata?
+		// Metadata would then store this, plus the UUID perhaps
+		// Metadata for a file really shouldn't have a loaded flag, the asset itself should
 		struct RbaFileEntry
 		{
 			char filepath[256]{};
