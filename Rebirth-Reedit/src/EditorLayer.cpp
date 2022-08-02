@@ -628,7 +628,7 @@ namespace rebirth
 			if (ImGuizmo::IsUsing())
 			{
 				glm::vec3 translation, rotation, scale;
-				Math::Decompose(transform, translation, rotation, scale);
+				math::Decompose(transform, translation, rotation, scale);
 				glm::vec3 deltaRot = rotation - tc.rotation;
 				tc.translation = translation;
 				tc.rotation += deltaRot;

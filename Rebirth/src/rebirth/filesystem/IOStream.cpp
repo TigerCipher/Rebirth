@@ -15,18 +15,23 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: InputStream.cpp
+// File Name: IOStream.cpp
 // Date File Created: 8/2/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 
 #include "rbpch.h"
-#include "InputStream.h"
-
+#include "IOStream.h"
+#include "rebirth/util/MathUtil.h"
 
 namespace rebirth
 {
+
+	////////////////////////////////////////////////////////////////////////////
+	// InputStream Implementations /////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
+
 	size_t InputStream::ReadFrom(void* dest, size_t from, size_t size)
 	{
 		SetPointer(from);
@@ -59,7 +64,7 @@ namespace rebirth
 	std::string InputStream::ReadString()
 	{
 		std::stringstream ss;
-		while(!IsEndOfFile())
+		while (!IsEndOfFile())
 		{
 			char c = ReadChar();
 			if (c == '\0') return ss.str();
@@ -118,10 +123,10 @@ namespace rebirth
 		uint32 currentLength = 0;
 
 		// while(true) // Visual studio seems to give annoying warning for constant expression while loops
-		for(;;)
+		for (;;)
 		{
 			// Reached end of file
-			if(const size_t read = Read(&out[currentLength], 1); read == 0)
+			if (const size_t read = Read(&out[currentLength], 1); read == 0)
 			{
 				out.resize(currentLength);
 				return currentLength > 0;
@@ -130,7 +135,7 @@ namespace rebirth
 			// Windows newlines are \r\n
 			if (out[currentLength] == '\r')
 				continue;
-			if(out[currentLength] == delimiter)
+			if (out[currentLength] == delimiter)
 			{
 				out.resize(currentLength);
 				return true;
@@ -156,4 +161,67 @@ namespace rebirth
 		mFilePointer = mSize - position;
 		return true;
 	}
+
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// OutputStream Implementations ////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
+
+
+	bool OutputStream::WriteString(const std::string& str)
+	{
+		return Write(str.data(), str.size() + 1) == str.size() + 1;
+	}
+
+	bool OutputStream::WriteSizedString(const std::string& str)
+	{
+		if (!WriteByte((byte)str.size()))
+			return false;
+		if (!Write(str.data(), str.size()))
+			return false;
+		return true;
+	}
+
+	bool OutputStream::WriteLine(const std::string& line)
+	{
+#ifdef RB_PLATFORM_WINDOWS
+		return Write(line.c_str(), line.size()) && WriteByte((byte)'\r') && WriteByte((byte)'\n');
+#else
+		return Write(line.c_str(), line.size()) && WriteByte((byte)'\n');
+#endif
+	}
+
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// MemoryStream Implementations ////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
+
+
+
+	size_t MemoryStream::Write(const void* data, const size_t size)
+	{
+		RB_CORE_ASSERT(mFilePointer + size < mSize);
+
+		memcpy(Current(), data, size);
+		mFilePointer += size;
+
+		return size;
+	}
+
+	size_t MemoryStream::Read(void* dest, const size_t size)
+	{
+		const size_t s = math::Clamp(size, mSize, (size_t)0);
+		memcpy(dest, Current(), s);
+		mFilePointer += s;
+		return s;
+	}
+
+	void* MemoryStream::Current() const
+	{
+		return (char*)mBuffer + mFilePointer;
+	}
 }
+

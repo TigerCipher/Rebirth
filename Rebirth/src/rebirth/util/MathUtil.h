@@ -24,12 +24,28 @@
 
 #include <glm/glm.hpp>
 
-namespace rebirth
+namespace rebirth::math
 {
-	class Math
+	bool Decompose(const glm::mat4& transform, glm::vec3& outTranslation, glm::vec3& outRotation, glm::vec3& outScale);
+
+	template<typename T>
+	constexpr T Clamp(const T value, const T high, const T low)
 	{
-	public:
-		static bool Decompose(const glm::mat4& transform, glm::vec3& outTranslation, glm::vec3& outRotation, glm::vec3& outScale);
-	};
+		if (value > high) return high;
+		if (value < low) return low;
+		return value;
+	}
+
+	std::string ToBase(uint32 number, uint32 base);
+
+	inline std::string ToBinary(const uint32 number)
+	{
+		return ToBase(number, 2);
+	}
+
+	inline std::string ToHex(const uint32 number)
+	{
+		return ToBase(number, 16);
+	}
 }
 

@@ -26,10 +26,10 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 
-namespace rebirth
+namespace rebirth::math
 {
 
-	bool Math::Decompose(const glm::mat4& transform, glm::vec3& outTranslation, glm::vec3& outRotation, glm::vec3& outScale)
+	bool Decompose(const glm::mat4& transform, glm::vec3& outTranslation, glm::vec3& outRotation, glm::vec3& outScale)
 	{
 				// From glm::decompose in matrix_decompose.inl
 
@@ -57,7 +57,8 @@ namespace rebirth
 		outTranslation = vec3(LocalMatrix[3]);
 		LocalMatrix[3] = vec4(0, 0, 0, LocalMatrix[3].w);
 
-		vec3 Row[3], Pdum3 = {};
+		vec3 Row[3] = {};
+		//vec3 Pdum3 = {};
 
 		// Now get scale and shear.
 		for (length_t i = 0; i < 3; ++i)
@@ -99,6 +100,34 @@ namespace rebirth
 
 
 		return true;
+	}
+
+	std::string ToBase(uint32 number, uint32 base)
+	{
+		std::stringstream ss;
+		uint32 count = 0;
+		while(number != 0)
+		{
+			uint32 mod = number % base;
+			if (mod > 9)
+				ss << (char)('A' + mod - 10);
+			else
+				ss << mod;
+			number /= base;
+			++count;
+		}
+
+		for(count; count <= 8; ++count)
+		{
+			ss << '0';
+		}
+
+		if (base == 2)
+			ss << "b0";
+		else if (base == 8)
+			ss << "c0";
+		else if (base == 16)
+			ss << "x0";
 	}
 
 }
