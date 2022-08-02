@@ -31,6 +31,11 @@ project "Sandbox"
 
 	filter "system:windows"
 		systemversion "latest"
+		postbuildcommands
+		{
+			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
+			"{COPY} \"%{IncludeDir.zlib}/bin/" .. outputdir .. "/zlib/*.dll\" \"%{cfg.targetdir}\""
+		}
 
 	filter "configurations:Debug"
 		defines
@@ -39,21 +44,11 @@ project "Sandbox"
 		}
 		symbols "on"
 		runtime "Debug"
-		postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-			"{COPY} \"%{IncludeDir.zlib}/bin/Debug-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
-		}
 
 	filter "configurations:Release"
 		defines "RB_RELEASE"
 		optimize "on"
 		runtime "Release"
-		postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-			"{COPY} \"%{IncludeDir.zlib}/bin/Release-windows-x86_64/zlib/zlib.dll\" \"%{cfg.targetdir}\"",
-		}
 
 	filter "configurations:Dist"
 		defines "RB_DIST"
