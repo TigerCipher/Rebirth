@@ -128,6 +128,8 @@ namespace rebirth::math
 			ss << "c0";
 		else if (base == 16)
 			ss << "x0";
+
+		return ss.str();
 	}
 
 }
