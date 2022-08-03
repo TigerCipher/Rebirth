@@ -27,15 +27,16 @@
 
 #include <string>
 
+enum FileMode : rebirth::uint8
+{
+	FileMode_None = BIT(0),
+	FileMode_Read = BIT(1),
+	FileMode_Write = BIT(2),
+	FileMode_Append = BIT(3)
+};
+
 namespace rebirth
 {
-	enum FileMode : uint8
-	{
-		FileMode_None = BIT(0),
-		FileMode_Read = BIT(1),
-		FileMode_Write = BIT(2),
-		FileMode_Append = BIT(3)
-	};
 
 	enum class ContentType
 	{
