@@ -23,7 +23,7 @@
 #include "rbpch.h"
 #include "RbaFile.h"
 
-#include "rebirth/util/File.h"
+#include "rebirth/util/FileUtil.h"
 
 #include <zlib.h>
 

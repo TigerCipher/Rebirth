@@ -23,7 +23,6 @@
 #pragma once
 
 #include <Rebirth.h>
-#include <rebirth/filesystem/RbaFile.h>
 
 #include <imgui/imgui.h>
 
@@ -60,8 +59,36 @@ namespace rebirth
 
 			std::string virtualDir = "assets/";
 			RbaFile rbaFile("test.rba");
-			rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
+			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
 			//rbaFile.ExtractRbaFile("exported_assets/");
+
+			PhysicalFile testFile("test/dir/just_a_test.txt");
+			if(testFile.OpenWrite(false, true))
+			{
+				testFile.WriteLine("Testing out the writing line method");
+				testFile.WriteFloat(3.2343545f);
+
+				std::vector<byte> testVec(50);
+				for(auto& t : testVec)
+				{
+					t = '@';
+				}
+
+				testFile.Write(testVec.data(), testVec.size());
+
+				std::vector<byte> readVec;
+				testFile.ReadAllBytes(readVec);
+
+				for (const auto& b : readVec)
+				{
+					fmt::print("{}", (char)b);
+				}
+
+			}
+			else
+			{
+				RB_CORE_ERROR("Failed to open file");
+			}
 
 		}
 		void OnDetach() override{}

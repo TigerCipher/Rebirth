@@ -117,10 +117,15 @@ namespace rebirth::math
 			++count;
 		}
 
-		for(count; count <= 8; ++count)
+		while(count <= 8)
 		{
 			ss << '0';
+			++count;
 		}
+		//for(count; count <= 8; ++count)
+		//{
+		//	ss << '0';
+		//}
 
 		if (base == 2)
 			ss << "b0";

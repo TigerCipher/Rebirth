@@ -89,7 +89,7 @@ namespace rebirth
 	};
 
 
-	class IOStream : public InputStream, OutputStream
+	class IOStream : public InputStream, public OutputStream
 	{
 	public:
 		IOStream() = default;

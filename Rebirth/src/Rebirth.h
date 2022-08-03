@@ -33,7 +33,7 @@
 // Util
 #include "rebirth/util/PlatformUtil.h"
 #include "rebirth/util/MathUtil.h"
-#include "rebirth/util/File.h"
+#include "rebirth/util/FileUtil.h"
 #include "rebirth/util/StringUtil.h"
 
 
@@ -86,6 +86,15 @@
 #include "rebirth/assets/AssetLoader.h"
 #include "rebirth/assets/AssetRegistry.h"
 #include "rebirth/assets/AssetManager.h"
+
+
+// Filesystem
+#include "rebirth/filesystem/IOStream.h"
+#include "rebirth/filesystem/MountPoint.h"
+#include "rebirth/filesystem/IOStream.h"
+#include "rebirth/filesystem/File.h"
+#include "rebirth/filesystem/PhysicalFile.h"
+#include "rebirth/filesystem/RbaFile.h"
 
 
 // Main function

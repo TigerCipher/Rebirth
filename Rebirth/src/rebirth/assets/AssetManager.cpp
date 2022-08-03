@@ -22,7 +22,7 @@
 // ------------------------------------------------------------------------------
 #include "rbpch.h"
 #include "AssetManager.h"
-#include "rebirth/util/File.h"
+#include "rebirth/util/FileUtil.h"
 
 namespace rebirth
 {
