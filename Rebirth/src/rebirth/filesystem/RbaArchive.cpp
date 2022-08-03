@@ -21,7 +21,7 @@
 // 
 // ------------------------------------------------------------------------------
 #include "rbpch.h"
-#include "RbaFile.h"
+#include "RbaArchive.h"
 
 #include "rebirth/util/FileUtil.h"
 
@@ -31,7 +31,7 @@
 
 namespace rebirth
 {
-	bool RbaFile::CreateRbaFile(const std::string& srcDir, std::string& virtualDir,
+	bool RbaArchive::CreateRbaFile(const std::string& srcDir, std::string& virtualDir,
 		uint8 contentVersion, bool compress, uint32 minCompressBias)
 	{
 		std::string targetFile = mFilepath;
@@ -121,7 +121,7 @@ namespace rebirth
 		return true;
 	}
 
-	bool RbaFile::ExtractRbaFile(const std::string& destDir)
+	bool RbaArchive::ExtractRbaFile(const std::string& destDir)
 	{
 		std::string rbaFile = mFilepath;
 		std::ifstream rbaFileStream(rbaFile, std::ios::binary);
@@ -183,7 +183,7 @@ namespace rebirth
 	}
 
 
-	bool RbaFile::Compress(const byte* srcData, const ulong srcDataSize, std::vector<byte>& destData, ulong* compressedSize)
+	bool RbaArchive::Compress(const byte* srcData, const ulong srcDataSize, std::vector<byte>& destData, ulong* compressedSize)
 	{
 		*compressedSize = compressBound(srcDataSize);
 		destData.resize(*compressedSize);
@@ -194,7 +194,7 @@ namespace rebirth
 		return ret == Z_OK;
 	}
 
-	bool RbaFile::Decompress(const byte* srcData, const ulong compressedSize, ulong* uncompressedSize,
+	bool RbaArchive::Decompress(const byte* srcData, const ulong compressedSize, ulong* uncompressedSize,
 		std::vector<byte>& destData)
 	{
 		const int ret = uncompress(destData.data(), uncompressedSize, srcData, compressedSize);

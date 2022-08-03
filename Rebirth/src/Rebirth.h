@@ -94,7 +94,7 @@
 #include "rebirth/filesystem/IOStream.h"
 #include "rebirth/filesystem/File.h"
 #include "rebirth/filesystem/PhysicalFile.h"
-#include "rebirth/filesystem/RbaFile.h"
+#include "rebirth/filesystem/RbaArchive.h"
 
 
 // Main function

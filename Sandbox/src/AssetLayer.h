@@ -58,7 +58,7 @@ namespace rebirth
 			mTexture = AssetManager::GetAsset<Texture2D>(testTexture);
 
 			std::string virtualDir = "assets/";
-			RbaFile rbaFile("test.rba");
+			RbaArchive rbaFile("test.rba");
 			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
 			//rbaFile.ExtractRbaFile("exported_assets/");
 

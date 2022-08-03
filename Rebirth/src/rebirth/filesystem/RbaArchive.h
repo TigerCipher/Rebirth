@@ -26,7 +26,7 @@
 
 namespace rebirth
 {
-	class RbaFile
+	class RbaArchive
 	{
 	public:
 		struct RbaHeader
@@ -53,7 +53,7 @@ namespace rebirth
 
 	public:
 
-		RbaFile(const std::string& filepath, const uint8 rbaFileVersion = RBA_NEWEST_VERSION) :
+		RbaArchive(const std::string& filepath, const uint8 rbaFileVersion = RBA_NEWEST_VERSION) :
 			mFilepath(filepath), mRbaFileVersion(rbaFileVersion) {}
 
 		bool CreateRbaFile(const std::string& srcDir, std::string& virtualDir,
