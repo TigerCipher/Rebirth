@@ -60,7 +60,7 @@ namespace rebirth
 			std::string virtualDir = "assets/";
 			RbaArchive rbaFile("test.rba");
 			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
-			//rbaFile.ExtractRbaFile("exported_assets/");
+			rbaFile.ExtractRbaFile("exported_assets/");
 
 			PhysicalFile testFile("test/dir/just_a_test.txt", FileMode_Append | FileMode_Read);
 			if(testFile.OpenWrite())

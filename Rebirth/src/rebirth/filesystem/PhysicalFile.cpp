@@ -215,7 +215,6 @@ namespace rebirth
 			return false;
 
 		mFilePointer = (size_t)moved;
-		RB_CORE_WARN("File pointer: {}", mFilePointer);
 		return true;
 	}
 

@@ -24,6 +24,7 @@
 #include "RbaArchive.h"
 
 #include "rebirth/util/FileUtil.h"
+#include "rebirth/filesystem/PhysicalFile.h"
 
 #include <zlib.h>
 
@@ -62,26 +63,26 @@ namespace rebirth
 
 			for (char& c : filename)
 				c = (char)tolower(c);
-
-			std::ifstream filestream(filename, std::ios::ate | std::ios::binary);
-			if (filestream.fail())
+			PhysicalFile filestream(filename, FileMode_Read);
+			//std::ifstream filestream(filename, std::ios::ate | std::ios::binary);
+			if (!filestream.OpenRead())
 			{
 				RB_CORE_WARN("File failed to load {}", filename);
 				continue;
 			}
 			RbaFileEntry rbaFileEntry;
 			memset(&rbaFileEntry, 0, sizeof(RbaFileEntry));
-			rbaFileEntry.uncompressedSize = (uint32)filestream.tellg();
+			rbaFileEntry.uncompressedSize = (ulong)filestream.GetSize();
 			std::string fname = filename.substr(virtualDir.size());
 			RB_CORE_INFO("[PACKING] [{}] to [{}] in [{}]", filename, fname, targetFile);
 			memcpy(rbaFileEntry.filepath, fname.data(), fname.length() + 1);
 			rbaFileEntry.offset = (uint32)dataBuffer.size();
 			rbaFileEntry.compressed = rbaFileEntry.uncompressedSize > compressBias && compress == true;
-			filestream.seekg(0);
+			filestream.SetPointer(0);
 
 			std::vector<byte> fileData;
 			fileData.resize(rbaFileEntry.uncompressedSize);
-			filestream.read((char*)fileData.data(), rbaFileEntry.uncompressedSize);
+			filestream.Read(fileData.data(), rbaFileEntry.uncompressedSize);
 #if ENABLE_COMPRESSION
 			if (rbaFileEntry.compressed)
 			{
@@ -98,40 +99,47 @@ namespace rebirth
 			}
 
 			fileEntries.push_back(rbaFileEntry);
-			filestream.close();
+			filestream.Close();
 		}
 
 		header.numEntries = (uint8)fileEntries.size();
 
-		std::ofstream output(targetFile, std::ios::binary);
+		PhysicalFile output(targetFile, FileMode_Write);
 
-		output.write(reinterpret_cast<char*>(&header), sizeof(RbaHeader));
+		if(!output.OpenWrite())
+		{
+			RB_CORE_ERROR("Failed to create RBA archive file {}", targetFile);
+			return false;
+		}
+
+		output.Write(&header, sizeof(RbaHeader));
 
 		const uint32 baseOffset = sizeof(RbaHeader) + (uint32)fileEntries.size() * sizeof(RbaFileEntry);
 
 		for (RbaFileEntry& e : fileEntries)
 		{
 			e.offset += baseOffset;
-			output.write(reinterpret_cast<char*>(&e), sizeof(RbaFileEntry));
+			output.Write(&e, sizeof(RbaFileEntry));
 		}
 
-		output.write(dataBuffer.data(), dataBuffer.size());
+		output.Write(dataBuffer.data(), dataBuffer.size());
 
-		output.close();
+		output.Close();
 		return true;
 	}
 
 	bool RbaArchive::ExtractRbaFile(const std::string& destDir)
 	{
 		std::string rbaFile = mFilepath;
-		std::ifstream rbaFileStream(rbaFile, std::ios::binary);
-		if (rbaFileStream.fail())
+		PhysicalFile rbaFileStream(rbaFile, FileMode_Read);
+		//std::ifstream rbaFileStream(rbaFile, std::ios::binary);
+		if (rbaFileStream.OpenRead())
 		{
 			RB_CORE_ERROR("Failed to open RBA file {}", rbaFile);
 			return false;
 		}
 		RbaHeader header;
-		rbaFileStream.read(reinterpret_cast<char*>(&header), sizeof(RbaHeader));
+		rbaFileStream.Read(&header, sizeof(RbaHeader));
 		if (std::string(header.id) != "RBA")
 		{
 			RB_CORE_ERROR("RBA file {} is of bad format", rbaFile);
@@ -139,7 +147,7 @@ namespace rebirth
 		}
 		std::vector<RbaFileEntry> pEntries(header.numEntries);
 		//auto* pEntries = new RbaFileEntry[header.numEntries];
-		rbaFileStream.read(reinterpret_cast<char*>(pEntries.data()), header.numEntries * sizeof(RbaFileEntry));
+		rbaFileStream.Read(pEntries.data(), header.numEntries * sizeof(RbaFileEntry));
 
 		for (int i = 0; i < header.numEntries; i++)
 		{
@@ -150,7 +158,7 @@ namespace rebirth
 			if (entry.compressed)
 			{
 				std::vector<byte> compressedBuffer(entry.compressedSize);
-				rbaFileStream.read((char*)compressedBuffer.data(), compressedBuffer.size());
+				rbaFileStream.Read(compressedBuffer.data(), compressedBuffer.size());
 				if (!Decompress(compressedBuffer.data(), (uLong)compressedBuffer.size(), &entry.uncompressedSize, buffer))
 				{
 					RB_CORE_ERROR("Failed to decompress file {}. Uncompressed Size: {} -- {}, Compressed Size: {}",
@@ -164,11 +172,16 @@ namespace rebirth
 #endif
 			{
 				buffer.resize(entry.uncompressedSize);
-				rbaFileStream.read((char*)buffer.data(), buffer.size());
+				rbaFileStream.Read(buffer.data(), buffer.size());
 			}
+
+			rbaFileStream.Close();
+
 			std::filesystem::create_directories(destDir + file::GetDirectoryPath(entry.filepath));
-			std::ofstream outputStream(destDir + entry.filepath, std::ios::binary);
-			if (outputStream.fail())
+
+			PhysicalFile outputStream(destDir + entry.filepath, FileMode_Write);
+			//std::ofstream outputStream(destDir + entry.filepath, std::ios::binary);
+			if (outputStream.OpenWrite())
 			{
 				RB_CORE_ERROR("Failed to create file {}", destDir + entry.filepath);
 				//delete[] pEntries;
@@ -176,7 +189,8 @@ namespace rebirth
 			}
 
 			RB_CORE_INFO("Extracting [{}] to [{}]", entry.filepath, destDir + entry.filepath);
-			outputStream.write((char*)buffer.data(), buffer.size());
+			outputStream.Write(buffer.data(), buffer.size());
+			outputStream.Close();
 		}
 		//delete[] pEntries;
 		return true;
