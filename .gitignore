@@ -17,7 +17,7 @@ obj/
 /*/assets/cache
 /*/exported_assets
 *.rba
-
+/Sandbox/test
 
 # Exceptions
 !/vendor/premake/bin/

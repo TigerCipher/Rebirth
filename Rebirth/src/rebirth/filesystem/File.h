@@ -29,11 +29,12 @@
 
 namespace rebirth
 {
-	enum class FileMode
+	enum FileMode : uint8
 	{
-		READ,
-		WRITE,
-		READ_WRITE
+		FileMode_None = BIT(0),
+		FileMode_Read = BIT(1),
+		FileMode_Write = BIT(2),
+		FileMode_Append = BIT(3)
 	};
 
 	enum class ContentType
@@ -45,7 +46,8 @@ namespace rebirth
 	class File : public IOStream
 	{
 	public:
-		File(const std::string& filename)
+		File(const std::string& filename, const uint8 flags = FileMode_None) :
+			mFileMode(flags)
 		{
 			mSource = filename;
 		}
@@ -67,11 +69,16 @@ namespace rebirth
 			return file::GetFileName(mSource);
 		}
 
-		virtual bool OpenRead(bool allowWrite = false) = 0;
-		virtual bool OpenWrite(bool append = false, bool allowRead = false) = 0;
+		void SetFileMode(const FileMode flags) { mFileMode = flags; }
+
+		virtual bool OpenRead() = 0;
+		virtual bool OpenWrite() = 0;
 		virtual bool Flush() = 0;
 		virtual bool Close() = 0;
 		virtual bool IsOpen() const = 0;
+
+	protected:
+		uint8 mFileMode;
 	};
 }
 

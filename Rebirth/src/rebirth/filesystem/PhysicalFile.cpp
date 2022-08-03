@@ -82,9 +82,15 @@ namespace rebirth
 		return size - bytesToWrite;
 	}
 
-	bool PhysicalFile::OpenRead(const bool allowWrite)
+	bool PhysicalFile::OpenRead()
 	{
+		if (mFileMode & FileMode_None)
+			mFileMode = FileMode_Read;
+		if (!(mFileMode & FileMode_Read))
+			mFileMode |= FileMode_Read;
+
 		ulong access = GENERIC_READ;
+		const bool allowWrite = mFileMode & FileMode_Write || mFileMode & FileMode_Append;
 		if (allowWrite)
 			access |= GENERIC_WRITE;
 
@@ -121,11 +127,17 @@ namespace rebirth
 		return msg;
 	}
 
-	bool PhysicalFile::OpenWrite(const bool append, const bool allowRead)
+	bool PhysicalFile::OpenWrite()
 	{
+		if (mFileMode & FileMode_None)
+			mFileMode = FileMode_Write;
+		if (!(mFileMode & FileMode_Write))
+			mFileMode |= FileMode_Write;
+
 		ulong access = GENERIC_WRITE;
-		if (allowRead)
+		if (mFileMode & FileMode_Read)
 			access |= GENERIC_READ;
+		bool append = mFileMode & FileMode_Append;
 		if (append)
 			access |= FILE_APPEND_DATA;
 		//if (!CreateDirectoryTree(mPhysicalPath))

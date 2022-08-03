@@ -62,8 +62,8 @@ namespace rebirth
 			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
 			//rbaFile.ExtractRbaFile("exported_assets/");
 
-			PhysicalFile testFile("test/dir/just_a_test.txt");
-			if(testFile.OpenWrite(true, true))
+			PhysicalFile testFile("test/dir/just_a_test.txt", FileMode_Append | FileMode_Read);
+			if(testFile.OpenWrite())
 			{
 				testFile.WriteLine("Testing out the writing line method");
 				testFile.WriteFloat(3.2343545f);

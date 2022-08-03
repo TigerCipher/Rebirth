@@ -48,7 +48,7 @@ namespace rebirth
 		int count = 0;
 		char** args = nullptr;
 
-		const char* operator[](int index) const
+		const char* operator[](const int index) const
 		{
 			RB_CORE_ASSERT(index < count);
 			return args[index];

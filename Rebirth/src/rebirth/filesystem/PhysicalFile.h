@@ -34,15 +34,15 @@ namespace rebirth
 	class PhysicalFile : public File
 	{
 	public:
-		PhysicalFile(const std::string& filename) : File(filename), mPhysicalPath(filename) {}
+		PhysicalFile(const std::string& filename, const uint8 flags = FileMode_None) : File(filename, flags), mPhysicalPath(filename) {}
 		virtual ~PhysicalFile();
 
 		bool SetPointer(size_t position) override;
 		bool SetPointerFromEnd(size_t position) override;
 		size_t Read(void* dest, size_t size) override;
 		size_t Write(const void* data, size_t size) override;
-		bool OpenRead(bool allowWrite) override;
-		bool OpenWrite(bool append, bool allowRead) override;
+		bool OpenRead() override;
+		bool OpenWrite() override;
 		bool Flush() override;
 		bool Close() override;
 		bool IsOpen() const override;
