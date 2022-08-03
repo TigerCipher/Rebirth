@@ -126,6 +126,8 @@ namespace rebirth
 		ulong access = GENERIC_WRITE;
 		if (allowRead)
 			access |= GENERIC_READ;
+		if (append)
+			access |= FILE_APPEND_DATA;
 		//if (!CreateDirectoryTree(mPhysicalPath))
 		//{
 		//	return false;
@@ -133,7 +135,8 @@ namespace rebirth
 
 		CreateDirectoryTree(mPhysicalPath);
 
-		const ulong creationDisposition = !file::Exists(mPhysicalPath) ? CREATE_NEW : CREATE_ALWAYS;
+		//const ulong creationDisposition = !file::Exists(mPhysicalPath) ? CREATE_NEW : append ? CREATE_ALWAYS : OPEN_EXISTING;
+		const ulong creationDisposition = !file::Exists(mPhysicalPath) ? CREATE_NEW : append ? OPEN_ALWAYS : CREATE_ALWAYS;
 
 		mHandle = CreateFileA(mPhysicalPath.c_str(), access, 0, nullptr, creationDisposition, FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -185,18 +188,22 @@ namespace rebirth
 	bool PhysicalFile::SetPointerInternal(const size_t position, const bool fromEnd)
 	{
 		if (mHandle == INVALID_HANDLE)
+		{
+			RB_CORE_WARN("Invalid file handle while trying to set file pointer");
+			return false;
+		}
+
+		//if (mFilePointer == position)
+		//{
+		//	return true;
+		//}
+
+		ulong moved = SetFilePointer(mHandle, 0, nullptr, fromEnd ? FILE_END : FILE_BEGIN);
+		if (moved == INVALID_SET_FILE_POINTER)
 			return false;
 
-		if (mFilePointer == position)
-			return true;
-
-		LARGE_INTEGER li;
-		li.QuadPart = position;
-		li.LowPart = SetFilePointer(mHandle, li.LowPart, &li.HighPart, fromEnd ? FILE_END : FILE_BEGIN);
-		if (li.LowPart == INVALID_SET_FILE_POINTER)
-			return false;
-
-		mFilePointer = (size_t)li.QuadPart;
+		mFilePointer = (size_t)moved;
+		RB_CORE_WARN("File pointer: {}", mFilePointer);
 		return true;
 	}
 
