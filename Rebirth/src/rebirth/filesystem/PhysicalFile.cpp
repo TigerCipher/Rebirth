@@ -82,21 +82,17 @@ namespace rebirth
 		return size - bytesToWrite;
 	}
 
+
 	bool PhysicalFile::OpenRead()
 	{
-		if (mFileMode & FileMode_None)
-			mFileMode = FileMode_Read;
-		if (!(mFileMode & FileMode_Read))
-			mFileMode |= FileMode_Read;
-
 		ulong access = GENERIC_READ;
 		const bool allowWrite = mFileMode & FileMode_Write || mFileMode & FileMode_Append;
 		if (allowWrite)
 			access |= GENERIC_WRITE;
 
-		const ulong creationDisposition = allowWrite ? CREATE_NEW : OPEN_EXISTING;
+		//const ulong creationDisposition = allowWrite ? CREATE_NEW : OPEN_EXISTING;
 
-		mHandle = CreateFileA(mPhysicalPath.c_str(), access, 0, nullptr, creationDisposition, FILE_ATTRIBUTE_NORMAL, nullptr);
+		mHandle = CreateFileA(mPhysicalPath.c_str(), access, 0, nullptr, OPEN_EXISTING /*creationDisposition*/, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 		if (mHandle == INVALID_HANDLE)
 		{
@@ -129,11 +125,6 @@ namespace rebirth
 
 	bool PhysicalFile::OpenWrite()
 	{
-		if (mFileMode & FileMode_None)
-			mFileMode = FileMode_Write;
-		if (!(mFileMode & FileMode_Write))
-			mFileMode |= FileMode_Write;
-
 		ulong access = GENERIC_WRITE;
 		if (mFileMode & FileMode_Read)
 			access |= GENERIC_READ;

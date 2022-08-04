@@ -88,5 +88,27 @@ namespace rebirth::file
 				c = '/';
 		}
 	}
+
+	std::string NormalizePath(const std::string& filepath)
+	{
+		auto output = std::string(filepath.begin(), filepath.end());
+		NormalizeInline(output);
+		return output;
+	}
+
+	void NormalizeInline(std::string& filepath)
+	{
+		for (char& c : filepath)
+		{
+			if (c == '\\')
+				c = '/';
+			else c = (char)tolower(c);
+		}
+
+		if(filepath.find("./") == 0)
+		{
+			filepath = std::string(filepath.begin() + 2, filepath.end());
+		}
+	}
 }
 

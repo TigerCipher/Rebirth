@@ -22,6 +22,7 @@
 // ------------------------------------------------------------------------------
 #include "rbpch.h"
 #include "RbaArchive.h"
+#include "RbaFileHeader.h"
 
 #include "rebirth/util/FileUtil.h"
 #include "rebirth/filesystem/PhysicalFile.h"
@@ -65,7 +66,7 @@ namespace rebirth
 				c = (char)tolower(c);
 			PhysicalFile filestream(filename, FileMode_Read);
 			//std::ifstream filestream(filename, std::ios::ate | std::ios::binary);
-			if (!filestream.OpenRead())
+			if (!filestream.Open())
 			{
 				RB_CORE_WARN("File failed to load {}", filename);
 				continue;
@@ -106,7 +107,7 @@ namespace rebirth
 
 		PhysicalFile output(targetFile, FileMode_Write);
 
-		if(!output.OpenWrite())
+		if(!output.Open())
 		{
 			RB_CORE_ERROR("Failed to create RBA archive file {}", targetFile);
 			return false;
@@ -133,7 +134,7 @@ namespace rebirth
 		std::string rbaFile = mFilepath;
 		PhysicalFile rbaFileStream(rbaFile, FileMode_Read);
 		//std::ifstream rbaFileStream(rbaFile, std::ios::binary);
-		if (rbaFileStream.OpenRead())
+		if (rbaFileStream.Open())
 		{
 			RB_CORE_ERROR("Failed to open RBA file {}", rbaFile);
 			return false;
@@ -181,7 +182,7 @@ namespace rebirth
 
 			PhysicalFile outputStream(destDir + entry.filepath, FileMode_Write);
 			//std::ofstream outputStream(destDir + entry.filepath, std::ios::binary);
-			if (outputStream.OpenWrite())
+			if (outputStream.Open())
 			{
 				RB_CORE_ERROR("Failed to create file {}", destDir + entry.filepath);
 				//delete[] pEntries;

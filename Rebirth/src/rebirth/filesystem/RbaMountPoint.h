@@ -15,32 +15,35 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: File.h
-// Date File Created: 7/29/2022
+// File Name: RbaMountPoint.h
+// Date File Created: 8/3/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-namespace fs = std::filesystem;
+#include "MountPoint.h"
+#include "RbaFileHeader.h"
+#include "PhysicalFile.h"
 
-namespace rebirth::file {
-
-	inline bool IsSlash(const char c)
+namespace rebirth
+{
+	class RbaMountPoint : public MountPoint
 	{
-		return c == '\\' || c == '/';
-	}
+	public:
+		RbaMountPoint(const std::string& physicalPath) :
+			MountPoint(physicalPath, -1) {}
+		virtual ~RbaMountPoint() = default;
 
-	bool Exists(const fs::path& path);
+		bool OnMount() override;
+		bool HasFile(const std::string& filePath) const override;
+		Scope<File> GetFile(const std::string& filePath) override;
 
-	std::string GetFileName(const std::string& filePath);
-	std::string GetFileNameWithoutExtension(const std::string& filePath);
-	std::string GetFileExtensionFromString(const std::string& filePath);
-	std::string GetFileExtensionFromPath(const fs::path& path);
-	std::string GetDirectoryPath(const std::string& filePath);
-	void FixPath(std::string& path);
-
-	std::string NormalizePath(const std::string& filepath);
-	void NormalizeInline(std::string& filepath);
+		PhysicalFile* GetRbaFile() const { return mRbaFile.get(); }
+	private:
+		Scope<PhysicalFile> mRbaFile;
+		RbaHeader mHeader{};
+		std::vector<RbaFileEntry> mFileEntries;
+	};
 }
 

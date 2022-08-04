@@ -50,7 +50,8 @@ project "Rebirth"
 
 	defines {
 		"_CRT_SECURE_NO_WARNINGS",
-		"GLFW_INCLUDE_NONE"
+		"GLFW_INCLUDE_NONE",
+		"RBA_NEWEST_VERSION=1"
 	}
 	filter "files:../vendor/deps/ImGuizmo/**.cpp"
 		flags {"NoPCH"}

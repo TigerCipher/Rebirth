@@ -29,15 +29,15 @@
 
 enum FileMode : rebirth::uint8
 {
-	FileMode_None = BIT(0),
-	FileMode_Read = BIT(1),
-	FileMode_Write = BIT(2),
-	FileMode_Append = BIT(3)
+	FileMode_Read = BIT(0),
+	FileMode_Write = BIT(1),
+	FileMode_Append = BIT(2)
 };
 
 namespace rebirth
 {
 
+	// #TODO: Currently unused. Things are BINARY by default, and may very well stay that way
 	enum class ContentType
 	{
 		TEXT,
@@ -47,7 +47,7 @@ namespace rebirth
 	class File : public IOStream
 	{
 	public:
-		File(const std::string& filename, const uint8 flags = FileMode_None) :
+		File(const std::string& filename, const uint8 flags) :
 			mFileMode(flags)
 		{
 			mSource = filename;
@@ -72,13 +72,20 @@ namespace rebirth
 
 		void SetFileMode(const FileMode flags) { mFileMode = flags; }
 
-		virtual bool OpenRead() = 0;
-		virtual bool OpenWrite() = 0;
+		/**
+		 * \brief Opens the file in either write mode or read mode depending on the filemode flags set. It can be opened in both, and if so, it will internally call OpenWrite
+		 * \return True if the file was able to be opened, false if it failed
+		 */
+		bool Open();
+
 		virtual bool Flush() = 0;
 		virtual bool Close() = 0;
 		virtual bool IsOpen() const = 0;
 
 	protected:
+		virtual bool OpenRead() = 0;
+		virtual bool OpenWrite() = 0;
+
 		uint8 mFileMode;
 	};
 }

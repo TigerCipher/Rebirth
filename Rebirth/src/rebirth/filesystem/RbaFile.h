@@ -15,32 +15,44 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: File.h
-// Date File Created: 7/29/2022
+// File Name: RbaFile.h
+// Date File Created: 8/3/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-namespace fs = std::filesystem;
+#include "File.h"
+#include "RbaFileHeader.h"
 
-namespace rebirth::file {
+namespace rebirth
+{
+	class RbaMountPoint;
 
-	inline bool IsSlash(const char c)
+	class RbaFile : public File
 	{
-		return c == '\\' || c == '/';
-	}
+	public:
+		RbaFile(const std::string& filename, RbaMountPoint* mountPoint, RbaFileEntry* fileEntry)
+			: File(filename, FileMode_Read), mMountPoint(mountPoint), mFileEntry(fileEntry) {}
 
-	bool Exists(const fs::path& path);
+		virtual ~RbaFile() = default;
 
-	std::string GetFileName(const std::string& filePath);
-	std::string GetFileNameWithoutExtension(const std::string& filePath);
-	std::string GetFileExtensionFromString(const std::string& filePath);
-	std::string GetFileExtensionFromPath(const fs::path& path);
-	std::string GetDirectoryPath(const std::string& filePath);
-	void FixPath(std::string& path);
+		size_t Read(void* dest, size_t size) override;
+		size_t Write(const void* data, size_t size) override;
+		bool Flush() override;
+		bool Close() override;
+		bool IsOpen() const override;
+	protected:
+		bool OpenRead() override;
+		bool OpenWrite() override;
 
-	std::string NormalizePath(const std::string& filepath);
-	void NormalizeInline(std::string& filepath);
+	private:
+		bool CacheUncompressedData();
+
+		RbaMountPoint* mMountPoint;
+		RbaFileEntry* mFileEntry;
+
+		std::vector<char> mUncompressedCache;
+	};
 }
 

@@ -59,19 +59,20 @@ namespace rebirth
 
 			std::string virtualDir = "assets/";
 			RbaArchive rbaFile("test.rba");
-			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
-			rbaFile.ExtractRbaFile("exported_assets/");
+			rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
+			//rbaFile.ExtractRbaFile("exported_assets/");
 
 			PhysicalFile testFile("test/dir/just_a_test.txt", FileMode_Append | FileMode_Read);
-			if(testFile.OpenWrite())
+			if(testFile.Open())
 			{
 				testFile.WriteLine("Testing out the writing line method");
 				testFile.WriteFloat(3.2343545f);
 
-				std::vector<byte> testVec(50);
+				std::vector<byte> testVec(26);
+				char a = 'a';
 				for(auto& t : testVec)
 				{
-					t = '@';
+					t = a++;
 				}
 
 				testFile.Write(testVec.data(), testVec.size());
