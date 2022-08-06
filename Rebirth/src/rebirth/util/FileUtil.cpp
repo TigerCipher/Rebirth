@@ -22,6 +22,7 @@
 // ------------------------------------------------------------------------------
 #include "rbpch.h"
 #include "FileUtil.h"
+#include "StringUtil.h"
 
 namespace rebirth::file
 {
@@ -87,6 +88,23 @@ namespace rebirth::file
 			if (c == '\\')
 				c = '/';
 		}
+	}
+
+	std::string FixPath(const std::string& path)
+	{
+		std::string output;
+		if (path.substr(0, 2) == "./" || path.substr(0, 2) == ".\\")
+			output = std::string(path.begin() + 2, path.end());
+		else
+		{
+			output = path;
+		}
+
+		std::replace(output.begin(), output.end(), '\\', '/');
+		ToLower(output);
+		if (output.back() == '/')
+			output.pop_back();
+		return output;
 	}
 
 	std::string NormalizePath(const std::string& filepath)

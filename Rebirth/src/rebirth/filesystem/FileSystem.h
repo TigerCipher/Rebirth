@@ -15,33 +15,37 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: File.h
-// Date File Created: 7/29/2022
+// File Name: FileSystem.h
+// Date File Created: 8/6/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
 #pragma once
 
-namespace fs = std::filesystem;
+#include "MountPoint.h"
+#include "PhysicalFile.h"
+#include "RbaMountPoint.h"
+#include "RbaFile.h"
 
-namespace rebirth::file {
-
-	inline bool IsSlash(const char c)
+namespace rebirth
+{
+	class FileSystem
 	{
-		return c == '\\' || c == '/';
-	}
+	public:
 
-	bool Exists(const fs::path& path);
+		using MountPointPtr = Scope<MountPoint>;
 
-	std::string GetFileName(const std::string& filePath);
-	std::string GetFileNameWithoutExtension(const std::string& filePath);
-	std::string GetFileExtensionFromString(const std::string& filePath);
-	std::string GetFileExtensionFromPath(const fs::path& path);
-	std::string GetDirectoryPath(const std::string& filePath);
-	void FixPath(std::string& path);
-	std::string FixPath(const std::string& path);
+		static bool Mount(const std::string& physicalPath);
+		static void AddRbaLocation(const std::string& path);
+		static Scope<File> GetFile(const std::string& filename);
 
-	std::string NormalizePath(const std::string& filepath);
-	void NormalizeInline(std::string& filepath);
+		// file attribute utilities? Modified times, creation times, etc?
+
+	private:
+		static MountPointPtr CreateMountPoint(const std::string& physicalPath);
+
+		static std::vector<MountPointPtr> mMountPoints;
+		static std::vector<std::string> mRbaLocations;
+	};
 }
 
