@@ -56,7 +56,7 @@ namespace rebirth::file
 	{
 		const size_t dotPos = filePath.rfind('.');
 		if (dotPos == std::string::npos)
-			return filePath;
+			return std::string();
 		return filePath.substr(dotPos + 1);
 	}
 

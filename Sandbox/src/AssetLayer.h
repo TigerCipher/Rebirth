@@ -35,7 +35,7 @@ namespace rebirth
 		{
 			asset = Texture2D::Create(meta.path.string(), 0);
 			bool res = asset.As<Texture2D>()->IsLoaded();
-			if(!res)
+			if (!res)
 				asset->SetFlags(AssetFlag_Invalid);
 			return res;
 		}
@@ -58,41 +58,27 @@ namespace rebirth
 			mTexture = AssetManager::GetAsset<Texture2D>(testTexture);
 
 			std::string virtualDir = "assets/";
-			RbaArchive rbaFile("test.rba");
-			rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
+			//RbaArchive rbaFile("test.rba");
+			//rbaFile.CreateRbaFile("assets", virtualDir, 1, true, 0);
 			//rbaFile.ExtractRbaFile("exported_assets/");
 
-			PhysicalFile testFile("test/dir/just_a_test.txt", FileMode_Append | FileMode_Read);
-			if(testFile.Open())
+			if (FileSystem::Mount("test.rba")) // "assets" for physical files
 			{
-				testFile.WriteLine("Testing out the writing line method");
-				testFile.WriteFloat(3.2343545f);
-
-				std::vector<byte> testVec(26);
-				char a = 'a';
-				for(auto& t : testVec)
+				Scope<File> f = FileSystem::GetFile("shaders/Quad.glsl");
+				if (f)
 				{
-					t = a++;
+					f->Open();
+					std::string s = f->ReadString();
+					RB_CORE_WARN(s);
 				}
-
-				testFile.Write(testVec.data(), testVec.size());
-
-				std::vector<byte> readVec;
-				testFile.ReadAllBytes(readVec);
-
-				for (const auto& b : readVec)
+				else
 				{
-					fmt::print("{}", (char)b);
+					RB_CORE_ERROR("File not found");
 				}
 
 			}
-			else
-			{
-				RB_CORE_ERROR("Failed to open file");
-			}
-
 		}
-		void OnDetach() override{}
+		void OnDetach() override {}
 		void OnUpdate(Timestep timestep) override
 		{
 			RenderCommand::SetClearColor({ 0.2f, 0.0f, 0.0f, 1.0f });
@@ -107,7 +93,7 @@ namespace rebirth
 
 			ImGui::End();
 		}
-		void OnEvent(Event& e) override{}
+		void OnEvent(Event& e) override {}
 
 	private:
 		Reference<Texture2D> mTexture;

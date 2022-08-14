@@ -41,7 +41,8 @@ namespace rebirth
 			return false;
 		}
 
-		if (!mRbaFile->ReadFrom(&mHeader, 0, sizeof(RbaHeader)))
+		//if (!mRbaFile->ReadFrom(&mHeader, 0, sizeof(RbaHeader)))
+		if (!mRbaFile->Read(&mHeader, sizeof(RbaHeader)))
 		{
 			RB_CORE_ERROR("Failed to read RBA file header");
 			return false;
@@ -52,7 +53,6 @@ namespace rebirth
 			RB_CORE_ERROR("Bad format for RBA file");
 			return false;
 		}
-
 		if (mHeader.rbaVersion != RBA_NEWEST_VERSION)
 		{
 			RB_CORE_ERROR("RBA File [{}] version does not match the RBA version used by this engine (found {}, expected {})",
@@ -62,8 +62,10 @@ namespace rebirth
 
 		mOrder = mHeader.contentVersion;
 
+
 		mFileEntries.resize(mHeader.numEntries);
-		if(!mRbaFile->ReadFrom(mFileEntries.data(), sizeof(RbaHeader), mHeader.numEntries * sizeof(RbaFileEntry)))
+		//if(!mRbaFile->ReadFrom(mFileEntries.data(), sizeof(RbaHeader), mHeader.numEntries * sizeof(RbaFileEntry)))
+		if(!mRbaFile->Read(mFileEntries.data(), mHeader.numEntries * sizeof(RbaFileEntry)))
 		{
 			RB_CORE_ERROR("Failed to read RBA file entries");
 			return false;

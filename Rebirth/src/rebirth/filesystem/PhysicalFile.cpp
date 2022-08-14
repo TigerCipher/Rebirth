@@ -52,9 +52,8 @@ namespace rebirth
 		while (bytesToRead > 0)
 		{
 			ulong read = 0;
-			if (!ReadFile(mHandle, (char*)dest + size - bytesToRead, bytesToRead, &read, nullptr) || read == 0)
+			if (!ReadFile(mHandle, (char*)dest /*+ size - bytesToRead*/, bytesToRead, &read, nullptr) || read == 0)
 				return size - bytesToRead;
-
 			bytesToRead -= read;
 			mFilePointer += read;
 		}
@@ -201,7 +200,7 @@ namespace rebirth
 		//	return true;
 		//}
 
-		ulong moved = SetFilePointer(mHandle, 0, nullptr, fromEnd ? FILE_END : FILE_BEGIN);
+		ulong moved = SetFilePointer(mHandle, position, nullptr, fromEnd ? FILE_END : FILE_BEGIN);
 		if (moved == INVALID_SET_FILE_POINTER)
 			return false;
 

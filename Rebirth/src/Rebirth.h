@@ -95,6 +95,10 @@
 #include "rebirth/filesystem/File.h"
 #include "rebirth/filesystem/PhysicalFile.h"
 #include "rebirth/filesystem/RbaArchive.h"
+#include "rebirth/filesystem/MountPoint.h"
+#include "rebirth/filesystem/RbaMountPoint.h"
+#include "rebirth/filesystem/PhysicalMountPoint.h"
+#include "rebirth/filesystem/FileSystem.h"
 
 
 // Main function

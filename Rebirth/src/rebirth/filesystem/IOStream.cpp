@@ -41,7 +41,7 @@ namespace rebirth
 	bool InputStream::ReadAllBytes(std::vector<byte>& buffer)
 	{
 		SetPointer(0);
-		size_t size = GetSize();
+		const size_t size = GetSize();
 		buffer.resize(size);
 		return Read(buffer.data(), buffer.size()) == size;
 	}

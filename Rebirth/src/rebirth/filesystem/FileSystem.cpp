@@ -24,6 +24,10 @@
 #include "rbpch.h"
 #include "FileSystem.h"
 
+#include "PhysicalMountPoint.h"
+#include "RbaMountPoint.h"
+#include "RbaFile.h"
+
 namespace rebirth
 {
 
@@ -95,8 +99,9 @@ namespace rebirth
 
 	FileSystem::MountPointPtr FileSystem::CreateMountPoint(const std::string& physicalPath)
 	{
-		std::string ext = file::GetFileExtensionFromString(physicalPath);
-		// #TODO: Physical mount points. Maybe zips too?
+		const std::string ext = file::GetFileExtensionFromString(physicalPath);
+		if(ext.length() == 0)
+			return createScope<PhysicalMountPoint>(physicalPath);
 		if (ext == "rba")
 			return createScope<RbaMountPoint>(physicalPath);
 

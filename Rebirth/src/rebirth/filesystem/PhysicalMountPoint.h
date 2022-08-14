@@ -15,8 +15,8 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 // 
-// File Name: FileSystem.h
-// Date File Created: 8/6/2022
+// File Name: PhysicalMountPoint.h
+// Date File Created: 8/13/2022
 // Author: Matt
 // 
 // ------------------------------------------------------------------------------
@@ -24,26 +24,24 @@
 
 #include "MountPoint.h"
 
-
 namespace rebirth
 {
-	class FileSystem
+
+	class PhysicalMountPoint : public MountPoint
 	{
 	public:
+		PhysicalMountPoint(const std::string& physicalPath) :
+			MountPoint(physicalPath, 0) {}
+		virtual ~PhysicalMountPoint() = default;
 
-		using MountPointPtr = Scope<MountPoint>;
-
-		static bool Mount(const std::string& physicalPath);
-		static void AddRbaLocation(const std::string& path);
-		static Scope<File> GetFile(const std::string& filename);
-
-		// file attribute utilities? Modified times, creation times, etc?
+		bool OnMount() override;
+		bool HasFile(const std::string& filePath) const override;
+		Scope<File> GetFile(const std::string& filePath) override;
 
 	private:
-		static MountPointPtr CreateMountPoint(const std::string& physicalPath);
+		bool RegisterDirectory(const std::string& path);
 
-		static std::vector<MountPointPtr> mMountPoints;
-		static std::vector<std::string> mRbaLocations;
+		std::vector<std::string> mFileEntries;
 	};
 }
 

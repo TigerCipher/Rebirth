@@ -22,6 +22,9 @@
 // ------------------------------------------------------------------------------
 #pragma once
 
+#ifndef RBA_NEWEST_VERSION
+#define RBA_NEWEST_VERSION 1
+#endif
 
 namespace rebirth
 {
